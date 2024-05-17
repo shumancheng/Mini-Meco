@@ -1,8 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@700&display=swap");
 body {
-  margin: 0;
   line-height: normal;
-  background-color: #0C1336;
+  background: #0C1336;
+  background: -moz-linear-gradient(left, #0C1336 0%, #10318F 64%, #0C1336 100%);
+  background: -webkit-linear-gradient(left, #0C1336 0%, #10318F 64%, #0C1336 100%);
+  background: linear-gradient(to right, #0C1336 0%, #10318F 64%, #0C1336 100%);
+  font-family: var(--font-kaisei-decol);
 }
 :root {
   /* fonts */
@@ -23,22 +26,92 @@ body {
 }
 
 .container {
-    position: absolute;
-    top: 267px;
-    left: 459px;
     border-radius: 10px;
     background-color: var(--color-white);
     width: 522px;
     height: 490px;
+    justify-content: center;
+    border-width: 5px;
+    border-color: red;
+    border-style: solid;
   }
 
 .header {
-  position: absolute;
-  top: 298px;
-  left: 608px;
-  font-size: 36px;
-  display: inline-block;
-  color: var(--color-black);
-  width: 303px;
-  height: 53px;
+    font-size: 36px;
+    display: inline-block;
+    color: var(--color-black);
+    font-weight: bold;
+    margin-top: 20px;
+    border-width: 5px;
+    border-color: red;
+    border-style: solid;
+}
+
+.submit-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 25px;
+    border-width: 5px;
+    border-color: red;
+    border-style: solid;
+}
+
+.signUpButton{
+border-radius: 5px;
+background: linear-gradient(0deg, #AA44FB 0%, #AA44FB 100%), linear-gradient(0deg, #ACA6A6 0%, #ACA6A6 100%), linear-gradient(0deg, #ACA6A6 0%, #ACA6A6 100%), #ACA6A6;
+width: 143px;
+height: 50px;
+text-align: center;
+font-size: 23px;
+flex-shrink: 0;
+color: white;
+}
+
+.loginButton{
+width: 143px;
+font-size: 23px;
+height: 50px;
+text-align: center;
+flex-shrink: 0;
+border-radius: 5px;
+color: white;
+background: linear-gradient(0deg, #47A10F 0%, #47A10F 100%), linear-gradient(0deg, #ACA6A6 0%, #ACA6A6 100%), linear-gradient(0deg, #ACA6A6 0%, #ACA6A6 100%), #ACA6A6;
+}
+
+.input{
+    border: none;
+    width: 100%;
+    padding: 10px 15px;
+    margin: 8px 0;
+    border-width: 5px;
+    border-style: solid;
+    border-color: red;
+}
+
+.inputs{
+    justify-content: flex-start;
+    display:flex;
+    border-width: 5px;
+    margin-right: 25px;
+    border-color: red;
+    border-style: solid;
+    flex-direction: column;
+}
+
+.inputBox{
+    border: none;
+    width: 70%;
+    height: 50px;
+    border-bottom: 2px solid #000;
+    font-size: medium;
+}
+
+.input img{
+    align-items: flex-start;
+    margin-right: 15px;
+    margin-top: 5px;
+    border-style: solid;
+    border-color: red;
+    border-width: 5px;
 }
