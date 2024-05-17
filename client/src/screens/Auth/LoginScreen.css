@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@700&display=swap");
+body {
+  margin: 0;
+  line-height: normal;
+  background-color: #0C1336;
+}
+:root {
+  /* fonts */
+  --font-kaisei-decol: "Kaisei Decol";
+
+  /* font sizes */
+  --font-size-5xl: 24px;
+  --font-size-xl: 20px;
+
+  /* Colors */
+  --color-gray-100: #7d7c7c;
+  --color-gainsboro: #d9d9d9;
+  --color-white: #fff;
+  --color-black: #000;
+
+  /* Border radiuses */
+  --br-8xs: 5px;
+}
+
+.container {
+    position: absolute;
+    top: 267px;
+    left: 459px;
+    border-radius: 10px;
+    background-color: var(--color-white);
+    width: 522px;
+    height: 490px;
+  }
+
+.header {
+  position: absolute;
+  top: 298px;
+  left: 608px;
+  font-size: 36px;
+  display: inline-block;
+  color: var(--color-black);
+  width: 303px;
+  height: 53px;
+}
