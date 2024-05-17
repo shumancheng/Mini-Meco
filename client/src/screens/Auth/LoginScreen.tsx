@@ -14,23 +14,35 @@ const LoginScreen = () => {
       <div className="inputs">
         <div className="input">
           <img className="username-icon" src={UserNameIcon} alt="" />
-          <input type="text" placeholder="Please write your name" />
+          <input
+            className="inputBox"
+            type="text"
+            placeholder="Please enter your name"
+          />
         </div>
         <div className="input">
           <img className="email-icon" src={EmailIcon} alt="" />
-          <input type="email" placeholder="Please write your email address" />
+          <input
+            className="inputBox"
+            type="email"
+            placeholder="Please enter your email address"
+          />
         </div>
         <div className="input">
           <img className="password-icon" src={PasswordIcon} alt="" />
-          <input type="password" placeholder="Please write your password" />
+          <input
+            className="inputBox"
+            type="password"
+            placeholder="Please enter your password"
+          />
         </div>
       </div>
       <div className="forget-password">
         Forget Password? <span>Click here</span>
       </div>
       <div className="submit-container">
-        <div className="submit">Sign Up</div>
-        <div className="submit">Login</div>
+        <div className="loginButton">Login</div>
+        <div className="signUpButton">Sign Up</div>
       </div>
     </div>
   );
