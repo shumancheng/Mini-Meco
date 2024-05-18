@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./LoginScreen.css";
 import UserNameIcon from "./../../assets/UserNameIcon.png";
 import EmailIcon from "./../../assets/EmailIcon.png";
@@ -13,14 +13,22 @@ const LoginScreen = () => {
         <div className="underline"></div>
       </div>
       <div className="inputs">
-        <div className="input">
-          <img className="username-icon" src={UserNameIcon} alt="" />
-          <input
-            className="inputBox"
-            type="text"
-            placeholder="Please enter your name"
-          />
-        </div>
+        {action === "Login" ? (
+          <div>
+            <br></br>
+            <br></br>
+          </div>
+        ) : (
+          <div className="input">
+            <img className="username-icon" src={UserNameIcon} alt="" />
+            <input
+              className="inputBox"
+              type="text"
+              placeholder="Please enter your name"
+            />
+          </div>
+        )}
+
         <div className="input">
           <img className="email-icon" src={EmailIcon} alt="" />
           <input
@@ -38,9 +46,14 @@ const LoginScreen = () => {
           />
         </div>
       </div>
-      <div className="forget-password">
-        Forget Password? <span>Click here</span>
-      </div>
+      {action === "Registration" ? (
+        <div></div>
+      ) : (
+        <div className="forget-password">
+          Forget Password? <span>Click here</span>
+        </div>
+      )}
+
       <div className="submit-container">
         <div
           className={action === "Registration" ? "submit gray" : "submit"}
