@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./LoginScreen.css";
 import UserNameIcon from "./../../assets/UserNameIcon.png";
 import EmailIcon from "./../../assets/EmailIcon.png";
 import PasswordIcon from "./../../assets/PasswordIcon.png";
 
 const LoginScreen = () => {
+  const [action, setAction] = useState("Registration");
   return (
     <div className="container">
       <div className="header">
-        <div className="text">Registration</div>
+        <div className="text">{action}</div>
         <div className="underline"></div>
       </div>
       <div className="inputs">
@@ -41,8 +42,22 @@ const LoginScreen = () => {
         Forget Password? <span>Click here</span>
       </div>
       <div className="submit-container">
-        <div className="loginButton">Login</div>
-        <div className="signUpButton">Sign Up</div>
+        <div
+          className={action === "Registration" ? "submit gray" : "submit"}
+          onClick={() => {
+            setAction("Login");
+          }}
+        >
+          Login
+        </div>
+        <div
+          className={action === "Login" ? "submit gray" : "submit"}
+          onClick={() => {
+            setAction("Registration");
+          }}
+        >
+          Sign Up
+        </div>
       </div>
     </div>
   );

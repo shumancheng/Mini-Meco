@@ -31,9 +31,6 @@ body {
     width: 522px;
     height: 490px;
     justify-content: center;
-    border-width: 5px;
-    border-color: red;
-    border-style: solid;
   }
 
 .header {
@@ -42,41 +39,32 @@ body {
     color: var(--color-black);
     font-weight: bold;
     margin-top: 20px;
-    border-width: 5px;
-    border-color: red;
-    border-style: solid;
 }
 
 .submit-container{
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    margin-top: 25px;
-    border-width: 5px;
-    border-color: red;
-    border-style: solid;
+    margin-top: 35px;
 }
 
-.signUpButton{
-border-radius: 5px;
-background: linear-gradient(0deg, #AA44FB 0%, #AA44FB 100%), linear-gradient(0deg, #ACA6A6 0%, #ACA6A6 100%), linear-gradient(0deg, #ACA6A6 0%, #ACA6A6 100%), #ACA6A6;
-width: 143px;
-height: 50px;
-text-align: center;
-font-size: 23px;
-flex-shrink: 0;
-color: white;
+
+.submit{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    cursor: pointer;
+    width: 143px;
+    font-size: 23px;
+    height: 50px;
+    border-radius: 5px;
+    color: white;
+    background-color: #219A0D;
 }
 
-.loginButton{
-width: 143px;
-font-size: 23px;
-height: 50px;
-text-align: center;
-flex-shrink: 0;
-border-radius: 5px;
-color: white;
-background: linear-gradient(0deg, #47A10F 0%, #47A10F 100%), linear-gradient(0deg, #ACA6A6 0%, #ACA6A6 100%), linear-gradient(0deg, #ACA6A6 0%, #ACA6A6 100%), #ACA6A6;
+.gray{
+    background-color: #BFC3BC;
+    color: white;
 }
 
 .input{
@@ -84,18 +72,12 @@ background: linear-gradient(0deg, #47A10F 0%, #47A10F 100%), linear-gradient(0de
     width: 100%;
     padding: 10px 15px;
     margin: 8px 0;
-    border-width: 5px;
-    border-style: solid;
-    border-color: red;
 }
 
 .inputs{
     justify-content: flex-start;
     display:flex;
-    border-width: 5px;
     margin-right: 25px;
-    border-color: red;
-    border-style: solid;
     flex-direction: column;
 }
 
@@ -105,13 +87,15 @@ background: linear-gradient(0deg, #47A10F 0%, #47A10F 100%), linear-gradient(0de
     height: 50px;
     border-bottom: 2px solid #000;
     font-size: medium;
+    margin-right: 20px;
+    font-family: var(--font-kaisei-decol);
 }
 
 .input img{
-    align-items: flex-start;
-    margin-right: 15px;
+    margin-right: 20px;
     margin-top: 5px;
-    border-style: solid;
-    border-color: red;
-    border-width: 5px;
+}
+
+.forget-password span{
+    color: rgb(26, 70, 248);
 }
