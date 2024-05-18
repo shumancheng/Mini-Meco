@@ -1,0 +1,42 @@
+{
+  "name": "mini-meco",
+  "version": "1.0.0",
+  "description": "A web app that provides agile tooling",
+  "main": "server.ts",
+  "scripts": {
+    "start": "node server.js",
+    "server": "node --watch server.js",
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shumancheng/Mini-Meco.git"
+  },
+  "keywords": [
+    "Agile",
+    "Tooling",
+    "AMOS",
+    "Web",
+    "App",
+    "React",
+    "TypeScript",
+    "SQLite",
+    "Node.js"
+  ],
+  "author": "Shu-Man Cheng",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shumancheng/Mini-Meco/issues"
+  },
+  "homepage": "https://github.com/shumancheng/Mini-Meco#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.12",
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
