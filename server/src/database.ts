@@ -1,28 +1,28 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
-import path from 'path';
 
-export const initializeDb = async () => {
-  try {
-    const dbPath = path.resolve(__dirname, '../database.sqlite');
-    const db = await open({
-      filename: dbPath,
-      driver: sqlite3.Database
-    });
+export async function initializeDb() {
+  console.log("Opening database...");
 
-    
-    await db.exec(`
-      CREATE TABLE IF NOT EXISTS credentials (
-        username TEXT NOT NULL,
-        email TEXT UNIQUE,
-        password TEXT NOT NULL
-      )
-    `);
+  const db = await open({
+    filename: './myDatabase.db',  // Adjust path as needed
+    driver: sqlite3.Database,
+  });
 
+  console.log("Database opened successfully");
 
-    return db;
-  } catch (error) {
-    console.error('Failed to initialize the database:', error);
-    throw error;
-  }
-};
+  console.log("Creating users table if not exists...");
+
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      email TEXT UNIQUE,
+      password TEXT
+    )
+  `);
+
+  console.log("Users table created or already exists");
+
+  return db;
+}

@@ -3,39 +3,43 @@ import "./LoginScreen.css";
 import UserNameIcon from "./../../assets/UserNameIcon.png";
 import EmailIcon from "./../../assets/EmailIcon.png";
 import PasswordIcon from "./../../assets/PasswordIcon.png";
-import axios from "axios";
 
 const LoginScreen = () => {
   const [action, setAction] = useState("Registration");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
 
-  const handleRegister = async () => {
-    try {
-      await axios.post("http://localhost:3000/register", {
-        name,
-        email,
-        password,
-      });
-      alert("Registration successful");
-      setAction("Login");
-    } catch (error) {
-      alert("Registration failed");
+  const handleSubmit = async () => {
+    const endpoint = action === "Registration" ? "/register" : "/login";
+    const body: { [key: string]: string } = { email, password };
+    if (action === "Registration") {
+      body.name = name;
     }
-  };
 
-  const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/login", {
-        email,
-        password,
+      const response = await fetch(`http://localhost:3000${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
       });
-      const { token } = response.data;
-      localStorage.setItem("token", token);
-      alert("Login successful");
-    } catch (error) {
-      alert("Login failed");
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setMessage(data.message || "Success!");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        setMessage("An unexpected error occurred");
+      }
     }
   };
 
@@ -46,12 +50,7 @@ const LoginScreen = () => {
         <div className="underline"></div>
       </div>
       <div className="inputs">
-        {action === "Login" ? (
-          <div>
-            <br></br>
-            <br></br>
-          </div>
-        ) : (
+        {action === "Registration" && (
           <div className="input">
             <img className="username-icon" src={UserNameIcon} alt="" />
             <input
@@ -85,30 +84,32 @@ const LoginScreen = () => {
           />
         </div>
       </div>
-      {action === "Registration" ? (
-        <div></div>
-      ) : (
+      {action === "Login" && (
         <div className="forget-password">
           Forget Password? <span>Click here</span>
         </div>
       )}
-
       <div className="submit-container">
-        <div
-          className={action === "Registration" ? "submit gray" : "submit"}
-          onClick={action === "Registration" ? handleRegister : handleLogin}
-        >
-          {action}
-        </div>
         <div
           className={action === "Login" ? "submit gray" : "submit"}
           onClick={() => {
-            setAction(action === "Login" ? "Registration" : "Login");
+            setAction("Login");
+            handleSubmit();
           }}
         >
-          {action === "Login" ? "Sign Up" : "Login"}
+          Login
+        </div>
+        <div
+          className={action === "Registration" ? "submit gray" : "submit"}
+          onClick={() => {
+            setAction("Registration");
+            handleSubmit();
+          }}
+        >
+          Sign Up
         </div>
       </div>
+      {message && <div className="message">{message}</div>}
     </div>
   );
 };
