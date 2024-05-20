@@ -13,7 +13,11 @@ const LoginScreen = () => {
 
   const handleRegister = async () => {
     try {
-      await axios.post("http://localhost:3000/register", { email, password });
+      await axios.post("http://localhost:3000/register", {
+        name,
+        email,
+        password,
+      });
       alert("Registration successful");
       setAction("Login");
     } catch (error) {
