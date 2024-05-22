@@ -11,6 +11,15 @@ const register = async (req, res, db) => {
     if (!name || !email || !password) {
         return res.status(400).json({ message: 'Please fill in username, email and password!' });
     }
+    else if (password.length < 8) {
+        return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+    }
+    else if (!email.includes('@')) {
+        return res.status(400).json({ message: 'Invalid email address' });
+    }
+    else if (name.length < 3) {
+        return res.status(400).json({ message: 'Name must be at least 3 characters long' });
+    }
     const hashedPassword = await bcryptjs_1.default.hash(password, 10);
     try {
         await db.run('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, hashedPassword]);
@@ -30,11 +39,11 @@ const login = async (req, res, db) => {
     try {
         const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
         if (!user) {
-            return res.status(400).json({ message: 'Invalid email or password' });
+            return res.status(400).json({ message: 'Invalid email' });
         }
         const isValidPassword = await bcryptjs_1.default.compare(password, user.password);
         if (!isValidPassword) {
-            return res.status(400).json({ message: 'Invalid email or password' });
+            return res.status(400).json({ message: 'Invalid password' });
         }
         const token = jsonwebtoken_1.default.sign({ id: user.id }, 'your_jwt_secret', { expiresIn: '1h' });
         res.status(200).json({ token });

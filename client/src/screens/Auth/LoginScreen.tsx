@@ -14,6 +14,7 @@ const LoginScreen = () => {
   const handleSubmit = async () => {
     const endpoint = action === "Registration" ? "/register" : "/login";
     const body: { [key: string]: string } = { email, password };
+    // Add name to the body if the action is Registration (not Login)
     if (action === "Registration") {
       body.name = name;
     }
@@ -22,9 +23,9 @@ const LoginScreen = () => {
       const response = await fetch(`http://localhost:3000${endpoint}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json", // Tell the server we are sending JSON
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(body), // Convert JS object to JSON string
       });
 
       const data = await response.json();

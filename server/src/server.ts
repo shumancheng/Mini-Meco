@@ -14,7 +14,7 @@ initializeDb().then((db) => {
   console.log("Database initialized, starting server...");
 
   app.get('/', (req, res) => {
-    res.send('Welcome to the Authentication API');
+    res.send('Server is running!');
   });
 
   app.post('/register', (req, res) => register(req, res, db));

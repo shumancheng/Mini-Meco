@@ -11,8 +11,8 @@ body {
     font-size: 50px;
     color: var(--color-white);
     font-weight: bold;
-    margin-top: 20px;
     margin-bottom: 50px;
+    text-shadow: 5px 5px 13px #c4cff1;
 }
 :root {
   /* fonts */
