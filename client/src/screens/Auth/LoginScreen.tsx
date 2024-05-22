@@ -5,7 +5,7 @@ import EmailIcon from "./../../assets/EmailIcon.png";
 import PasswordIcon from "./../../assets/PasswordIcon.png";
 
 const LoginScreen = () => {
-  const [action, setAction] = useState("Registration");
+  const [action, setAction] = useState("Login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -91,7 +91,7 @@ const LoginScreen = () => {
       )}
       <div className="submit-container">
         <div
-          className={action === "Login" ? "submit gray" : "submit"}
+          className={action === "Login" ? "submit" : "submit gray"}
           onClick={() => {
             setAction("Login");
             handleSubmit();
@@ -100,7 +100,7 @@ const LoginScreen = () => {
           Login
         </div>
         <div
-          className={action === "Registration" ? "submit gray" : "submit"}
+          className={action === "Registration" ? "submit" : "submit gray"}
           onClick={() => {
             setAction("Registration");
             handleSubmit();
