@@ -7,6 +7,13 @@ body {
   background: linear-gradient(to right, #0C1336 0%, #10318F 64%, #0C1336 100%);
   font-family: var(--font-kaisei-decol);
 }
+.WelcomeTitle{
+    font-size: 50px;
+    color: var(--color-white);
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
 :root {
   /* fonts */
   --font-kaisei-decol: "Kaisei Decol";

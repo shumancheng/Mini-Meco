@@ -44,73 +44,84 @@ const LoginScreen = () => {
   };
 
   return (
-    <div className="container">
-      <div className="header">
-        <div className="text">{action}</div>
-        <div className="underline"></div>
-      </div>
-      <div className="inputs">
-        {action === "Registration" && (
+    <>
+      <h1 className="WelcomeTitle">Welcome to Mini-Meco</h1>
+      <div className="container">
+        <div className="header">
+          <div className="text">{action}</div>
+          {action === "Login" ? (
+            <>
+              {" "}
+              <br></br>{" "}
+            </>
+          ) : (
+            ""
+          )}
+          <div className="underline"></div>
+        </div>
+        <div className="inputs">
+          {action === "Registration" && (
+            <div className="input">
+              <img className="username-icon" src={UserNameIcon} alt="" />
+              <input
+                className="inputBox"
+                type="text"
+                placeholder="Please enter your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+          )}
+
           <div className="input">
-            <img className="username-icon" src={UserNameIcon} alt="" />
+            <img className="email-icon" src={EmailIcon} alt="" />
             <input
               className="inputBox"
-              type="text"
-              placeholder="Please enter your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              type="email"
+              placeholder="Please enter your email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+          <div className="input">
+            <img className="password-icon" src={PasswordIcon} alt="" />
+            <input
+              className="inputBox"
+              type="password"
+              placeholder="Please enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+        </div>
+        {action === "Login" && (
+          <div className="forget-password">
+            Forget Password? <span>Click here</span>
+          </div>
         )}
-
-        <div className="input">
-          <img className="email-icon" src={EmailIcon} alt="" />
-          <input
-            className="inputBox"
-            type="email"
-            placeholder="Please enter your email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+        <div className="submit-container">
+          <div
+            className={action === "Login" ? "submit" : "submit gray"}
+            onClick={() => {
+              setAction("Login");
+              handleSubmit();
+            }}
+          >
+            Login
+          </div>
+          <div
+            className={action === "Registration" ? "submit" : "submit gray"}
+            onClick={() => {
+              setAction("Registration");
+              handleSubmit();
+            }}
+          >
+            Sign Up
+          </div>
         </div>
-        <div className="input">
-          <img className="password-icon" src={PasswordIcon} alt="" />
-          <input
-            className="inputBox"
-            type="password"
-            placeholder="Please enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+        {message && <div className="message">{message}</div>}
       </div>
-      {action === "Login" && (
-        <div className="forget-password">
-          Forget Password? <span>Click here</span>
-        </div>
-      )}
-      <div className="submit-container">
-        <div
-          className={action === "Login" ? "submit" : "submit gray"}
-          onClick={() => {
-            setAction("Login");
-            handleSubmit();
-          }}
-        >
-          Login
-        </div>
-        <div
-          className={action === "Registration" ? "submit" : "submit gray"}
-          onClick={() => {
-            setAction("Registration");
-            handleSubmit();
-          }}
-        >
-          Sign Up
-        </div>
-      </div>
-      {message && <div className="message">{message}</div>}
-    </div>
+    </>
   );
 };
 
