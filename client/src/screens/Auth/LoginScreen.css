@@ -111,3 +111,16 @@ body {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.submit-ResetPassword{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    cursor: pointer;
+    width: 250;
+    font-size: 23px;
+    height: 50px;
+    border-radius: 5px;
+    color: white;
+    background-color: #219A0D;
+}

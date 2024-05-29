@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./LoginScreen.css";
-import EmailIcon from "./../../assets/EmailIcon.png";
 import PasswordIcon from "./../../assets/PasswordIcon.png";
 
 const ResetPassword = () => {
@@ -8,13 +7,9 @@ const ResetPassword = () => {
     <>
       <div className="container">
         <div className="header">
-          <div className="text">Forgot Your Password</div>
+          <div className="text">Reset Your Password</div>
           <br></br>
           <div className="underline"></div>
-        </div>
-        <div className="text ForgotPasswordText">
-          Enter your email address and
-          <br /> we will send you a link to reset your password
         </div>
         <div className="inputs">
           <div className="input">
@@ -26,9 +21,19 @@ const ResetPassword = () => {
             />
           </div>
         </div>
-        \
+        <div className="inputs">
+          <div className="input">
+            <img className="password-icon" src={PasswordIcon} alt="" />
+            <input
+              className="inputBox"
+              type="password"
+              placeholder="Confirm New Password"
+            />
+          </div>
+        </div>
+
         <div className="submit-container">
-          <div className="submit">Send</div>
+          <div className="submit-ResetPassword"> - Reset Password -</div>
         </div>
       </div>
     </>
