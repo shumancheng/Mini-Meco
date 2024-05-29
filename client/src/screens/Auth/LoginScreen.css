@@ -106,3 +106,8 @@ body {
 .forget-password span{
     color: rgb(26, 70, 248);
 }
+
+.ForgotPasswordText{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
