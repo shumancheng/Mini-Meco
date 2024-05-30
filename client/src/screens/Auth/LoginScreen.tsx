@@ -97,7 +97,7 @@ const LoginScreen = () => {
         </div>
         {action === "Login" && (
           <div className="forget-password">
-            Forget Password? <span>Click here</span>
+            Forget Password? Click <a href="/ForgotPassword">Here</a>
           </div>
         )}
         <div className="submit-container">

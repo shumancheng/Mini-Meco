@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./LoginScreen.css";
 import PasswordIcon from "./../../assets/PasswordIcon.png";
 
