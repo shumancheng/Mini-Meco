@@ -16,7 +16,9 @@ async function initializeDb() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       email TEXT UNIQUE,
-      password TEXT
+      password TEXT,
+      resetPasswordToken TEXT,
+      resetPasswordExpires INTEGER
     )
   `);
     return db;
