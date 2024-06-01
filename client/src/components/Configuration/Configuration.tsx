@@ -5,7 +5,6 @@ import ProjectConfig from "./ProjectConfig";
 const Configuration = () => {
   return (
     <div>
-      <h2>Configuration</h2>
       <Settings />
       <ProjectConfig />
     </div>
