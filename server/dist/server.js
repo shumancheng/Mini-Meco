@@ -19,6 +19,8 @@ app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
     });
     app.post('/register', (req, res) => (0, auth_1.register)(req, res, db));
     app.post('/login', (req, res) => (0, auth_1.login)(req, res, db));
+    app.post('/forgotPassword', (req, res) => (0, auth_1.forgotPassword)(req, res, db));
+    app.post('/resetPassword', (req, res) => (0, auth_1.resetPassword)(req, res, db));
     app.listen(port, () => {
         console.log(`Server running on http://localhost:${port}`);
     });
