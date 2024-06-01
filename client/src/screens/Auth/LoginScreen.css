@@ -9,10 +9,10 @@ body {
 }
 .WelcomeTitle{
     font-size: 50px;
-    color: var(--color-white);
+    color: #0C1336;
     font-weight: bold;
     margin-bottom: 50px;
-    text-shadow: 5px 5px 13px #c4cff1;
+    text-shadow: 5px 5px 13px #8cadf5;
 }
 :root {
   /* fonts */
