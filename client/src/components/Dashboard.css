@@ -42,21 +42,22 @@ body{
     top: 25px; /* Negative margin to overlap with container */
     left: -5px;
     text-align: center;
-    width: 153px;
-    height: 42px;
+    width: 173px;
+    height: 52px;   
+    font-size: 23px;
     border-radius: 5px;
     background: #92C3E7;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 .ConfigTitle{
-    width: 230px;
-    height: 45px;
+    width: 300px;
+    height: 55px;
 }
 
 .AdminTitle{
-    width: 240px;
-    height: 45px;
+    width: 300px;
+    height: 55px;
 }
 
 .Logout{
