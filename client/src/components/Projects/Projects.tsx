@@ -6,7 +6,6 @@ import CodeActivity from "./CodeActivity";
 const Projects: React.FC = () => {
   return (
     <div>
-      <h2>Projects</h2>
       <Standups />
       <Happiness />
       <CodeActivity />
