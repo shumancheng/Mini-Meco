@@ -10,23 +10,30 @@ const Dashboard: React.FC = () => {
       <div className="DashboardContainer">
         <h1>Dashboard</h1>
       </div>
+      <div className="Logout">
+        <h3>Log out</h3>
+      </div>
+
       <div>
         <div className="Title">
-          {" "}
           <h2>Projects</h2>
         </div>
         <div className="Container">
           <Projects />
         </div>
-        <div className="Title ConfigTitle"> <h2>Configuration</h2></div>
-          <div className="Container">
-            <Configuration />
-          </div>
-        
-        <div className="Title AdminTitle"> <h2>Administration</h2></div>
-          <div className="Container">
-            <Administration />
-          </div>
+        <div className="Title ConfigTitle">
+          <h2>Configuration</h2>
+        </div>
+        <div className="Container">
+          <Configuration />
+        </div>
+
+        <div className="Title AdminTitle">
+          <h2>Administration</h2>
+        </div>
+        <div className="Container">
+          <Administration />
+        </div>
       </div>
     </div>
   );
