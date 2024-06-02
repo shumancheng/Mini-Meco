@@ -3,14 +3,21 @@ import Projects from "./Projects/Projects";
 import Configuration from "./Configuration/Configuration";
 import Administration from "./Administration/Administration";
 import "./Dashboard.css";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
+
+  function logout() {
+    navigate("/login");
+  }
+
   return (
     <div>
       <div className="DashboardContainer">
         <h1>Dashboard</h1>
       </div>
-      <div className="Logout">
+      <div className="Logout" onClick={logout}>
         <h3>Log out</h3>
       </div>
 

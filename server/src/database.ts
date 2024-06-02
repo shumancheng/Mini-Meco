@@ -17,7 +17,16 @@ export async function initializeDb() {
       resetPasswordExpires INTEGER
     )
   `);
+  const columns = await db.all("PRAGMA table_info(users)");
+  const columnNames = columns.map((column: { name: string; }) => column.name);
 
+  if (!columnNames.includes("resetPasswordToken")) {
+    await db.exec("ALTER TABLE users ADD COLUMN resetPasswordToken TEXT");
+  }
+
+  if (!columnNames.includes("resetPasswordExpire")) {
+    await db.exec("ALTER TABLE users ADD COLUMN resetPasswordExpire INTEGER");
+  }
 
   return db;
 }
