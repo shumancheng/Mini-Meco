@@ -3,11 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ForgotPassword from "./screens/Auth/ForgotPassword";
 import ResetPassword from "./screens/Auth/ResetPassword";
 import LoginScreen from "./screens/Auth/LoginScreen";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
-
-
-import ResetPassword from "./screens/Auth/ResetPassword";
 
 function App() {
   return (
@@ -23,7 +19,6 @@ function App() {
         </Routes>
       </BrowserRouter>
     </div>
-
   );
 }
 

@@ -8,6 +8,8 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const auth_1 = require("./auth");
 const database_1 = require("./database");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = 3000;
 app.use(body_parser_1.default.json());
