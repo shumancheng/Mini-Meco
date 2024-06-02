@@ -12,10 +12,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<LoginScreen />} />
-          <Route path="forgotPassword" element={<ForgotPassword />} />
-          <Route path="resetPassword" element={<ResetPassword />} />
-          <Route path="/" Component={LoginScreen} />
-          <Route path="/dashboard" Component={Dashboard} />
+          <Route path="/forgotPassword" element={<ForgotPassword />} />
+          <Route path="/resetPassword" element={<ResetPassword />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
     </div>
