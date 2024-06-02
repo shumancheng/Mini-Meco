@@ -64,8 +64,8 @@ const transporter = nodemailer.createTransport({
   host: 'smtp.mailersend.net',
   port: 587,
   auth: {
-    user: "MS_5JSHZT@trial-k68zxl211y34j905.mlsender.net",
-    pass: "WwuZu9Je52ufgBYq",
+    user: "username",
+    pass: "[password]",
   },
 });
 
