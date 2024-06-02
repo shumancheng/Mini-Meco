@@ -58,24 +58,28 @@ const login = async (req, res, db) => {
     }
 };
 exports.login = login;
-const transporter = nodemailer_1.default.createTransport({
-    host: 'smtp.mailersend.net',
-    port: 587,
-    auth: {
-        user: REDACTED_USER" ",
-        pass: REDACTED_PASS" ",
-    },
-});
 const sendPasswordResetEmail = async (email, token) => {
+    let testAccount = await nodemailer_1.default.createTestAccount();
+    const transporter = nodemailer_1.default.createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: testAccount.user,
+            pass: testAccount.pass,
+        },
+    });
+    const resetLink = `http://localhost:5173/resetPassword?token=${token}`;
     const mailOptions = {
-        from: '"Mini-Meco" <minimeco.server@gmail.com>',
+        from: '"Mini-Meco" <no-reply@mini-meco.com>',
         to: email,
         subject: 'Password Reset',
-        text: `You requested a password reset. Click the link to reset your password: http://localhost:5173/resetPassword?token=${token}`,
+        text: `You requested a password reset. Click the link to reset your password: ${resetLink}`,
     };
     try {
         const info = await transporter.sendMail(mailOptions);
         console.log('Password reset email sent: %s', info.messageId);
+        console.log('Preview URL: %s', nodemailer_1.default.getTestMessageUrl(info));
     }
     catch (error) {
         console.error('Error sending password reset email:', error);
@@ -91,6 +95,7 @@ const forgotPassword = async (req, res, db) => {
         }
         const token = crypto_1.default.randomBytes(20).toString('hex');
         const expire = Date.now() + 3600000; // 1 hour
+        console.log(`Generated token: ${token}, Expiry time: ${expire}`);
         await db.run('UPDATE users SET resetPasswordToken = ?, resetPasswordExpire = ? WHERE email = ?', [token, expire, email]);
         await sendPasswordResetEmail(email, token);
         res.status(200).json({ message: 'Password reset email sent' });
@@ -103,16 +108,19 @@ const forgotPassword = async (req, res, db) => {
 exports.forgotPassword = forgotPassword;
 const resetPassword = async (req, res, db) => {
     const { token, newPassword } = req.body;
+    console.log('Request body:', req.body);
     if (!token || !newPassword) {
         return res.status(400).json({ message: 'Token and new password are required' });
     }
     try {
-        const user = await db.get('SELECT * FROM users WHERE resetPasswordToken = ? AND resetPasswordExpires > ?', [token, Date.now()]);
-        if (!user) {
+        const currentTime = Date.now();
+        const user = await db.get('SELECT * FROM users WHERE resetPasswordToken = ?', [token]);
+        console.log('User retrieved from database:', user);
+        if (!user || user.resetPasswordExpire < currentTime) {
             return res.status(400).json({ message: 'Invalid or expired token' });
         }
         const hashedPassword = await bcryptjs_1.default.hash(newPassword, 10);
-        await db.run('UPDATE users SET password = ?, resetPasswordToken = NULL, resetPasswordExpires = NULL WHERE id = ?', [hashedPassword, user.id]);
+        await db.run('UPDATE users SET password = ?, resetPasswordToken = NULL, resetPasswordExpire = NULL WHERE id = ?', [hashedPassword, user.id]);
         res.status(200).json({ message: 'Password has been reset' });
     }
     catch (error) {
