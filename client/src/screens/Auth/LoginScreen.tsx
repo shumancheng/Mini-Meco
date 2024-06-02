@@ -47,6 +47,7 @@ const LoginScreen = () => {
     }
   };
 
+
   return (
     <>
       <h1 className="WelcomeTitle">Welcome to Mini-Meco</h1>

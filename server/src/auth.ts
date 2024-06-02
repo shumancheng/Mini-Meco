@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { Database } from 'sqlite';
 
 dotenv.config();
 
@@ -60,53 +61,56 @@ export const login = async (req: Request, res: Response, db: any) => {
 };
 
 const transporter = nodemailer.createTransport({
-  service: 'Gmail', // email service provider
+  host: 'smtp.mailersend.net',
+  port: 587,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: "MS_5JSHZT@trial-k68zxl211y34j905.mlsender.net",
+    pass: "WwuZu9Je52ufgBYq",
   },
 });
 
-export const forgotPassword = async (req: Request, res: Response, db: any) => {
-  const { email } = req.body;
-  if (!email) {
-    return res.status(400).json({ message: 'Email is required' });
+const sendPasswordResetEmail = async (email: string, token: string) => {
+  const mailOptions = {
+    from: '"Mini-Meco" <minimeco.server@gmail.com>',
+    to: email,
+    subject: 'Password Reset',
+    text: `You requested a password reset. Click the link to reset your password: http://localhost:5173/resetPassword?token=${token}`,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Password reset email sent: %s', info.messageId);
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    throw new Error('There was an error sending the email');
   }
+};
+
+export const forgotPassword = async (req: Request, res: Response, db: Database) => {
+  const { email } = req.body;
 
   try {
     const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
     if (!user) {
-      return res.status(400).json({ message: 'Email not found' });
+      return res.status(404).json({ message: 'Email not found' });
     }
 
     const token = crypto.randomBytes(20).toString('hex');
-    const expiration = Date.now() + 3600000; // 1 hour from now
+    const expire = Date.now() + 3600000; // 1 hour
 
-    await db.run('UPDATE users SET resetPasswordToken = ?, resetPasswordExpires = ? WHERE email = ?', [token, expiration, email]);
+    await db.run(
+      'UPDATE users SET resetPasswordToken = ?, resetPasswordExpire = ? WHERE email = ?',
+      [token, expire, email]
+    );
 
-    const mailOptions = {
-      to: email,
-      from: 'minimeco.server@gmail.com',
-      subject: 'Password Reset',
-      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
-             Please click on the following link, or paste this into your browser to complete the process:\n\n
-             http://localhost:5173/reset/${token}\n\n
-             If you did not request this, please ignore this email and your password will remain unchanged.\n`,
-    };
+    await sendPasswordResetEmail(email, token);
 
-    transporter.sendMail(mailOptions, (err, response) => {
-      if (err) {
-        console.error('There was an error sending the email:', err);
-        return res.status(500).json({ message: 'Error sending email' });
-      }
-      res.status(200).json({ message: 'Password reset link sent successfully' });
-    });
+    res.status(200).json({ message: 'Password reset email sent' });
   } catch (error) {
     console.error('Error in forgotPassword:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 
 export const resetPassword = async (req: Request, res: Response, db: any) => {
   const { token, newPassword } = req.body;
