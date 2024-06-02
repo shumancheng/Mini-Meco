@@ -3,8 +3,10 @@ import "./LoginScreen.css";
 import UserNameIcon from "./../../assets/UserNameIcon.png";
 import EmailIcon from "./../../assets/EmailIcon.png";
 import PasswordIcon from "./../../assets/PasswordIcon.png";
+import { useNavigate } from "react-router-dom";
 
 const LoginScreen = () => {
+  const navigate = useNavigate();
   const [action, setAction] = useState("Login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,6 +37,7 @@ const LoginScreen = () => {
       }
 
       setMessage(data.message || "Success!");
+      navigate("/dashboard");
     } catch (error: unknown) {
       if (error instanceof Error) {
         setMessage(error.message);

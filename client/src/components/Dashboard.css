@@ -19,7 +19,6 @@ body{
     text-align: center;
     font-family: "Kaisei Decol";
     font-size: 13px;
-
     position: relative;
     top: 1px; 
     left: 50%; /* Center horizontally */
@@ -40,9 +39,9 @@ body{
 .Title{
     position: relative;
     top: 25px; /* Negative margin to overlap with container */
-    left: -5px;
+    left: -15px;
     text-align: center;
-    width: 173px;
+    width: 183px;
     height: 52px;   
     font-size: 23px;
     border-radius: 5px;
