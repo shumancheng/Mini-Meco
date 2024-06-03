@@ -1,8 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { register, login } from './auth';
+import { register, login, forgotPassword, resetPassword  } from './auth';
 import { initializeDb } from './database';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = 3000;
@@ -19,6 +22,8 @@ initializeDb().then((db) => {
 
   app.post('/register', (req, res) => register(req, res, db));
   app.post('/login', (req, res) => login(req, res, db));
+  app.post('/forgotPassword', (req, res) => forgotPassword(req, res, db));
+  app.post('/resetPassword', (req, res) => resetPassword(req, res, db));
 
   app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);

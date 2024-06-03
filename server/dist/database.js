@@ -16,9 +16,19 @@ async function initializeDb() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       email TEXT UNIQUE,
-      password TEXT
+      password TEXT,
+      resetPasswordToken TEXT,
+      resetPasswordExpires INTEGER
     )
   `);
+    const columns = await db.all("PRAGMA table_info(users)");
+    const columnNames = columns.map((column) => column.name);
+    if (!columnNames.includes("resetPasswordToken")) {
+        await db.exec("ALTER TABLE users ADD COLUMN resetPasswordToken TEXT");
+    }
+    if (!columnNames.includes("resetPasswordExpire")) {
+        await db.exec("ALTER TABLE users ADD COLUMN resetPasswordExpire INTEGER");
+    }
     return db;
 }
 exports.initializeDb = initializeDb;
