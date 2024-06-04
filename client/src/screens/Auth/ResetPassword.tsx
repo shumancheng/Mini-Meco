@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "./LoginScreen.css";
 
-
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
@@ -19,10 +18,8 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("handleSubmit triggered");
     const endpoint = "/resetPassword";
     const body = { token, newPassword };
-    console.log("Request body:", body);
 
     try {
       const response = await fetch(`http://localhost:3000${endpoint}`, {
