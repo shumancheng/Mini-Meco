@@ -1,10 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const CodeActivity = () => {
+const CodeActivity: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleNavigation = () => {
+    navigate("/code-activity");
+  };
+
   return (
-    <div>
+    <div onClick={handleNavigation}>
       <h3>Code Activity</h3>
-      {/* Code Activity feature implementation */}
     </div>
   );
 };

@@ -1,10 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Standups = () => {
+const Standups: React.FC = () => {
+  const navigate = useNavigate();
+  const handliestandups = () => {
+    navigate("/standups");
+  };
+
   return (
-    <div>
+    <div onClick={handliestandups}>
       <h3>Standups</h3>
-      {/* Standup feature implementation */}
     </div>
   );
 };

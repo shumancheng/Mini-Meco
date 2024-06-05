@@ -1,10 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Settings = () => {
+const Settings: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleNavigation = () => {
+    navigate("/settings");
+  };
+
   return (
-    <div>
+    <div onClick={handleNavigation}>
       <h3>Settings</h3>
-      {/* Settings feature implementation */}
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import "./LoginScreen.css";
 
 const useQuery = () => {
-  return new URLSearchParams(useLocation().search);
+  return new URLSearchParams(useLocation().search); // search: '?query=string'
 };
 
 const ResetPassword = () => {

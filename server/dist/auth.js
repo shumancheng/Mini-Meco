@@ -94,7 +94,7 @@ const forgotPassword = async (req, res, db) => {
             return res.status(404).json({ message: 'Email not found' });
         }
         const token = crypto_1.default.randomBytes(20).toString('hex');
-        const expire = Date.now() + 3600000; // 1 hour
+        const expire = Date.now() + 3600000; // 1000 (1 sec) --> 1000 * 60  (1 min) --> 1000 * 60 * 60 (1 hour)
         console.log(`Generated token: ${token}, Expiry time: ${expire}`);
         await db.run('UPDATE users SET resetPasswordToken = ?, resetPasswordExpire = ? WHERE email = ?', [token, expire, email]);
         await sendPasswordResetEmail(email, token);
@@ -108,7 +108,6 @@ const forgotPassword = async (req, res, db) => {
 exports.forgotPassword = forgotPassword;
 const resetPassword = async (req, res, db) => {
     const { token, newPassword } = req.body;
-    console.log('Request body:', req.body);
     if (!token || !newPassword) {
         return res.status(400).json({ message: 'Token and new password are required' });
     }

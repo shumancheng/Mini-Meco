@@ -102,7 +102,7 @@ export const forgotPassword = async (req: Request, res: Response, db: Database) 
     }
 
     const token = crypto.randomBytes(20).toString('hex');
-    const expire = Date.now() + 3600000; // 1 hour
+    const expire = Date.now() + 3600000; // 1000 (1 sec) --> 1000 * 60  (1 min) --> 1000 * 60 * 60 (1 hour)
 
     console.log(`Generated token: ${token}, Expiry time: ${expire}`);
 
