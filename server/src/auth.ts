@@ -64,7 +64,7 @@ const sendPasswordResetEmail = async (email: string, token: string) => {
   let testAccount = await nodemailer.createTestAccount();
 
   const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
+    host: 'smtp.ethereal.email', //Gmail (need Gmail workspace), SendGrid (registeration fail), Mailgun (not free)
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
