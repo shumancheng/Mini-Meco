@@ -59,8 +59,6 @@ const login = async (req, res, db) => {
 };
 exports.login = login;
 const sendPasswordResetEmail = async (email, token) => {
-    console.log('EMAIL_USER:', process.env.EMAIL_USER_FAU); // Debug line
-    console.log('EMAIL_PASS:', process.env.EMAIL_PASS_FAU); // Debug line
     const transporter = nodemailer_1.default.createTransport({
         host: 'smtp-auth.fau.de',
         port: 465,
