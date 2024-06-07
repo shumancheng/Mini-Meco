@@ -35,7 +35,7 @@ export const register = async (req: Request, res: Response, db: any) => {
   }
 };
 
-export const login = async (req: Request, res: Response, db: any) => {
+export const login = async (req: Request, res: Response, db: Database) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
@@ -53,12 +53,13 @@ export const login = async (req: Request, res: Response, db: any) => {
     }
 
     const token = jwt.sign({ id: user.id }, 'your_jwt_secret', { expiresIn: '1h' });
-    res.status(200).json({ token });
+    res.status(200).json({ token, name: user.name });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ message: 'Login failed' });
   }
 };
+
 
 const sendPasswordResetEmail = async (email: string, token: string) => {
 

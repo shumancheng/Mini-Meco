@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Projects from "./Projects/Projects";
 import Configuration from "./Configuration/Configuration";
 import Administration from "./Administration/Administration";
 import "./Dashboard.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
 
+  const username = localStorage.getItem("username");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
     navigate("/login");
   }
 
@@ -17,8 +29,13 @@ const Dashboard: React.FC = () => {
       <div className="DashboardContainer">
         <h1>Dashboard</h1>
       </div>
-      <div className="Logout" onClick={logout}>
-        <h3>Log out</h3>
+      <div className="UserLogoutContainer">
+        <div className="UserAttribute">
+          <h3>User: {username}</h3>
+        </div>
+        <div className="Logout" onClick={logout}>
+          <h3>Log out</h3>
+        </div>
       </div>
 
       <div>
