@@ -61,22 +61,24 @@ export const login = async (req: Request, res: Response, db: any) => {
 };
 
 const sendPasswordResetEmail = async (email: string, token: string) => {
-  let testAccount = await nodemailer.createTestAccount();
+
+  console.log('EMAIL_USER:', process.env.EMAIL_USER_FAU); // Debug line
+console.log('EMAIL_PASS:', process.env.EMAIL_PASS_FAU); // Debug line
 
   const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email', //Gmail (need Gmail workspace), SendGrid (registeration fail), Mailgun (not free)
-    port: 587,
-    secure: false, // true for 465, false for other ports
+    host: 'smtp-auth.fau.de',
+    port: 465,
+    secure: true,
     auth: {
-      user: testAccount.user, 
-      pass: testAccount.pass, 
+      user: process.env.EMAIL_USER_FAU,
+      pass: process.env.EMAIL_PASS_FAU,
     },
   });
 
   const resetLink = `http://localhost:5173/resetPassword?token=${token}`;
 
   const mailOptions = {
-    from: '"Mini-Meco" <no-reply@mini-meco.com>',
+    from: '"Mini-Meco" <shu-man.cheng@fau.de>',
     to: email,
     subject: 'Password Reset',
     text: `You requested a password reset. Click the link to reset your password: ${resetLink}`,
