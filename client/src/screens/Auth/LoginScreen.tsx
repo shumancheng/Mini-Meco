@@ -36,6 +36,11 @@ const LoginScreen = () => {
         throw new Error(data.message || "Something went wrong");
       }
 
+      if (endpoint === "/login") {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", data.name);
+      }
+
       setMessage(data.message || "Success!");
       navigate("/dashboard");
     } catch (error: unknown) {
@@ -46,7 +51,6 @@ const LoginScreen = () => {
       }
     }
   };
-
 
   return (
     <>

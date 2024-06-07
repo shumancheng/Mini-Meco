@@ -50,7 +50,7 @@ const login = async (req, res, db) => {
             return res.status(400).json({ message: 'Invalid password' });
         }
         const token = jsonwebtoken_1.default.sign({ id: user.id }, 'your_jwt_secret', { expiresIn: '1h' });
-        res.status(200).json({ token });
+        res.status(200).json({ token, name: user.name });
     }
     catch (error) {
         console.error('Error during login:', error);
