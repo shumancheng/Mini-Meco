@@ -3,17 +3,13 @@ import { useNavigate } from "react-router-dom";
 import "./ProjectAdmin.css";
 import {
   Select,
-  SelectGroup,
-  SelectValue,
   SelectTrigger,
   SelectContent,
-  SelectLabel,
   SelectItem,
-  SelectSeparator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
+  SelectValue,
 } from "@/components/ui/select";
 import Add from "./../../assets/Add.png";
+import Edit from "./../../assets/Edit.png";
 
 const ProjectAdmin: React.FC = () => {
   const navigate = useNavigate();
@@ -44,44 +40,57 @@ const ProjectAdmin: React.FC = () => {
         <div className="ProjectGroupContainer">
           <div className="title">
             <h3>Project Group Lists</h3>
-            <Select>
-              <SelectTrigger className="SelectTrigger">
-                <SelectValue
-                  className="SelectValue"
-                  placeholder="Select Semester"
-                />
-              </SelectTrigger>
-              <SelectContent className="SelectContent">
-                {semesters.map((semester) => (
-                  <SelectItem key={semester} value={semester}>
-                    {semester}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
+          <Select>
+            <SelectTrigger className="SelectTrigger">
+              <SelectValue
+                className="SelectValue"
+                placeholder="Select Semester"
+              />
+            </SelectTrigger>
+            <SelectContent className="SelectContent">
+              {semesters.map((semester) => (
+                <SelectItem key={semester} value={semester}>
+                  {semester}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <div className="Add">
-            <img src={Add} />
+            <img src={Add} alt="Add" />
           </div>
+          <div className="ProjectItem">
+            <div className="ProjectName">AMOS #22</div>
+            <img className="Edit" src={Edit} alt="Edit" />
+          </div>
+          <hr className="ProjectDivider" />
+          <div className="ProjectItem">
+            <div className="ProjectName">ADAP</div>
+            <img className="Edit" src={Edit} alt="Edit" />
+          </div>
+          <hr className="ProjectDivider" />
         </div>
         <div className="ProjectContainer">
           <div className="ProjectTitle">
             <h3>Project Lists</h3>
-            <Select>
-              <SelectTrigger className="SelectTrigger">
-                <SelectValue
-                  className="SelectValue"
-                  placeholder="Select Project Group"
-                />
-              </SelectTrigger>
-              <SelectContent className="SelectContent">
-                {projectGroups.map((group) => (
-                  <SelectItem key={group} value={group}>
-                    {group}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          </div>
+          <Select>
+            <SelectTrigger className="SelectTrigger">
+              <SelectValue
+                className="SelectValue"
+                placeholder="Select Project Group"
+              />
+            </SelectTrigger>
+            <SelectContent className="SelectContent">
+              {projectGroups.map((group) => (
+                <SelectItem key={group} value={group}>
+                  {group}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="Add">
+            <img src={Add} alt="Add" />
           </div>
         </div>
       </div>
