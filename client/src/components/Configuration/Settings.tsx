@@ -9,8 +9,15 @@ const Settings: React.FC = () => {
     navigate("/settings");
   };
 
+  const returnToDashboard = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+    navigate("/dashboard");
+  };
   return (
     <div onClick={handleNavigation}>
+      <div className="Return" onClick={returnToDashboard}>
+        Return
+      </div>
       <div className="DashboardContainer">
         <h1>Project Admin</h1>
       </div>
