@@ -9,7 +9,9 @@ const Settings: React.FC = () => {
     navigate("/settings");
   };
 
-  const returnToDashboard = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const returnToDashboard = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     e.stopPropagation();
     navigate("/dashboard");
   };
@@ -19,12 +21,12 @@ const Settings: React.FC = () => {
         Return
       </div>
       <div className="DashboardContainer">
-        <h1>Project Admin</h1>
+        <h1>Settings</h1>
       </div>
       <div className="BigContainer">
         <div className="ProjectGroupContainer">
           <div className="title">
-            <h3>Project Group Lists</h3>
+            <h3>Account Info</h3>
           </div>
         </div>
         <div className="ProjectContainer">
