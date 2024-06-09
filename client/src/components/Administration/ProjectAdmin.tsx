@@ -27,6 +27,7 @@ const ProjectAdmin: React.FC = () => {
 
   const semesters = ["SS23", "WS2324", "SS24", "WS2425"];
   const projectGroups = ["AMOS", "ADAP"];
+  const projects = ["Project A", "Project B", "Project C"];
 
   return (
     <div onClick={handleNavigation}>
@@ -40,32 +41,34 @@ const ProjectAdmin: React.FC = () => {
         <div className="ProjectGroupContainer">
           <div className="title">
             <h3>Project Group Lists</h3>
+            <div className="Add">
+              <img src={Add} alt="Add" />
+            </div>
           </div>
-          <Select>
-            <SelectTrigger className="SelectTrigger">
-              <SelectValue
-                className="SelectValue"
-                placeholder="Select Semester"
-              />
-            </SelectTrigger>
-            <SelectContent className="SelectContent">
-              {semesters.map((semester) => (
-                <SelectItem key={semester} value={semester}>
-                  {semester}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <div className="Add">
-            <img src={Add} alt="Add" />
+          <div className="SelectWrapper">
+            <Select>
+              <SelectTrigger className="SelectTrigger">
+                <SelectValue
+                  className="SelectValue"
+                  placeholder="Select Semester"
+                />
+              </SelectTrigger>
+              <SelectContent className="SelectContent">
+                {semesters.map((semester) => (
+                  <SelectItem key={semester} value={semester}>
+                    {semester}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="ProjectItem">
-            <div className="ProjectName">AMOS #22</div>
+            <div className="ProjectName">{projectGroups[0]}</div>
             <img className="Edit" src={Edit} alt="Edit" />
           </div>
           <hr className="ProjectDivider" />
           <div className="ProjectItem">
-            <div className="ProjectName">ADAP</div>
+            <div className="ProjectName">{projectGroups[1]}</div>
             <img className="Edit" src={Edit} alt="Edit" />
           </div>
           <hr className="ProjectDivider" />
@@ -73,25 +76,42 @@ const ProjectAdmin: React.FC = () => {
         <div className="ProjectContainer">
           <div className="ProjectTitle">
             <h3>Project Lists</h3>
+            <div className="Add">
+              <img src={Add} alt="Add" />
+            </div>
           </div>
-          <Select>
-            <SelectTrigger className="SelectTrigger">
-              <SelectValue
-                className="SelectValue"
-                placeholder="Select Project Group"
-              />
-            </SelectTrigger>
-            <SelectContent className="SelectContent">
-              {projectGroups.map((group) => (
-                <SelectItem key={group} value={group}>
-                  {group}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <div className="Add">
-            <img src={Add} alt="Add" />
+          <div className="SelectWrapper">
+            <Select>
+              <SelectTrigger className="SelectTrigger">
+                <SelectValue
+                  className="SelectValue"
+                  placeholder="Select Project Group"
+                />
+              </SelectTrigger>
+              <SelectContent className="SelectContent">
+                {projectGroups.map((group) => (
+                  <SelectItem key={group} value={group}>
+                    {group}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+          <div className="ProjectItem">
+            <div className="ProjectName">{projects[0]}</div>
+            <img className="Edit" src={Edit} alt="Edit" />
+          </div>
+          <hr className="ProjectDivider" />
+          <div className="ProjectItem">
+            <div className="ProjectName">{projects[1]}</div>
+            <img className="Edit" src={Edit} alt="Edit" />
+          </div>
+          <hr className="ProjectDivider" />
+          <div className="ProjectItem">
+            <div className="ProjectName">{projects[2]}</div>
+            <img className="Edit" src={Edit} alt="Edit" />
+          </div>
+          <hr className="ProjectDivider" />
         </div>
       </div>
     </div>
