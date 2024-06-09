@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Settings.css";
+import ReturnButton from "../Components/return";
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
@@ -9,17 +10,9 @@ const Settings: React.FC = () => {
     navigate("/settings");
   };
 
-  const returnToDashboard = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
-    navigate("/dashboard");
-  };
   return (
     <div onClick={handleNavigation}>
-      <div className="Return" onClick={returnToDashboard}>
-        Return
-      </div>
+      <ReturnButton />
       <div className="DashboardContainer">
         <h1>Settings</h1>
       </div>

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/select";
 import Add from "./../../assets/Add.png";
 import Edit from "./../../assets/Edit.png";
+import ReturnButton from "../Components/return";
 
 const ProjectAdmin: React.FC = () => {
   const navigate = useNavigate();
@@ -18,22 +19,13 @@ const ProjectAdmin: React.FC = () => {
     navigate("/project-admin");
   };
 
-  const returnToDashboard = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
-    navigate("/dashboard");
-  };
-
   const semesters = ["SS23", "WS2324", "SS24", "WS2425"];
   const projectGroups = ["AMOS", "ADAP"];
   const projects = ["Project A", "Project B", "Project C"];
 
   return (
     <div onClick={handleNavigation}>
-      <div className="Return" onClick={returnToDashboard}>
-        Return
-      </div>
+      <ReturnButton />
       <div className="DashboardContainer">
         <h1>Project Admin</h1>
       </div>
