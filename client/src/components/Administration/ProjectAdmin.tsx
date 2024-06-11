@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 import "./ProjectAdmin.css";
 import {
@@ -11,6 +12,15 @@ import {
 import Add from "./../../assets/Add.png";
 import Edit from "./../../assets/Edit.png";
 import ReturnButton from "../Components/return";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const ProjectAdmin: React.FC = () => {
   const navigate = useNavigate();
@@ -19,9 +29,20 @@ const ProjectAdmin: React.FC = () => {
     navigate("/project-admin");
   };
 
+  const [semester, setSemester] = useState("");
+  const [projectGroupName, setProjectGroupName] = useState("");
+
   const semesters = ["SS23", "WS2324", "SS24", "WS2425"];
-  const projectGroups = ["AMOS", "ADAP"];
-  const projects = ["Project A", "Project B", "Project C"];
+  const projectGroups = ["AMOS #21", "AMOS #22"];
+  const projects = [
+    "Xcelerator Demo App",
+    "International Dataspace Station",
+    "Building Information Extractor",
+    "Knowledge Graph Extractor",
+    "Health AI Agent",
+    "Updating Flash Boot Loader",
+    "Cloud Native LLM",
+  ];
 
   return (
     <div onClick={handleNavigation}>
@@ -34,7 +55,43 @@ const ProjectAdmin: React.FC = () => {
           <div className="title">
             <h3>Project Group Lists</h3>
             <div className="Add">
-              <img src={Add} alt="Add" />
+              <Dialog>
+                <DialogTrigger className="DialogTrigger">
+                  <img src={Add} alt="Add" />
+                </DialogTrigger>
+                <DialogContent className="DialogContent">
+                  <DialogHeader>
+                    <div className="DialogHeader">
+                      <DialogTitle className="DialogTitle">
+                        Create New Project Group
+                      </DialogTitle>
+                      <div className="ProjAdmin-input">
+                      <div className="Sem">Semester: </div>
+                        <input
+                          className="ProjAdmin-inputBox"
+                          type="text"
+                          placeholder="Please follow this format: SS24 / WS2425"
+                          value={semester}
+                          onChange={(e) => setSemester(e.target.value)}
+                        />
+                      </div>
+                      <div className="ProjAdmin-input">
+                      <div className="ProjGroupName">Project Group Name: </div>
+                        <input
+                          className="ProjAdmin-inputBox"
+                          type="text"
+                          placeholder="Please Enter Project Group Name"
+                          value={projectGroupName}
+                          onChange={(e) => setProjectGroupName(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button  className="create" type="submit">Create</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <div className="SelectWrapper">
@@ -90,17 +147,32 @@ const ProjectAdmin: React.FC = () => {
             </Select>
           </div>
           <div className="ProjectItem">
-            <div className="ProjectName">{projects[0]}</div>
+            <div className="ProjectName">Project 1: {projects[0]}</div>
             <img className="Edit" src={Edit} alt="Edit" />
           </div>
           <hr className="ProjectDivider" />
           <div className="ProjectItem">
-            <div className="ProjectName">{projects[1]}</div>
+            <div className="ProjectName">Project 2: {projects[1]}</div>
             <img className="Edit" src={Edit} alt="Edit" />
           </div>
           <hr className="ProjectDivider" />
           <div className="ProjectItem">
-            <div className="ProjectName">{projects[2]}</div>
+            <div className="ProjectName">Project 3: {projects[2]}</div>
+            <img className="Edit" src={Edit} alt="Edit" />
+          </div>
+          <hr className="ProjectDivider" />
+          <div className="ProjectItem">
+            <div className="ProjectName">Project 4: {projects[3]}</div>
+            <img className="Edit" src={Edit} alt="Edit" />
+          </div>
+          <hr className="ProjectDivider" />
+          <div className="ProjectItem">
+            <div className="ProjectName">Project 5: {projects[4]}</div>
+            <img className="Edit" src={Edit} alt="Edit" />
+          </div>
+          <hr className="ProjectDivider" />
+          <div className="ProjectItem">
+            <div className="ProjectName">Project 6: {projects[5]}</div>
             <img className="Edit" src={Edit} alt="Edit" />
           </div>
           <hr className="ProjectDivider" />
