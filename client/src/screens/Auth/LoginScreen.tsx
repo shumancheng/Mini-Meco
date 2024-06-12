@@ -25,9 +25,9 @@ const LoginScreen = () => {
       const response = await fetch(`http://localhost:3000${endpoint}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // Tell the server we are sending JSON
+          "Content-Type": "application/json", 
         },
-        body: JSON.stringify(body), // Convert JS object to JSON string
+        body: JSON.stringify(body), 
       });
 
       const data = await response.json();
