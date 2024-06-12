@@ -31,7 +31,9 @@ const ProjectAdmin: React.FC = () => {
 
   const [semester, setSemester] = useState("");
   const [projectGroupName, setProjectGroupName] = useState("");
+  const [projectName, setProjectName] = useState("");
   const [message, setMessage] = useState("");
+  const [action, setAction] = useState("");
 
   const semesters = ["SS23", "WS2324", "SS24", "WS2425"];
   const projectGroups = ["AMOS #21", "AMOS #22"];
@@ -45,9 +47,16 @@ const ProjectAdmin: React.FC = () => {
     "Cloud Native LLM",
   ];
 
-  const handleCreateProjGroup = async () => {
-    const endpoint = "/createProjectGroup";
+  const handleCreate = async () => {
+    const endpoint =
+      action === "CreateProjectGroup"
+        ? "/createProjectGroup"
+        : "/createProject";
     const body: { [key: string]: string } = { semester, projectGroupName };
+
+    if (action === "CreateProject") {
+      body.projectName = projectName;
+    }
 
     try {
       const response = await fetch(
@@ -72,6 +81,7 @@ const ProjectAdmin: React.FC = () => {
       // Clear input fields
       setSemester("");
       setProjectGroupName("");
+      setProjectName("");
 
       console.log(data);
     } catch (error: unknown) {
@@ -128,7 +138,10 @@ const ProjectAdmin: React.FC = () => {
                     <Button
                       className="create"
                       type="submit"
-                      onClick={handleCreateProjGroup}
+                      onClick={() => {
+                        setAction("CreateProjectGroup");
+                        handleCreate();
+                      }}
                     >
                       Create
                     </Button>
@@ -170,7 +183,51 @@ const ProjectAdmin: React.FC = () => {
           <div className="ProjectTitle">
             <h3>Project Lists</h3>
             <div className="Add">
-              <img src={Add} alt="Add" />
+              <Dialog>
+                <DialogTrigger className="DialogTrigger">
+                  <img src={Add} alt="Add" />
+                </DialogTrigger>
+                <DialogContent className="DialogContent">
+                  <DialogHeader>
+                    <DialogTitle className="DialogTitle">
+                      Create New Project
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="ProjAdmin-input">
+                    <div className="ProjGroup">Project Group: </div>
+                    <input
+                      className="ProjAdmin-inputBox3"
+                      type="text"
+                      placeholder="Please Enter Project Group Name"
+                      value={projectGroupName}
+                      onChange={(e) => setProjectGroupName(e.target.value)}
+                    />
+                  </div>
+                  <div className="ProjAdmin-input">
+                    <div className="ProjGroupName">Project Name: </div>
+                    <input
+                      className="ProjAdmin-inputBox4"
+                      type="text"
+                      placeholder="Please Enter Project Name"
+                      value={projectName}
+                      onChange={(e) => setProjectName(e.target.value)}
+                    />
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      className="create"
+                      type="submit"
+                      onClick={() => {
+                        setAction("CreateProject");
+                        handleCreate();
+                      }}
+                    >
+                      Create
+                    </Button>
+                  </DialogFooter>
+                  {message && <div className="message">{message}</div>}
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <div className="SelectWrapper">
