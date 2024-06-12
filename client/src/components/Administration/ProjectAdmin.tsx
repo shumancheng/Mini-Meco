@@ -61,34 +61,35 @@ const ProjectAdmin: React.FC = () => {
                 </DialogTrigger>
                 <DialogContent className="DialogContent">
                   <DialogHeader>
-                    <div className="DialogHeader">
-                      <DialogTitle className="DialogTitle">
-                        Create New Project Group
-                      </DialogTitle>
-                      <div className="ProjAdmin-input">
-                      <div className="Sem">Semester: </div>
-                        <input
-                          className="ProjAdmin-inputBox"
-                          type="text"
-                          placeholder="Please follow this format: SS24 / WS2425"
-                          value={semester}
-                          onChange={(e) => setSemester(e.target.value)}
-                        />
-                      </div>
-                      <div className="ProjAdmin-input">
-                      <div className="ProjGroupName">Project Group Name: </div>
-                        <input
-                          className="ProjAdmin-inputBox"
-                          type="text"
-                          placeholder="Please Enter Project Group Name"
-                          value={projectGroupName}
-                          onChange={(e) => setProjectGroupName(e.target.value)}
-                        />
-                      </div>
-                    </div>
+                    <DialogTitle className="DialogTitle">
+                      Create New Project Group
+                    </DialogTitle>
+
                   </DialogHeader>
+                  <div className="ProjAdmin-input">
+                    <div className="Sem">Semester: </div>
+                    <input
+                      className="ProjAdmin-inputBox"
+                      type="text"
+                      placeholder="Please follow this format: SS24 / WS2425"
+                      value={semester}
+                      onChange={(e) => setSemester(e.target.value)}
+                    />
+                  </div>
+                  <div className="ProjAdmin-input">
+                    <div className="ProjGroupName">Project Group Name: </div>
+                    <input
+                      className="ProjAdmin-inputBox2"
+                      type="text"
+                      placeholder="Please Enter Project Group Name"
+                      value={projectGroupName}
+                      onChange={(e) => setProjectGroupName(e.target.value)}
+                    />
+                  </div>
                   <DialogFooter>
-                    <Button  className="create" type="submit">Create</Button>
+                    <Button className="create" type="submit">
+                      Create
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
