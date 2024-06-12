@@ -28,5 +28,13 @@ export async function initializeDb() {
     await db.exec("ALTER TABLE users ADD COLUMN resetPasswordExpire INTEGER");
   }
 
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS projectGroup (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      semester TEXT,
+      projectGroupName TEXT
+    )
+  `);
+
   return db;
 }

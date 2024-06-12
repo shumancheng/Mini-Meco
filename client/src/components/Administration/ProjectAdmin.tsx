@@ -31,6 +31,7 @@ const ProjectAdmin: React.FC = () => {
 
   const [semester, setSemester] = useState("");
   const [projectGroupName, setProjectGroupName] = useState("");
+  const [message, setMessage] = useState("");
 
   const semesters = ["SS23", "WS2324", "SS24", "WS2425"];
   const projectGroups = ["AMOS #21", "AMOS #22"];
@@ -43,6 +44,44 @@ const ProjectAdmin: React.FC = () => {
     "Updating Flash Boot Loader",
     "Cloud Native LLM",
   ];
+
+  const handleCreateProjGroup = async () => {
+    const endpoint = "/createProjectGroup";
+    const body: { [key: string]: string } = { semester, projectGroupName };
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/project-admin${endpoint}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setMessage(data.message || "Success!");
+
+      // Clear input fields
+      setSemester("");
+      setProjectGroupName("");
+
+      console.log(data);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        setMessage("An unexpected error occurred");
+      }
+    }
+  };
 
   return (
     <div onClick={handleNavigation}>
@@ -64,7 +103,6 @@ const ProjectAdmin: React.FC = () => {
                     <DialogTitle className="DialogTitle">
                       Create New Project Group
                     </DialogTitle>
-
                   </DialogHeader>
                   <div className="ProjAdmin-input">
                     <div className="Sem">Semester: </div>
@@ -87,10 +125,15 @@ const ProjectAdmin: React.FC = () => {
                     />
                   </div>
                   <DialogFooter>
-                    <Button className="create" type="submit">
+                    <Button
+                      className="create"
+                      type="submit"
+                      onClick={handleCreateProjGroup}
+                    >
                       Create
                     </Button>
                   </DialogFooter>
+                  {message && <div className="message">{message}</div>}
                 </DialogContent>
               </Dialog>
             </div>
