@@ -20,6 +20,9 @@ app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
     app.get('/', (req, res) => {
         res.send('Server is running!');
     });
+    app.get('/semesters', (req, res) => { (0, projMgmt_1.getSemesters)(req, res, db); });
+    app.get('/project-groups', (req, res) => { (0, projMgmt_1.getProjectGroups)(req, res, db); });
+    app.get('/projects', (req, res) => { (0, projMgmt_1.getProjects)(req, res, db); });
     app.post('/register', (req, res) => (0, auth_1.register)(req, res, db));
     app.post('/login', (req, res) => (0, auth_1.login)(req, res, db));
     app.post('/forgotPassword', (req, res) => (0, auth_1.forgotPassword)(req, res, db));

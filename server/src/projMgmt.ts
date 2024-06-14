@@ -7,8 +7,7 @@ export const createProjectGroup = async (req: Request, res: Response, db: Databa
 
     if (!semester || !projectGroupName) {
         return res.status(400).json({ message: "Please fill in semester and project group name" });
-    }
-    else if (!semesterRegex.test(semester)) {
+    } else if (!semesterRegex.test(semester)) {
         return res.status(400).json({ message: "Invalid semester format. Please use SSYY or WSYYYY format" });
     }
     
@@ -19,7 +18,7 @@ export const createProjectGroup = async (req: Request, res: Response, db: Databa
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               projectName TEXT
             )
-          `);
+        `);
         res.status(201).json({ message: "Project group created successfully" });
     } catch (error) {
         console.error("Error during project group creation:", error);
@@ -53,5 +52,50 @@ export const createProject = async (req: Request, res: Response, db: Database) =
     } catch (error) {
         console.error("Error during project creation:", error);
         res.status(500).json({ message: "Project creation failed", error });
+    }
+};
+
+export const getSemesters = async (req: Request, res: Response, db: Database) => {
+    try {
+        const semesters = await db.all("SELECT DISTINCT semester FROM projectGroup");
+        res.json(semesters);
+    } catch (error) {
+        console.error("Error during semester retrieval:", error);
+        res.status(500).json({ message: "Failed to retrieve semesters", error });
+    }
+}
+
+export const getProjectGroups = async (req: Request, res: Response, db: Database) => {
+    const { semester } = req.query;
+    let query = "SELECT * FROM projectGroup";
+    let params = [];
+
+    if (semester) {
+        query += " WHERE semester = ?";
+        params.push(semester);
+    }
+
+    try {
+        const projectGroups = await db.all(query, params);
+        res.json(projectGroups);
+    } catch (error) {
+        console.error("Error during project group retrieval:", error);
+        res.status(500).json({ message: "Failed to retrieve project groups", error });
+    }
+};
+
+export const getProjects = async (req: Request, res: Response, db: Database) => {
+    const { projectGroupName } = req.query;
+
+    if (!projectGroupName) {
+        return res.status(400).json({ message: "Project group name is required" });
+    }
+
+    try {
+        const projects = await db.all(`SELECT * FROM "${projectGroupName}"`);
+        res.json(projects);
+    } catch (error) {
+        console.error("Error during project retrieval:", error);
+        res.status(500).json({ message: `Failed to retrieve projects for project group ${projectGroupName}`, error });
     }
 };
