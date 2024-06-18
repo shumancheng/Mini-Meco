@@ -1,10 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { register, login, forgotPassword, resetPassword  } from './auth';
+import { register, login, forgotPassword, resetPassword } from './auth';
 import { initializeDb } from './database';
 import dotenv from 'dotenv';
-import { createProjectGroup, createProject } from './projMgmt';
+import { createProjectGroup, createProject, getProjectGroups, getProjects, getSemesters } from './projMgmt';
 
 dotenv.config();
 
@@ -20,6 +20,10 @@ initializeDb().then((db) => {
   app.get('/', (req, res) => {
     res.send('Server is running!');
   });
+
+  app.get('/semesters', (req, res) => { getSemesters(req, res, db) });
+  app.get('/project-groups', (req, res) => { getProjectGroups(req, res, db) });
+  app.get('/projects', (req, res) => { getProjects(req, res, db) });
 
   app.post('/register', (req, res) => register(req, res, db));
   app.post('/login', (req, res) => login(req, res, db));

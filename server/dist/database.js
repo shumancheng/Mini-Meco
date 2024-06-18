@@ -25,7 +25,7 @@ async function initializeDb() {
     CREATE TABLE IF NOT EXISTS projectGroup (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       semester TEXT,
-      projectGroupName TEXT
+      projectGroupName TEXT UNIQUE
     )
   `);
     return db;
