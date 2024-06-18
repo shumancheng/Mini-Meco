@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 import "./ProjectAdmin.css";
@@ -15,7 +15,6 @@ import ReturnButton from "../Components/return";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -35,17 +34,71 @@ const ProjectAdmin: React.FC = () => {
   const [message, setMessage] = useState("");
   const [action, setAction] = useState("");
 
-  const semesters = ["SS23", "WS2324", "SS24", "WS2425"];
-  const projectGroups = ["AMOS #21", "AMOS #22"];
-  const projects = [
-    "Xcelerator Demo App",
-    "International Dataspace Station",
-    "Building Information Extractor",
-    "Knowledge Graph Extractor",
-    "Health AI Agent",
-    "Updating Flash Boot Loader",
-    "Cloud Native LLM",
-  ];
+  const [semesters, setSemesters] = useState<string[]>([]);
+  const [projectGroups, setProjectGroups] = useState<string[]>([]);
+  const [projects, setProjects] = useState<
+    { id: number; projectName: string; projectGroupName: string }[]
+  >([]);
+  const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
+
+  useEffect(() => {
+    const fetchSemesters = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/semesters");
+        const data = await response.json();
+        setSemesters(data.map((item: any) => item.semester));
+        console.log("Fetched semesters:", data);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+      }
+    };
+
+    const fetchProjectGroups = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/project-groups");
+        const data = await response.json();
+        setProjectGroups(data.map((item: any) => item.projectGroupName));
+        console.log("Fetched project groups:", data);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+      }
+    };
+
+    fetchSemesters();
+    fetchProjectGroups();
+  }, []);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      if (selectedProjectGroup) {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/projects?projectGroupName=${selectedProjectGroup}`
+          );
+          const data = await response.json();
+          const mappedProjects = data.map((item: any) => ({
+            id: item.id,
+            projectName: item.projectName,
+            projectGroupName: item.projectGroupName || selectedProjectGroup, // Fallback to selectedProjectGroup if undefined
+          }));
+          setProjects(mappedProjects);
+          console.log("Fetched projects:", mappedProjects);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.error(error.message);
+          }
+        }
+      } else {
+        setProjects([]);
+      }
+    };
+
+    fetchProjects();
+  }, [selectedProjectGroup]);
 
   const handleCreate = async () => {
     const endpoint =
@@ -77,11 +130,9 @@ const ProjectAdmin: React.FC = () => {
       }
 
       setMessage(data.message || "Success!");
-
-      // Clear input fields
-      setSemester("");
-      setProjectGroupName("");
-      setProjectName("");
+      if (data.message.includes("successfully")) {
+        window.location.reload(); // Refresh the page
+      }
 
       console.log(data);
     } catch (error: unknown) {
@@ -92,6 +143,10 @@ const ProjectAdmin: React.FC = () => {
       }
     }
   };
+
+  const filteredProjects = projects.filter(
+    (project) => project.projectGroupName === selectedProjectGroup
+  );
 
   return (
     <div onClick={handleNavigation}>
@@ -168,16 +223,17 @@ const ProjectAdmin: React.FC = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="ProjectItem">
-            <div className="ProjectName">{projectGroups[0]}</div>
-            <img className="Edit" src={Edit} alt="Edit" />
-          </div>
-          <hr className="ProjectDivider" />
-          <div className="ProjectItem">
-            <div className="ProjectName">{projectGroups[1]}</div>
-            <img className="Edit" src={Edit} alt="Edit" />
-          </div>
-          <hr className="ProjectDivider" />
+          {projectGroups.map((group, index) => (
+            <React.Fragment key={group}>
+              <div className="ProjectItem">
+                <div className="ProjectName">{group}</div>
+                <img className="Edit" src={Edit} alt="Edit" />
+              </div>
+              {index < projectGroups.length - 1 && (
+                <hr className="ProjectDivider" />
+              )}
+            </React.Fragment>
+          ))}
         </div>
         <div className="ProjectContainer">
           <div className="ProjectTitle">
@@ -231,7 +287,12 @@ const ProjectAdmin: React.FC = () => {
             </div>
           </div>
           <div className="SelectWrapper">
-            <Select>
+            <Select
+              onValueChange={(value) => {
+                console.log("Selected Project Group:", value);
+                setSelectedProjectGroup(value);
+              }}
+            >
               <SelectTrigger className="SelectTrigger">
                 <SelectValue
                   className="SelectValue"
@@ -247,40 +308,18 @@ const ProjectAdmin: React.FC = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="ProjectItem">
-            <div className="ProjectName">Project 1: {projects[0]}</div>
-            <img className="Edit" src={Edit} alt="Edit" />
-          </div>
-          <hr className="ProjectDivider" />
-          <div className="ProjectItem">
-            <div className="ProjectName">Project 2: {projects[1]}</div>
-            <img className="Edit" src={Edit} alt="Edit" />
-          </div>
-          <hr className="ProjectDivider" />
-          <div className="ProjectItem">
-            <div className="ProjectName">Project 3: {projects[2]}</div>
-            <img className="Edit" src={Edit} alt="Edit" />
-          </div>
-          <hr className="ProjectDivider" />
-          <div className="ProjectItem">
-            <div className="ProjectName">Project 4: {projects[3]}</div>
-            <img className="Edit" src={Edit} alt="Edit" />
-          </div>
-          <hr className="ProjectDivider" />
-          <div className="ProjectItem">
-            <div className="ProjectName">Project 5: {projects[4]}</div>
-            <img className="Edit" src={Edit} alt="Edit" />
-          </div>
-          <hr className="ProjectDivider" />
-          <div className="ProjectItem">
-            <div className="ProjectName">Project 6: {projects[5]}</div>
-            <img className="Edit" src={Edit} alt="Edit" />
-          </div>
-          <hr className="ProjectDivider" />
+          {filteredProjects.map((project) => (
+            <>
+              <div key={project.id} className="ProjectItem">
+                <div className="ProjectName">{project.projectName}</div>
+                <img className="Edit" src={Edit} alt="Edit" />
+              </div>
+              <hr className="ProjectDivider" />
+            </>
+          ))}
         </div>
       </div>
     </div>
   );
 };
-
 export default ProjectAdmin;
