@@ -356,4 +356,29 @@ body {
     margin: 0 auto; 
   }
   
+  .ProjectItem2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 30px;
+    
+  }
   
+  .Add{
+    height: 30px;
+    margin-right: 50px;
+    cursor: pointer;
+  }
+
+  .Delete{
+    margin-right: 100px;
+    height: 3px;
+    cursor: pointer;
+    margin-top: 13px;
+  }
+
+  .Imgs{
+    display: flex;
+
+  }

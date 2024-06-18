@@ -1,6 +1,5 @@
 import "./Settings.css";
 import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -12,15 +11,8 @@ import {
 } from "@/components/ui/select";
 import Add from "./../../assets/Add.png";
 import Edit from "./../../assets/Edit.png";
+import Delete from "./../../assets/Line 20.png";
 import ReturnButton from "../Components/return";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog";
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
@@ -29,13 +21,6 @@ const Settings: React.FC = () => {
     navigate("/settings");
   };
 
-  const [semester, setSemester] = useState("");
-  const [projectGroupName, setProjectGroupName] = useState("");
-  const [projectName, setProjectName] = useState("");
-  const [message, setMessage] = useState("");
-  const [action, setAction] = useState("");
-
-  const [semesters, setSemesters] = useState<string[]>([]);
   const [projectGroups, setProjectGroups] = useState<string[]>([]);
   const [projects, setProjects] = useState<
     { id: number; projectName: string; projectGroupName: string }[]
@@ -43,19 +28,6 @@ const Settings: React.FC = () => {
   const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
 
   useEffect(() => {
-    const fetchSemesters = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/semesters");
-        const data = await response.json();
-        setSemesters(data.map((item: any) => item.semester));
-        console.log("Fetched semesters:", data);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error(error.message);
-        }
-      }
-    };
-
     const fetchProjectGroups = async () => {
       try {
         const response = await fetch("http://localhost:3000/project-groups");
@@ -69,7 +41,6 @@ const Settings: React.FC = () => {
       }
     };
 
-    fetchSemesters();
     fetchProjectGroups();
   }, []);
 
@@ -87,7 +58,6 @@ const Settings: React.FC = () => {
             projectGroupName: item.projectGroupName || selectedProjectGroup, // Fallback to selectedProjectGroup if undefined
           }));
           setProjects(mappedProjects);
-          console.log("Fetched projects:", mappedProjects);
         } catch (error: unknown) {
           if (error instanceof Error) {
             console.error(error.message);
@@ -100,50 +70,6 @@ const Settings: React.FC = () => {
 
     fetchProjects();
   }, [selectedProjectGroup]);
-
-  const handleCreate = async () => {
-    const endpoint =
-      action === "CreateProjectGroup"
-        ? "/createProjectGroup"
-        : "/createProject";
-    const body: { [key: string]: string } = { semester, projectGroupName };
-
-    if (action === "CreateProject") {
-      body.projectName = projectName;
-    }
-
-    try {
-      const response = await fetch(
-        `http://localhost:3000/project-admin${endpoint}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
-
-      setMessage(data.message || "Success!");
-      if (data.message.includes("successfully")) {
-        window.location.reload(); // Refresh the page
-      }
-
-      console.log(data);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setMessage(error.message);
-      } else {
-        setMessage("An unexpected error occurred");
-      }
-    }
-  };
 
   const filteredProjects = projects.filter(
     (project) => project.projectGroupName === selectedProjectGroup
@@ -160,22 +86,20 @@ const Settings: React.FC = () => {
           <div className="AccountTitle">
             <h3>Account Info</h3>
             <div className="PersonalDataCOntainer">
-          <div className="PersonalData">
+              <div className="PersonalData">
                 <div className="Email">Email: abc@fau.de</div>
                 <img className="Edit2" src={Edit} />
-        </div>
-        <div className="PersonalData">
+              </div>
+              <div className="PersonalData">
                 <div className="Password">Password: **********</div>
                 <img className="Edit2" src={Edit} />
               </div>
-          </div>
-              </div>
-
             </div>
+          </div>
+        </div>
         <div className="ProjectContainer">
           <div className="ProjectTitle">
             <h3>Project Lists</h3>
-
           </div>
           <div className="SelectWrapper">
             <Select
@@ -201,9 +125,12 @@ const Settings: React.FC = () => {
           </div>
           {filteredProjects.map((project) => (
             <>
-              <div key={project.id} className="ProjectItem">
+              <div key={project.id} className="ProjectItem2">
                 <div className="ProjectName">{project.projectName}</div>
-                <img className="Edit" src={Edit} alt="Edit" />
+                <div className="Imgs">
+                  <img className="Add" src={Add} />
+                  <img className="Delete" src={Delete} />
+                </div>
               </div>
               <hr className="ProjectDivider" />
             </>
