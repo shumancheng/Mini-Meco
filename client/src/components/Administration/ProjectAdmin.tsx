@@ -36,9 +36,9 @@ const ProjectAdmin: React.FC = () => {
 
   const [semesters, setSemesters] = useState<string[]>([]);
   const [projectGroups, setProjectGroups] = useState<string[]>([]);
-  const [projects, setProjects] = useState<{ name: string; group: string }[]>(
-    []
-  );
+  const [projects, setProjects] = useState<
+    { id: number; projectName: string; projectGroupName: string }[]
+  >([]);
   const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
 
   useEffect(() => {
@@ -80,13 +80,13 @@ const ProjectAdmin: React.FC = () => {
             `http://localhost:3000/projects?projectGroupName=${selectedProjectGroup}`
           );
           const data = await response.json();
-          setProjects(
-            data.map((item: any) => ({
-              name: item.projectName,
-              group: item.projectGroupName,
-            }))
-          );
-          console.log("Fetched projects:", data);
+          const mappedProjects = data.map((item: any) => ({
+            id: item.id,
+            projectName: item.projectName,
+            projectGroupName: item.projectGroupName || selectedProjectGroup, // Fallback to selectedProjectGroup if undefined
+          }));
+          setProjects(mappedProjects);
+          console.log("Fetched projects:", mappedProjects);
         } catch (error: unknown) {
           if (error instanceof Error) {
             console.error(error.message);
@@ -145,7 +145,7 @@ const ProjectAdmin: React.FC = () => {
   };
 
   const filteredProjects = projects.filter(
-    (project) => project.group === selectedProjectGroup
+    (project) => project.projectGroupName === selectedProjectGroup
   );
 
   return (
@@ -288,8 +288,10 @@ const ProjectAdmin: React.FC = () => {
           </div>
           <div className="SelectWrapper">
             <Select
-              value={selectedProjectGroup}
-              onValueChange={setSelectedProjectGroup}
+              onValueChange={(value) => {
+                console.log("Selected Project Group:", value);
+                setSelectedProjectGroup(value);
+              }}
             >
               <SelectTrigger className="SelectTrigger">
                 <SelectValue
@@ -306,21 +308,18 @@ const ProjectAdmin: React.FC = () => {
               </SelectContent>
             </Select>
           </div>
-          {filteredProjects.map((project, index) => (
-            <React.Fragment key={project.name}>
-              <div className="ProjectItem">
-                <div className="ProjectName">{project.name}</div>
+          {filteredProjects.map((project) => (
+            <>
+              <div key={project.id} className="ProjectItem">
+                <div className="ProjectName">{project.projectName}</div>
                 <img className="Edit" src={Edit} alt="Edit" />
               </div>
-              {index < filteredProjects.length - 1 && (
-                <hr className="ProjectDivider" />
-              )}
-            </React.Fragment>
+              <hr className="ProjectDivider" />
+            </>
           ))}
         </div>
       </div>
     </div>
   );
 };
-
 export default ProjectAdmin;
