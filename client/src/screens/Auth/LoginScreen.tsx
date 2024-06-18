@@ -39,6 +39,7 @@ const LoginScreen = () => {
       if (endpoint === "/login") {
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.name);
+        localStorage.setItem("email", data.email);
       }
 
       setMessage(data.message || "Success!");

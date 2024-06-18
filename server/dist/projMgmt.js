@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
+exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
 const createProjectGroup = async (req, res, db) => {
     const { semester, projectGroupName } = req.body;
     const semesterRegex = /^(SS|WS)\d{2,4}$/; // Format: SS24 or WS2425
@@ -97,3 +97,42 @@ const getProjects = async (req, res, db) => {
     }
 };
 exports.getProjects = getProjects;
+const joinProject = async (req, res, db) => {
+    const { projectName, memberName, memberRole, memberEmail } = req.body;
+    if (!memberRole) {
+        return res.status(400).json({ message: "Please fill in your role" });
+    }
+    try {
+        const user = await db.get(`SELECT * FROM "${projectName}" WHERE memberName = ?`, [memberName]);
+        if (user) {
+            return res.status(400).json({ message: "You have already joined this project" });
+        }
+        const email = await db.get(`SELECT * FROM "${projectName}" WHERE memberEmail = ?`, [memberEmail]);
+        if (user) {
+            return res.status(400).json({ message: "You have already joined this project" });
+        }
+        await db.run(`INSERT INTO "${projectName}" (memberName, memberRole, memberEmail) VALUES (?, ?, ?)`, [memberName, memberRole, memberEmail]);
+        res.status(201).json({ message: "Joined project successfully" });
+    }
+    catch (error) {
+        console.error("Error during joining project:", error);
+        res.status(500).json({ message: "Failed to join project", error });
+    }
+};
+exports.joinProject = joinProject;
+const leaveProject = async (req, res, db) => {
+    const { projectName, memberName } = req.body;
+    try {
+        const user = await db.get(`SELECT * FROM "${projectName}" WHERE memberName = ?`, [memberName]);
+        if (!user) {
+            return res.status(400).json({ message: "You are not a member of this project" });
+        }
+        await db.run(`DELETE FROM "${projectName}" WHERE memberName = ?`, [memberName]);
+        res.status(200).json({ message: "Left project successfully" });
+    }
+    catch (error) {
+        console.error("Error during leaving project:", error);
+        res.status(500).json({ message: "Failed to leave project", error });
+    }
+};
+exports.leaveProject = leaveProject;

@@ -1,7 +1,6 @@
 import "./Settings.css";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import {
   Select,
   SelectTrigger,
@@ -13,6 +12,15 @@ import Add from "./../../assets/Add.png";
 import Edit from "./../../assets/Edit.png";
 import Delete from "./../../assets/Line 20.png";
 import ReturnButton from "../Components/return";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import Button from "react-bootstrap/esm/Button";
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
@@ -21,13 +29,28 @@ const Settings: React.FC = () => {
     navigate("/settings");
   };
 
+  const [role, setRole] = useState("");
+  const [message, setMessage] = useState("");
+
   const [projectGroups, setProjectGroups] = useState<string[]>([]);
   const [projects, setProjects] = useState<
     { id: number; projectName: string; projectGroupName: string }[]
   >([]);
   const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
 
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+
   useEffect(() => {
+    const fetchUserData = () => {
+      const userName = localStorage.getItem("username");
+      const userEmail = localStorage.getItem("email");
+      if (userName && userEmail) {
+        setUser({ name: userName, email: userEmail });
+      }
+    };
+
+    fetchUserData();
+
     const fetchProjectGroups = async () => {
       try {
         const response = await fetch("http://localhost:3000/project-groups");
@@ -55,7 +78,7 @@ const Settings: React.FC = () => {
           const mappedProjects = data.map((item: any) => ({
             id: item.id,
             projectName: item.projectName,
-            projectGroupName: item.projectGroupName || selectedProjectGroup, // Fallback to selectedProjectGroup if undefined
+            projectGroupName: item.projectGroupName || selectedProjectGroup,
           }));
           setProjects(mappedProjects);
         } catch (error: unknown) {
@@ -75,6 +98,45 @@ const Settings: React.FC = () => {
     (project) => project.projectGroupName === selectedProjectGroup
   );
 
+  const handleJoin = async (projectName: string) => {
+    if (!user) {
+      setMessage("User data not available. Please log in again.");
+      return;
+    }
+
+    const body = {
+      projectName,
+      memberName: user.name,
+      memberRole: role,
+      memberEmail: user.email,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/settings/joinProject",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setMessage(data.message || "Successfully joined the project!");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        setMessage(error.message);
+      }
+    }
+  };
+
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -85,56 +147,80 @@ const Settings: React.FC = () => {
         <div className="AccountInfoContainer">
           <div className="AccountTitle">
             <h3>Account Info</h3>
-            <div className="PersonalDataCOntainer">
+          </div>
+            <div className="PersonalDataContainer">
               <div className="PersonalData">
-                <div className="Email">Email: abc@fau.de</div>
+                <div className="Email">Email: {user?.email}</div>
                 <img className="Edit2" src={Edit} />
               </div>
               <div className="PersonalData">
-                <div className="Password">Password: **********</div>
+                <div className="Password">Password: ********</div>
                 <img className="Edit2" src={Edit} />
               </div>
             </div>
-          </div>
         </div>
         <div className="ProjectContainer">
           <div className="ProjectTitle">
-            <h3>Project Lists</h3>
+          <h3>Project Lists</h3>
           </div>
           <div className="SelectWrapper">
             <Select
               onValueChange={(value) => {
-                console.log("Selected Project Group:", value);
                 setSelectedProjectGroup(value);
               }}
             >
               <SelectTrigger className="SelectTrigger">
-                <SelectValue
-                  className="SelectValue"
-                  placeholder="Select Project Group"
-                />
+                <SelectValue placeholder="Select a project group" />
               </SelectTrigger>
               <SelectContent className="SelectContent">
-                {projectGroups.map((group) => (
-                  <SelectItem key={group} value={group}>
+                {projectGroups.map((group, index) => (
+                  <SelectItem key={index} value={group}>
                     {group}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          {filteredProjects.map((project) => (
-            <>
-              <div key={project.id} className="ProjectItem2">
+          <div>
+            {filteredProjects.map((project) => (
+              <div className="ProjectItem2" key={project.id}>
                 <div className="ProjectName">{project.projectName}</div>
-                <div className="Imgs">
-                  <img className="Add" src={Add} />
-                  <img className="Delete" src={Delete} />
-                </div>
+                <Dialog>
+                  <DialogTrigger className="DialogTrigger">
+                    <img className="Add" src={Add} alt="Add" />
+                  </DialogTrigger>
+                  <DialogContent className="DialogContent">
+                    <DialogHeader>
+                      <DialogTitle className="DialogTitle">Join Project</DialogTitle>
+                    </DialogHeader>
+                    <div className="RoleInput">
+                    <div className="Role">Role: </div>
+                      <input
+                        type="text"
+                        className="ProjAdmin-inputBox"
+                        placeholder="Enter your role"
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                      />
+                    </div>
+                    <DialogFooter>
+                      <Button
+                      className="create"
+                        variant="primary"
+                        onClick={() => handleJoin(project.projectName)}
+                      >
+                        Join
+                      </Button>
+                    </DialogFooter>
+                {message && <div className="Message">{message}</div>}
+                  </DialogContent>
+                </Dialog>
+                <img className="Delete" src={Delete} alt="Delete" />
+                <hr className="ProjectDivider" />
               </div>
-              <hr className="ProjectDivider" />
-            </>
-          ))}
+              
+            ))}
+          </div>
         </div>
       </div>
     </div>
