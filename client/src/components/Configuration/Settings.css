@@ -170,7 +170,6 @@ body {
   
   .ProjectName {
     font-size: 20px;
-    margin-left: 30px;
     font-family: "Kaisei Decol";
   }
   
@@ -365,10 +364,17 @@ body {
     margin: 30px;
     
   }
+
+  .ProjectItem3 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 1200px;
+    margin: 30px;
+  }
   
   .Add{
     height: 30px;
-    margin-right: 15px;
     cursor: pointer;
   }
 
@@ -376,12 +382,13 @@ body {
     
     height: 3px;
     cursor: pointer;
-    margin-top: -10px;
+    margin-bottom: 8px;
   }
 
   .Imgs{
     display: flex;
-
+    gap: 10px; 
+    margin-right: -850px;
   }
 
   .RoleInput{
@@ -394,3 +401,4 @@ display: flex;
     justify-content: center;
     font-family: "Kaisei Decol";
   }
+

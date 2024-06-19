@@ -225,8 +225,10 @@ const Settings: React.FC = () => {
           </div>
           <div>
             {filteredProjects.map((project) => (
-              <div className="ProjectItem2" key={project.id}>
+              <div className="ProjectItem3" key={project.id}>
                 <div className="ProjectName">{project.projectName}</div>
+                <div className="Imgs">
+
                 <Dialog>
                   <DialogTrigger className="DialogTrigger">
                     <img className="Add" src={Add} alt="Add" />
@@ -284,6 +286,7 @@ const Settings: React.FC = () => {
                     {message && <div className="Message">{message}</div>}
                   </DialogContent>
                 </Dialog>
+                </div>
                 <hr className="ProjectDivider" />
               </div>
             ))}
