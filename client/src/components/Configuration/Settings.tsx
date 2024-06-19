@@ -38,7 +38,9 @@ const Settings: React.FC = () => {
   >([]);
   const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
 
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchUserData = () => {
@@ -46,6 +48,8 @@ const Settings: React.FC = () => {
       const userEmail = localStorage.getItem("email");
       if (userName && userEmail) {
         setUser({ name: userName, email: userEmail });
+      } else {
+        console.warn("User data not found in localStorage");
       }
     };
 
@@ -148,20 +152,22 @@ const Settings: React.FC = () => {
           <div className="AccountTitle">
             <h3>Account Info</h3>
           </div>
-            <div className="PersonalDataContainer">
-              <div className="PersonalData">
-                <div className="Email">Email: {user?.email}</div>
-                <img className="Edit2" src={Edit} />
+          <div className="PersonalDataContainer">
+            <div className="PersonalData">
+              <div className="Email">
+                Email: {user?.email || "Email not available"}
               </div>
-              <div className="PersonalData">
-                <div className="Password">Password: ********</div>
-                <img className="Edit2" src={Edit} />
-              </div>
+              <img className="Edit2" src={Edit} />
             </div>
+            <div className="PersonalData">
+              <div className="Password">Password: ********</div>
+              <img className="Edit2" src={Edit} />
+            </div>
+          </div>
         </div>
         <div className="ProjectContainer">
           <div className="ProjectTitle">
-          <h3>Project Lists</h3>
+            <h3>Project Lists</h3>
           </div>
           <div className="SelectWrapper">
             <Select
@@ -191,10 +197,12 @@ const Settings: React.FC = () => {
                   </DialogTrigger>
                   <DialogContent className="DialogContent">
                     <DialogHeader>
-                      <DialogTitle className="DialogTitle">Join Project</DialogTitle>
+                      <DialogTitle className="DialogTitle">
+                        Join Project
+                      </DialogTitle>
                     </DialogHeader>
                     <div className="RoleInput">
-                    <div className="Role">Role: </div>
+                      <div className="Role">Role: </div>
                       <input
                         type="text"
                         className="ProjAdmin-inputBox"
@@ -205,20 +213,19 @@ const Settings: React.FC = () => {
                     </div>
                     <DialogFooter>
                       <Button
-                      className="create"
+                        className="create"
                         variant="primary"
                         onClick={() => handleJoin(project.projectName)}
                       >
                         Join
                       </Button>
                     </DialogFooter>
-                {message && <div className="Message">{message}</div>}
+                    {message && <div className="Message">{message}</div>}
                   </DialogContent>
                 </Dialog>
                 <img className="Delete" src={Delete} alt="Delete" />
                 <hr className="ProjectDivider" />
               </div>
-              
             ))}
           </div>
         </div>
