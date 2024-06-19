@@ -99,3 +99,45 @@ export const getProjects = async (req: Request, res: Response, db: Database) => 
         res.status(500).json({ message: `Failed to retrieve projects for project group ${projectGroupName}`, error });
     }
 };
+
+export const joinProject = async (req: Request, res: Response, db: Database) => {
+    const { projectName, memberName, memberRole, memberEmail } = req.body;
+
+    if (!memberRole) {
+        return res.status(400).json({ message: "Please fill in your role" });
+    }
+
+    try {
+        const user = await db.get(`SELECT * FROM "${projectName}" WHERE memberName = ?`, [memberName]);
+        if (user) {
+            return res.status(400).json({ message: "You have already joined this project" });
+        }
+        const email = await db.get(`SELECT * FROM "${projectName}" WHERE memberEmail = ?`, [memberEmail]);
+        if (user) {
+            return res.status(400).json({ message: "You have already joined this project" });
+        }
+
+        await db.run(`INSERT INTO "${projectName}" (memberName, memberRole, memberEmail) VALUES (?, ?, ?)`, [memberName, memberRole, memberEmail]);
+        res.status(201).json({ message: "Joined project successfully" });
+    } catch (error) {
+        console.error("Error during joining project:", error);
+        res.status(500).json({ message: "Failed to join project", error });   
+    }
+};
+
+export const leaveProject = async (req: Request, res: Response, db: Database) => {
+    const { projectName, memberName } = req.body;
+
+    try {
+        const user = await db.get(`SELECT * FROM "${projectName}" WHERE memberName = ?`, [memberName]);
+        if (!user) {
+            return res.status(400).json({ message: "You are not a member of this project" });
+        }
+
+        await db.run(`DELETE FROM "${projectName}" WHERE memberName = ?`, [memberName]);
+        res.status(200).json({ message: "Left project successfully" });
+    } catch (error) {
+        console.error("Error during leaving project:", error);
+        res.status(500).json({ message: "Failed to leave project", error });
+    }
+}

@@ -32,6 +32,8 @@ const LoginScreen = () => {
 
       const data = await response.json();
 
+      console.log("Response data:", data);
+
       if (!response.ok) {
         throw new Error(data.message || "Something went wrong");
       }
@@ -39,6 +41,7 @@ const LoginScreen = () => {
       if (endpoint === "/login") {
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.name);
+        localStorage.setItem("email", data.email);
       }
 
       setMessage(data.message || "Success!");

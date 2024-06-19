@@ -4,7 +4,7 @@ import cors from 'cors';
 import { register, login, forgotPassword, resetPassword } from './auth';
 import { initializeDb } from './database';
 import dotenv from 'dotenv';
-import { createProjectGroup, createProject, getProjectGroups, getProjects, getSemesters } from './projMgmt';
+import { createProjectGroup, createProject, getProjectGroups, getProjects, getSemesters, joinProject, leaveProject } from './projMgmt';
 
 dotenv.config();
 
@@ -31,6 +31,8 @@ initializeDb().then((db) => {
   app.post('/resetPassword', (req, res) => resetPassword(req, res, db));
   app.post('/project-admin/createProjectGroup', (req, res) => createProjectGroup(req, res, db));
   app.post('/project-admin/createProject', (req, res) => createProject(req, res, db));
+  app.post('/settings/joinProject', (req, res) => joinProject(req, res, db));
+  app.post('/settings/leaveProject', (req, res) => leaveProject(req, res, db));
 
   app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
