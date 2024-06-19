@@ -373,7 +373,7 @@ body {
   }
 
   .Delete{
-    margin-right: 100px;
+    
     height: 3px;
     cursor: pointer;
     margin-top: -10px;
@@ -386,4 +386,11 @@ body {
 
   .RoleInput{
 display: flex;
+  }
+
+  .LeaveText{
+    font-size: 23px;
+    display: flex;
+    justify-content: center;
+    font-family: "Kaisei Decol";
   }

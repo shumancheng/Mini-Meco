@@ -141,6 +141,42 @@ const Settings: React.FC = () => {
     }
   };
 
+  const handleLeave = async (projectName: string) => {
+    if (!user) {
+      setMessage("User data not available. Please log in again.");
+      return;
+    }
+
+    const body = {
+      projectName,
+      memberName: user.name,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/settings/leaveProject",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setMessage(data.message || "Successfully left the project!");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        setMessage(error.message);
+      }
+    }
+  };
+
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -223,7 +259,31 @@ const Settings: React.FC = () => {
                     {message && <div className="Message">{message}</div>}
                   </DialogContent>
                 </Dialog>
-                <img className="Delete" src={Delete} alt="Delete" />
+                <Dialog>
+                  <DialogTrigger className="DialogTrigger">
+                    <img className="Delete" src={Delete} alt="Delete" />
+                  </DialogTrigger>
+                  <DialogContent className="DialogContent">
+                    <DialogHeader>
+                      <DialogTitle className="DialogTitle">
+                        Leave Project
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="LeaveText">
+                      Are you sure you want to leave {project.projectName} ?{" "}
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        className="create"
+                        variant="primary"
+                        onClick={() => handleLeave(project.projectName)}
+                      >
+                        Confirm
+                      </Button>
+                    </DialogFooter>
+                    {message && <div className="Message">{message}</div>}
+                  </DialogContent>
+                </Dialog>
                 <hr className="ProjectDivider" />
               </div>
             ))}
