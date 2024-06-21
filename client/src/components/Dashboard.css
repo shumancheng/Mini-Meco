@@ -130,6 +130,7 @@ body{
     justify-content: center; 
     cursor: pointer;
     margin-right: 140px;
+    font-style: bold;
 }
 
 .componentsProject{
