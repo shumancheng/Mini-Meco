@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
 import "./Dashboard.css";
 import { useNavigate } from "react-router-dom";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -67,11 +74,27 @@ const Dashboard: React.FC = () => {
           <h2>Projects</h2>
         </div>
         <div className="ProjectsContainer">
-          <div onClick={GoStandups} className="components">
+        <Select
+            >
+              <SelectTrigger className="SelectTriggerProject">
+                <SelectValue placeholder="Select Project" />
+              </SelectTrigger>
+              <SelectContent className="SelectContentProject">
+                
+                  <SelectItem value={"Q"} >
+                    Placeholder
+                  </SelectItem>
+          
+              </SelectContent>
+            </Select>
+            <div className="componentsContainer">
+
+          <div onClick={GoStandups} className="componentsProject">
             Standups
           </div>
-          <div onClick={goHappiness} className="components">Happiness</div>
-          <div onClick={goCodeActivity} className="components">Code Activity</div>
+          <div onClick={goHappiness} className="componentsProject">Happiness</div>
+          <div onClick={goCodeActivity} className="componentsProject">Code Activity</div>
+            </div>
         </div>
         <div className="Title ConfigTitle">
           <h2>Configuration</h2>
