@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReturnButton from "../Components/return";
 import "./Standups.css";
@@ -8,6 +8,24 @@ const Standups: React.FC = () => {
   const navigate = useNavigate();
   const handleStandups = () => {
     navigate("/standups");
+  };
+
+  const [doneText, setDoneText] = useState("");
+  const [plansText, setPlansText] = useState("");
+  const [challengesText, setChallengesText] = useState("");
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, setState: React.Dispatch<React.SetStateAction<string>>) => {
+    setState(e.target.value);
+  };
+
+  const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const target = e.target as HTMLTextAreaElement;
+      const value = target.value;
+      const newValue = value + "\n";
+      target.value = newValue;
+    }
   };
 
   return (
@@ -20,15 +38,30 @@ const Standups: React.FC = () => {
         <div className="InputContainer">
           <div className="Done">
             <div className="DoneTitle">Done</div>
-            <input className="DoneContainer" type="text" />
+            <textarea
+              className="DoneContainer"
+              value={doneText}
+              onChange={(e) => handleInputChange(e, setDoneText)}
+              onKeyDown={handleKeyDown}
+            />
           </div>
           <div className="Plans">
             <div className="PlansTitle">Plans</div>
-            <input className="PlansContainer" type="text" />
+            <textarea
+              className="PlansContainer"
+              value={plansText}
+              onChange={(e) => handleInputChange(e, setPlansText)}
+              onKeyDown={handleKeyDown}
+            />
           </div>
           <div className="Challenges">
             <div className="ChallengesTitle">Challenges</div>
-            <input className="ChallengesContainer" type="text" />
+            <textarea
+              className="ChallengesContainer"
+              value={challengesText}
+              onChange={(e) => handleInputChange(e, setChallengesText)}
+              onKeyDown={handleKeyDown}
+            />
           </div>
         </div>
         <Button className="SendButton" type="submit">
