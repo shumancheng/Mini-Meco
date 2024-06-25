@@ -14,6 +14,43 @@ const Standups: React.FC = () => {
   const [plansText, setPlansText] = useState("");
   const [challengesText, setChallengesText] = useState("");
 
+
+  const handleSendStandups = async (e: React.FormEvent<HTMLFormElement>) => {
+    const endpoint = "/projects/sendStandupsEmail";
+    const body = { doneText, plansText, challengesText };
+
+    try {
+      const response = await fetch(`http://localhost:3000${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      console.log(data.message || "Success!");
+      if (data.message.includes("successfully")) {
+        window.location.reload(); 
+      }
+    }
+    catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      } else {
+        console.log("An unexpected error occurred");
+      }
+    }
+
+
+  }
+
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, setState: React.Dispatch<React.SetStateAction<string>>) => {
     setState(e.target.value);
   };

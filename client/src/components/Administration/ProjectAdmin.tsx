@@ -47,6 +47,7 @@ const ProjectAdmin: React.FC = () => {
         const response = await fetch("http://localhost:3000/semesters");
         const data = await response.json();
         setSemesters(data.map((item: any) => item.semester));
+        console.log("Fetched semesters:", data);
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error(error.message);
@@ -59,6 +60,7 @@ const ProjectAdmin: React.FC = () => {
         const response = await fetch("http://localhost:3000/project-groups");
         const data = await response.json();
         setProjectGroups(data.map((item: any) => item.projectGroupName));
+        console.log("Fetched project groups:", data);
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error(error.message);
@@ -84,6 +86,7 @@ const ProjectAdmin: React.FC = () => {
             projectGroupName: item.projectGroupName || selectedProjectGroup, // Fallback to selectedProjectGroup if undefined
           }));
           setProjects(mappedProjects);
+          console.log("Fetched projects:", mappedProjects);
         } catch (error: unknown) {
           if (error instanceof Error) {
             console.error(error.message);
