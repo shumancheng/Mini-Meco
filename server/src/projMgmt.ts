@@ -118,7 +118,9 @@ export const joinProject = async (req: Request, res: Response, db: Database) => 
         }
 
         await db.run(`INSERT INTO "${projectName}" (memberName, memberRole, memberEmail) VALUES (?, ?, ?)`, [memberName, memberRole, memberEmail]);
+        await db.run('INSERT INTO user_projects (userEmail, projectName) VALUES (?, ?)', [memberEmail, projectName]);
         res.status(201).json({ message: "Joined project successfully" });
+
     } catch (error) {
         console.error("Error during joining project:", error);
         res.status(500).json({ message: "Failed to join project", error });   
@@ -126,18 +128,33 @@ export const joinProject = async (req: Request, res: Response, db: Database) => 
 };
 
 export const leaveProject = async (req: Request, res: Response, db: Database) => {
-    const { projectName, memberName } = req.body;
+    const { projectName, memberEmail } = req.body;
 
     try {
-        const user = await db.get(`SELECT * FROM "${projectName}" WHERE memberName = ?`, [memberName]);
-        if (!user) {
-            return res.status(400).json({ message: "You are not a member of this project" });
+        const isMember = await db.get(`SELECT * FROM "${projectName}" WHERE memberEmail = ?`, [memberEmail]);
+        if (!isMember) {
+          return res.status(400).json({ message: "You are not a member of this project" });
         }
 
-        await db.run(`DELETE FROM "${projectName}" WHERE memberName = ?`, [memberName]);
+        await db.run(`DELETE FROM "${projectName}" WHERE memberEmail = ?`, [memberEmail]);
+        await db.run('DELETE FROM user_projects WHERE userEmail = ? AND projectName = ?', [memberEmail, projectName]);
+
         res.status(200).json({ message: "Left project successfully" });
     } catch (error) {
         console.error("Error during leaving project:", error);
         res.status(500).json({ message: "Failed to leave project", error });
     }
 }
+
+export const getUserProjects = async (req: Request, res: Response, db: Database) => {
+    const { userEmail } = req.query;
+  
+    try {
+      const projects = await db.all('SELECT projectName FROM user_projects WHERE userEmail = ?', [userEmail]);
+      res.json(projects);
+    } catch (error) {
+      console.error("Error during retrieving user projects:", error);
+      res.status(500).json({ message: "Failed to retrieve user projects", error });
+    }
+  };
+  

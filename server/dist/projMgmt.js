@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
+exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
 const createProjectGroup = async (req, res, db) => {
     const { semester, projectGroupName } = req.body;
     const semesterRegex = /^(SS|WS)\d{2,4}$/; // Format: SS24 or WS2425
@@ -112,6 +112,7 @@ const joinProject = async (req, res, db) => {
             return res.status(400).json({ message: "You have already joined this project" });
         }
         await db.run(`INSERT INTO "${projectName}" (memberName, memberRole, memberEmail) VALUES (?, ?, ?)`, [memberName, memberRole, memberEmail]);
+        await db.run('INSERT INTO user_projects (userEmail, projectName) VALUES (?, ?)', [memberEmail, projectName]);
         res.status(201).json({ message: "Joined project successfully" });
     }
     catch (error) {
@@ -121,13 +122,14 @@ const joinProject = async (req, res, db) => {
 };
 exports.joinProject = joinProject;
 const leaveProject = async (req, res, db) => {
-    const { projectName, memberName } = req.body;
+    const { projectName, memberEmail } = req.body;
     try {
-        const user = await db.get(`SELECT * FROM "${projectName}" WHERE memberName = ?`, [memberName]);
-        if (!user) {
+        const isMember = await db.get(`SELECT * FROM "${projectName}" WHERE memberEmail = ?`, [memberEmail]);
+        if (!isMember) {
             return res.status(400).json({ message: "You are not a member of this project" });
         }
-        await db.run(`DELETE FROM "${projectName}" WHERE memberName = ?`, [memberName]);
+        await db.run(`DELETE FROM "${projectName}" WHERE memberEmail = ?`, [memberEmail]);
+        await db.run('DELETE FROM user_projects WHERE userEmail = ? AND projectName = ?', [memberEmail, projectName]);
         res.status(200).json({ message: "Left project successfully" });
     }
     catch (error) {
@@ -136,3 +138,15 @@ const leaveProject = async (req, res, db) => {
     }
 };
 exports.leaveProject = leaveProject;
+const getUserProjects = async (req, res, db) => {
+    const { userEmail } = req.query;
+    try {
+        const projects = await db.all('SELECT projectName FROM user_projects WHERE userEmail = ?', [userEmail]);
+        res.json(projects);
+    }
+    catch (error) {
+        console.error("Error during retrieving user projects:", error);
+        res.status(500).json({ message: "Failed to retrieve user projects", error });
+    }
+};
+exports.getUserProjects = getUserProjects;
