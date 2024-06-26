@@ -133,6 +133,9 @@ const Settings: React.FC = () => {
       }
 
       setMessage(data.message || "Successfully joined the project!");
+      if (data.message.includes("successfully")) {
+        window.location.reload(); 
+      }
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);
@@ -149,7 +152,7 @@ const Settings: React.FC = () => {
 
     const body = {
       projectName,
-      memberName: user.name,
+      memberEmail: user.email,
     };
 
     try {
@@ -169,6 +172,9 @@ const Settings: React.FC = () => {
       }
 
       setMessage(data.message || "Successfully left the project!");
+      if (data.message.includes("successfully")) {
+        window.location.reload(); 
+      }
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);

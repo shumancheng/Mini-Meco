@@ -26,5 +26,15 @@ export async function initializeDb() {
     )
   `);
 
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS user_projects (
+      userEmail TEXT,
+      projectName TEXT,
+      PRIMARY KEY (userEmail, projectName),
+      FOREIGN KEY (userEmail) REFERENCES users(email)
+    )
+    `);
+  
+
   return db;
 }
