@@ -8,12 +8,16 @@ const Standups: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [projectName, setProjectName] = useState<string | null>(null);
-  const userName = localStorage.getItem("username");
+  const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
     const projectNameFromState = location.state?.projectName;
     if (projectNameFromState) {
       setProjectName(projectNameFromState);
+    }
+    const storedUserName = localStorage.getItem("username");
+    if (storedUserName) {
+      setUserName(storedUserName);
     }
   }, [location.state]);
 

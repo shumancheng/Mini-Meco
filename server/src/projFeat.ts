@@ -5,11 +5,9 @@ import nodemailer from "nodemailer";
 export const sendStandupsEmail = async (req: Request, res: Response, db: Database) => {
     const { projectName, userName, doneText, plansText, challengesText } = req.body;
 
-    console.log("Received project name:", projectName);
   
     try {
         const query = `SELECT memberEmail FROM "${projectName}"`;
-        console.log("Database query:", query); 
         const members = await db.all(query);
       
   
@@ -33,7 +31,7 @@ export const sendStandupsEmail = async (req: Request, res: Response, db: Databas
         from: '"Mini-Meco" <shu-man.cheng@fau.de>',
         to: recipientEmails,
         subject: `Standup Update for ${projectName}`,
-        text: `Done: ${doneText}\nPlans: ${plansText}\nChallenges: ${challengesText}`,
+        text: `Standup report from ${userName}\n\nDone: ${doneText}\nPlans: ${plansText}\nChallenges: ${challengesText}`,
       };
   
       await transporter.sendMail(mailOptions);

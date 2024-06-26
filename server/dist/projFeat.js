@@ -7,10 +7,8 @@ exports.sendStandupsEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const sendStandupsEmail = async (req, res, db) => {
     const { projectName, userName, doneText, plansText, challengesText } = req.body;
-    console.log("Received project name:", projectName);
     try {
         const query = `SELECT memberEmail FROM "${projectName}"`;
-        console.log("Database query:", query);
         const members = await db.all(query);
         if (members.length === 0) {
             return res.status(400).json({ message: "No members in the project group" });
@@ -29,7 +27,7 @@ const sendStandupsEmail = async (req, res, db) => {
             from: '"Mini-Meco" <shu-man.cheng@fau.de>',
             to: recipientEmails,
             subject: `Standup Update for ${projectName}`,
-            text: `Done: ${doneText}\nPlans: ${plansText}\nChallenges: ${challengesText}`,
+            text: `Standup report from ${userName}\n\nDone: ${doneText}\nPlans: ${plansText}\nChallenges: ${challengesText}`,
         };
         await transporter.sendMail(mailOptions);
         res.status(200).json({ message: "Standup email sent successfully" });
