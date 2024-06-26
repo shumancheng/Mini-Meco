@@ -1,11 +1,23 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReturnButton from "../Components/return";
 import "./Standups.css";
 import Button from "react-bootstrap/esm/Button";
 
 const Standups: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [projectName, setProjectName] = useState<string | null>(null);
+  const userName = localStorage.getItem("username");
+
+  useEffect(() => {
+    const projectNameFromState = location.state?.projectName;
+    if (projectNameFromState) {
+      setProjectName(projectNameFromState);
+    }
+  }, [location.state]);
+
+  console.log("Project Name:", projectName);
   const handleStandups = () => {
     navigate("/standups");
   };
@@ -14,10 +26,16 @@ const Standups: React.FC = () => {
   const [plansText, setPlansText] = useState("");
   const [challengesText, setChallengesText] = useState("");
 
+  const handleSendStandups = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
 
-  const handleSendStandups = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!projectName) {
+      console.error("No project selected");
+      return;
+    }
+
     const endpoint = "/projects/sendStandupsEmail";
-    const body = { doneText, plansText, challengesText };
+    const body = { projectName, userName, doneText, plansText, challengesText };
 
     try {
       const response = await fetch(`http://localhost:3000${endpoint}`, {
@@ -36,26 +54,27 @@ const Standups: React.FC = () => {
 
       console.log(data.message || "Success!");
       if (data.message.includes("successfully")) {
-        window.location.reload(); 
+        window.location.reload();
       }
-    }
-    catch (error: unknown) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
       } else {
         console.log("An unexpected error occurred");
       }
     }
+  };
 
-
-  }
-
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, setState: React.Dispatch<React.SetStateAction<string>>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    setState: React.Dispatch<React.SetStateAction<string>>
+  ) => {
     setState(e.target.value);
   };
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
+  const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (
+    e
+  ) => {
     if (e.key === "Enter") {
       e.preventDefault();
       const target = e.target as HTMLTextAreaElement;
@@ -101,7 +120,11 @@ const Standups: React.FC = () => {
             />
           </div>
         </div>
-        <Button className="SendButton" type="submit">
+        <Button
+          className="SendButton"
+          type="submit"
+          onClick={handleSendStandups}
+        >
           Send Email
         </Button>
       </div>

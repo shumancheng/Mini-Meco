@@ -12,54 +12,73 @@ import {
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<string[]>([]);
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
+
   const username = localStorage.getItem("username");
-  const userEmail = localStorage.getItem("email");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
-    } else {
-      fetchUserProjects(userEmail);
     }
-  }, [navigate, userEmail]);
 
-  const fetchUserProjects = async (userEmail: string | null) => {
-    if (!userEmail) return;
-    try {
-      const response = await fetch(
-        `http://localhost:3000/userProjects?userEmail=${encodeURIComponent(
-          userEmail
-        )}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+    const fetchProjects = async () => {
+      const userEmail = localStorage.getItem("email");
+      if (userEmail) {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/userProjects?userEmail=${userEmail}`
+          );
+          const data = await response.json();
+          setProjects(data.map((project: { projectName: string }) => project.projectName));
+        } catch (error) {
+          console.error("Error fetching projects:", error);
         }
-      );
-      const projects = await response.json();
-      setProjects(
-        projects.map((project: { projectName: string }) => project.projectName)
-      );
-    } catch (error) {
-      console.error("Error fetching user projects:", error);
+      }
+    };
+
+    fetchProjects();
+  }, [navigate]);
+
+  const handleProjectChange = (projectName: string) => {
+    setSelectedProject(projectName);
+  };
+
+  const goToStandups = () => {
+    if (selectedProject) {
+      navigate("/standups", { state: { projectName: selectedProject } });
     }
   };
 
-  const logout = () => {
+  function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-    localStorage.removeItem("email");
     navigate("/login");
-  };
+  }
 
-  const goStandups = () => navigate("/standups");
-  const goHappiness = () => navigate("/happiness");
-  const goCodeActivity = () => navigate("/code-activity");
-  const goSettings = () => navigate("/settings");
-  const goProjectConfig = () => navigate("/project-config");
-  const goUserAdmin = () => navigate("/user-admin");
-  const goProjectAdmin = () => navigate("/project-admin");
+  function goHappiness() {
+    navigate("/happiness");
+  }
+
+  function goCodeActivity() {
+    navigate("/code-activity");
+  }
+
+  function goSettings() {
+    navigate("/settings");
+  }
+
+  function goProjectConfig() {
+    navigate("/project-config");
+  }
+
+  function goUserAdmin() {
+    navigate("/user-admin");
+  }
+
+  function goProjectAdmin() {
+    navigate("/project-admin");
+  }
 
   return (
     <div>
@@ -80,7 +99,7 @@ const Dashboard: React.FC = () => {
           <h2>Projects</h2>
         </div>
         <div className="ProjectsContainer">
-          <Select>
+          <Select onValueChange={handleProjectChange}>
             <SelectTrigger className="SelectTriggerProject">
               <SelectValue placeholder="Select Project" />
             </SelectTrigger>
@@ -93,7 +112,7 @@ const Dashboard: React.FC = () => {
             </SelectContent>
           </Select>
           <div className="componentsContainer">
-            <div onClick={goStandups} className="componentsProject">
+            <div onClick={goToStandups} className="componentsProject">
               Standups
             </div>
             <div onClick={goHappiness} className="componentsProject">
