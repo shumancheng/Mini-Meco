@@ -109,16 +109,18 @@ const Happiness: React.FC = () => {
                 plugins={[<TimePicker />]}
               />
             </div>
-          <Button
-                      className="save"
-                      type="submit"
-                      >
-                      Save
-                    </Button>
-                      </div>
+            <Button className="save" type="submit">
+              Save
+            </Button>
+          </div>
         </TabsContent>
         <TabsContent value="User">
-          <div className="BigContainerUser">User</div>
+          <div className="BigContainerUser">
+            <div className="UserSentence1">Please Enter Before (Date)</div>
+            <div className="UserSentence2">
+              How happy you are doing this project?
+            </div>
+          </div>
         </TabsContent>
         <TabsContent value="Display">
           <div className="BigContainerDisplay">Display</div>

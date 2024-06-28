@@ -183,3 +183,33 @@ align-items: center;
     margin: 0 auto; 
     margin-top: 70px;
   }
+
+  .UserSentence1{
+    width: 658px;
+    height: 60px;
+    flex-shrink: 0;
+    color: #000;
+font-family: "Kaisei Decol";
+font-size: 23px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+display: flex;
+justify-content: center;
+align-items: center;
+  }
+
+  .UserSentence2{
+    width: 658px;
+    height: 60px;
+    flex-shrink: 0;
+    color: #000;
+font-family: "Kaisei Decol";
+font-size: 23px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+display: flex;
+justify-content: center;
+align-items: center;
+  }
