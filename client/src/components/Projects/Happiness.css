@@ -53,12 +53,14 @@
     position: relative;
   }
 
+  .active{
+    background-color: white;
+  }
 
   .Admin{
     width: 416px;
     height: 42px;
     flex-shrink: 0;
-    background: #FFF;
     color: #000;
 font-family: "Kaisei Decol";
 font-size: 25px;
