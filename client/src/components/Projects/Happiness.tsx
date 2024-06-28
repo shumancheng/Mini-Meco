@@ -1,6 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import ReturnButton from "../Components/return";
+import "./Happiness.css";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+
 
 const Happiness: React.FC = () => {
   const navigate = useNavigate();
@@ -12,7 +16,20 @@ const Happiness: React.FC = () => {
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
-      <h3>Happiness</h3>
+      <div className="DashboardContainer">
+        <h1>Happiness</h1>
+      </div>
+      <Tabs defaultValue="User" className="w-[400px]">
+  <TabsList className="grid w-full grid-cols-2 TabsList">
+    <TabsTrigger value="Admin" className="Admin">Admin</TabsTrigger>
+    <TabsTrigger value="User" className="User">User</TabsTrigger>
+    <TabsTrigger value="Display" className="Display">Display</TabsTrigger>
+  </TabsList>
+  <TabsContent value="Admin"><div className="BigContainerAdmin">Admin</div></TabsContent>
+  <TabsContent value="User"><div className="BigContainerUser">User</div></TabsContent>
+  <TabsContent value="Display"><div className="BigContainerDisplay">Display</div></TabsContent>
+</Tabs>
+
     </div>
   );
 };
