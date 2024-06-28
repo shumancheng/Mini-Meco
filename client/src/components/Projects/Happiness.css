@@ -29,6 +29,12 @@
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
+    color: #000;
+font-family: "Kaisei Decol";
+font-size: 25px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
   }
   .BigContainerUser {
     width: 1269px;
@@ -54,7 +60,7 @@
   }
 
   .active{
-    background-color: white;
+    background-color: rgb(255, 255, 255);
   }
 
   .Admin{
@@ -70,6 +76,7 @@ line-height: normal;
 display: flex;
 justify-content: center;
 align-items: center;
+
   }
 
   .User{
@@ -116,3 +123,42 @@ align-items: center;
     flex-direction: row;
     justify-content: space-between;
   }
+
+  .SelectWrapperHappiness {
+    margin-left: 10px;
+    display: flex;
+    position: relative;
+    justify-content: center;
+  }
+
+  .Calendar{
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    margin-top: 50px;
+
+  }
+
+  .custom-calendar .rmdp-wrapper {
+    font-size: 18px; /* Adjust the font size */
+    padding: 20px; /* Adjust the padding */
+  }
+  
+  .custom-calendar .rmdp-calendar {
+    width: 100%; /* Adjust the width */
+    max-width: 500px; /* Adjust the maximum width */
+  }
+  
+  .custom-calendar .rmdp-calendar .rmdp-day {
+    height: 60px; /* Adjust the height of each day */
+    width: 60px; /* Adjust the width of each day */
+  }
+  
+  .custom-calendar .rmdp-calendar .rmdp-header {
+    font-size: 20px; /* Adjust the font size of the header */
+  }
+  
+  .custom-calendar .rmdp-calendar .rmdp-day-picker {
+    padding: 10px; /* Adjust the padding inside the calendar */
+  }
+  
