@@ -12,6 +12,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DatePicker, { Calendar, DateObject } from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
+import Button from "react-bootstrap/esm/Button";
 
 const Happiness: React.FC = () => {
   const navigate = useNavigate();
@@ -108,7 +109,13 @@ const Happiness: React.FC = () => {
                 plugins={[<TimePicker />]}
               />
             </div>
-          </div>
+          <Button
+                      className="save"
+                      type="submit"
+                      >
+                      Save
+                    </Button>
+                      </div>
         </TabsContent>
         <TabsContent value="User">
           <div className="BigContainerUser">User</div>
