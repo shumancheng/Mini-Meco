@@ -29,6 +29,7 @@
     "react-dom": "^18.2.0",
     "react-multi-date-picker": "^4.5.2",
     "react-router-dom": "^6.23.1",
+    "react-slider": "^2.0.6",
     "sqlite3": "^5.1.7",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
@@ -40,6 +41,7 @@
     "@types/node": "^20.14.2",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/react-slider": "^1.3.6",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
