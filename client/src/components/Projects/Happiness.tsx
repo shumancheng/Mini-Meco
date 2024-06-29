@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DatePicker, { Calendar, DateObject } from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import Button from "react-bootstrap/esm/Button";
+import ReactSlider from "react-slider";
 
 const Happiness: React.FC = () => {
   const navigate = useNavigate();
@@ -118,8 +119,33 @@ const Happiness: React.FC = () => {
           <div className="BigContainerUser">
             <div className="UserSentence1">Please Enter Before (Date)</div>
             <div className="UserSentence2">
-              How happy you are doing this project?
+              How happy are you doing this project?
             </div>
+            <div className="slider-container">
+              <ReactSlider
+                className="horizontal-slider"
+                marks
+                markClassName="example-mark"
+                min={-3}
+                max={3}
+                thumbClassName="example-thumb"
+                trackClassName="example-track"
+                renderThumb={(props, state) => (
+                  <div {...props}>{state.valueNow}</div>
+                )}
+              />{" "}
+              <div className="scale">
+                <span>-3</span>
+                <span>-2</span>
+                <span>-1</span>
+                <span>0</span>
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+              </div>            </div>
+            <Button className="confirm" type="submit">
+              Confirm
+            </Button>
           </div>
         </TabsContent>
         <TabsContent value="Display">
