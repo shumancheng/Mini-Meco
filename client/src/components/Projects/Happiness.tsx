@@ -59,21 +59,18 @@ const Happiness: React.FC = () => {
     const nextDate = values.find((date) => date.toDate() > currentDate);
 
     if (nextDate) {
-      console.log(
-        "Next Date:",
-        moment(nextDate.toDate()).format("DD/MM/YYYY HH:mm:ss")
-      );
+      console.log("Next Date:", moment(nextDate.toDate()).format("DD/MM/YYYY HH:mm:ss"));
     } else {
       console.log("No future dates selected");
     }
   };
-
   const currentDate = new Date();
   const nextDate = values.find((date) => date.toDate() > currentDate);
 
-  const formattedDates = nextDate
-    ? moment(nextDate.toDate()).format("DD-MM-YYYY HH:mm:ss")
-    : "";
+  const formattedDates = nextDate ? moment(nextDate.toDate()).format(
+    "DD-MM-YYYY HH:mm:ss"
+  ) : "";
+
 
   const getDate = () => {
     const today = new Date();

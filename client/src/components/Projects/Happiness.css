@@ -231,6 +231,8 @@ margin-bottom: 170px;
     cursor: grab;
     border-radius: 50%;
     border-color: #000;
+    border-style: solid;
+    border-width: 2px;
     color: transparent
   }
   
@@ -264,15 +266,6 @@ margin-bottom: 170px;
     margin-top: 120px;
   }
 
-  .scale{
-flex-shrink: 0;
-color: #000;
-font-family: "Kaisei Decol";
-font-size: 30px;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
-  }
 
   .scale {
     display: flex;
@@ -282,4 +275,5 @@ line-height: normal;
     font-family: "Kaisei Decol";
     font-size: 20px;
     margin-right: 20px;
+    margin-top: 20px;
   }
