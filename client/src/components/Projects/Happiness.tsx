@@ -14,6 +14,7 @@ import DatePicker, { Calendar, DateObject } from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import Button from "react-bootstrap/esm/Button";
 import ReactSlider from "react-slider";
+import moment from "moment";
 
 const Happiness: React.FC = () => {
   const navigate = useNavigate();
@@ -45,6 +46,45 @@ const Happiness: React.FC = () => {
 
     fetchProjectGroups();
   }, []);
+
+  const handleDate = () => {
+    const formattedDates = values.map((date) =>
+      moment(date.toDate()).format("DD/MM/YYYY HH:mm:ss")
+    );
+
+    console.log("Selected Dates:", formattedDates);
+    console.log("current date:", getDate());
+
+    const currentDate = new Date();
+    const nextDate = values.find((date) => date.toDate() > currentDate);
+
+    if (nextDate) {
+      console.log(
+        "Next Date:",
+        moment(nextDate.toDate()).format("DD/MM/YYYY HH:mm:ss")
+      );
+    } else {
+      console.log("No future dates selected");
+    }
+  };
+
+  const currentDate = new Date();
+  const nextDate = values.find((date) => date.toDate() > currentDate);
+
+  const formattedDates = nextDate
+    ? moment(nextDate.toDate()).format("DD-MM-YYYY HH:mm:ss")
+    : "";
+
+  const getDate = () => {
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const date = today.getDate();
+    const time = new Date();
+    const showTime =
+      time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+    return `${date}/${month}/${year} ${showTime}`;
+  };
 
   return (
     <div onClick={handleNavigation}>
@@ -110,14 +150,16 @@ const Happiness: React.FC = () => {
                 plugins={[<TimePicker />]}
               />
             </div>
-            <Button className="save" type="submit">
+            <Button className="save" type="submit" onClick={handleDate}>
               Save
             </Button>
           </div>
         </TabsContent>
         <TabsContent value="User">
           <div className="BigContainerUser">
-            <div className="UserSentence1">Please Enter Before (Date)</div>
+            <div className="UserSentence1">
+              Please Enter Before {formattedDates}
+            </div>
             <div className="UserSentence2">
               How happy are you doing this project?
             </div>
@@ -142,7 +184,8 @@ const Happiness: React.FC = () => {
                 <span>1</span>
                 <span>2</span>
                 <span>3</span>
-              </div>            </div>
+              </div>{" "}
+            </div>
             <Button className="confirm" type="submit">
               Confirm
             </Button>

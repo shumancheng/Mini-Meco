@@ -225,11 +225,12 @@ margin-bottom: 170px;
   }
   
   .example-thumb {
-    height: 15px;
-    width: 10px;
+    height: 45px;
+    width: 40px;
     background-color: #fff;
     cursor: grab;
     border-radius: 50%;
+    border-color: #000;
     color: transparent
   }
   
