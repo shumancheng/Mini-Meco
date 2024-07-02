@@ -34,6 +34,25 @@ export async function initializeDb() {
       FOREIGN KEY (userEmail) REFERENCES users(email)
     )
     `);
+
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS sprints (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    projectGroupName TEXT,
+    sprintName TEXT,
+    startDate DATETIME,
+    endDate DATETIME
+  `);
+
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS happiness (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      projectGroupName TEXT,
+      projectName TEXT,
+      userEmail TEXT,
+      happiness INTEGER,
+      timestamp DATETIME,
+      `)
   
 
   return db;

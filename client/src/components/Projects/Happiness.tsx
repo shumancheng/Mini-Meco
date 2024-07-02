@@ -47,7 +47,7 @@ const Happiness: React.FC = () => {
     fetchProjectGroups();
   }, []);
 
-  const handleDate = () => {
+  const handleDate = async () => {
     const formattedDates = values.map((date) =>
       moment(date.toDate()).format("DD/MM/YYYY HH:mm:ss")
     );
@@ -62,6 +62,23 @@ const Happiness: React.FC = () => {
       console.log("Next Date:", moment(nextDate.toDate()).format("DD/MM/YYYY HH:mm:ss"));
     } else {
       console.log("No future dates selected");
+    }
+
+    try {
+      await fetch("http://localhost:3000/createSprint", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          projectGroupName: selectedProjectGroup,
+          startDate: formattedDates[0],
+          endDate: formattedDates[1],
+        }),
+      });
+      alert("Sprint created successfully");
+    } catch (error) {
+      console.error("Error creating sprint:", error);
     }
   };
   const currentDate = new Date();

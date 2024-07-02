@@ -43,3 +43,47 @@ export const sendStandupsEmail = async (req: Request, res: Response, db: Databas
     }
   };
 
+export const saveHappiness = async (req: Request, res: Response, db: Database) => {
+    const { projectGroupName, projectName, happiness } = req.body;
+    const timestamp = new Date().toISOString();
+  
+    try {
+      await db.run(`INSERT INTO happiness (projectGroupName, projectName, happiness, timestamp ) VALUES (?, ?, ?, ? )`, [projectGroupName, projectName, happiness, timestamp]);
+      res.status(200).json({ message: "Happiness updated successfully" });
+    } catch (error) {
+      console.error("Error updating happiness:", error);
+      res.status(500).json({ message: "Failed to update happiness", error });
+    }
+  }
+
+export const createSprint = async (req: Request, res: Response, db: Database) => {
+    const { projectGroupName, sprintName, startDate, endDate } = req.body;
+  
+    try {
+      await db.run(`INSERT INTO sprints (projectGroupName, sprintName, startDate, endDate) VALUES (?, ?, ?, ?)`, [projectGroupName, sprintName, startDate, endDate]);
+      res.status(201).json({ message: "Sprint created successfully" });
+    } catch (error) {
+      console.error("Error creating sprint:", error);
+      res.status(500).json({ message: "Failed to create sprint", error });
+    }
+  }
+
+export const getHappinessData = async (req: Request, res: Response, db: Database) => {
+  const { projectName } = req.query;
+  
+  try {
+    const currentDate = new Date();
+    const previousSprint = await db.get(`SELECT * FROM sprints WHERE projectName = ? AND endDate < ? ORDER BY endDate DESC LIMIT 1`, [projectName, currentDate]);
+    const nextSprint = await db.get(`SELECT * FROM sprints WHERE projectName = ? AND startDate > ? ORDER BY startDate ASC LIMIT 1`, [projectName, currentDate]);
+
+    if (!previousSprint || !nextSprint) {
+    return res.status(400).json({ message: "No previous or next sprint found" });
+    }
+
+    const happinessData = await db.all(`SELECT * FROM happiness WHERE projectName = ? AND timestamp > ? AND timestamp < ?`, [projectName, previousSprint.endDate, nextSprint.startDate]);
+    res.json(happinessData);
+  } catch (error) {
+    console.error("Error retrieving happiness data:", error);
+    res.status(500).json({ message: "Failed to retrieve happiness data", error });
+  }
+  }
