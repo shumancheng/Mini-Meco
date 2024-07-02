@@ -7,8 +7,6 @@ Mini-Meco is a web application that provides agile tooling for teams to enhance 
 - [Usage](#usage)
   - [Frontend](#frontend)
   - [Backend](#backend)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
