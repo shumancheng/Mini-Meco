@@ -42,3 +42,4 @@ export const sendStandupsEmail = async (req: Request, res: Response, db: Databas
       res.status(500).json({ message: "Failed to send standup email", error });
     }
   };
+
