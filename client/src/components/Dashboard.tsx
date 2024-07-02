@@ -50,15 +50,18 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const goHappiness = () => {
+    if (selectedProject) {
+      navigate("/happiness", { state: { projectName: selectedProject } });
+    }
+  };
+
   function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     navigate("/login");
   }
 
-  function goHappiness() {
-    navigate("/happiness");
-  }
 
   function goCodeActivity() {
     navigate("/code-activity");
