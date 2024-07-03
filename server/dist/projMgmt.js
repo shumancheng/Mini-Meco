@@ -15,7 +15,7 @@ const createProjectGroup = async (req, res, db) => {
         await db.exec(`
             CREATE TABLE IF NOT EXISTS "${projectGroupName}" (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
-              projectName TEXT
+              projectName TEXT UNIQUE
             )
         `);
         res.status(201).json({ message: "Project group created successfully" });
@@ -43,7 +43,7 @@ const createProject = async (req, res, db) => {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 memberName TEXT,
                 memberRole TEXT,
-                memberEmail TEXT
+                memberEmail TEXT UNIQUE
             )
         `);
         res.status(201).json({ message: "Project created successfully" });

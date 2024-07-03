@@ -44,12 +44,12 @@ export async function initializeDb() {
     `);
 
   await db.exec(`
-    CREATE TABLE IF NOT EXISTS sprints (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    projectGroupName TEXT,
-    sprintName TEXT,
-    startDate DATETIME,
-    endDate DATETIME)
+CREATE TABLE IF NOT EXISTS sprints (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  projectGroupName TEXT NOT NULL,
+  sprintName TEXT NOT NULL,
+  endDate DATETIME NOT NULL
+)
   `);
 
   await db.exec(`
