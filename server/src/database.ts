@@ -19,6 +19,14 @@ export async function initializeDb() {
   `);
 
   await db.exec(`
+    CREATE TABLE IF NOT EXISTS project (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      projectName TEXT,
+      projectGroupName TEXT
+    )
+  `);
+
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS projectGroup (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       semester TEXT,
@@ -34,6 +42,25 @@ export async function initializeDb() {
       FOREIGN KEY (userEmail) REFERENCES users(email)
     )
     `);
+
+  await db.exec(`
+CREATE TABLE IF NOT EXISTS sprints (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  projectGroupName TEXT NOT NULL,
+  sprintName TEXT NOT NULL,
+  endDate DATETIME NOT NULL
+)
+  `);
+
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS happiness (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      projectGroupName TEXT,
+      projectName TEXT,
+      userEmail TEXT,
+      happiness INTEGER,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)
+      `);
   
 
   return db;

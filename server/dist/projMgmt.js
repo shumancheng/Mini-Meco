@@ -15,7 +15,7 @@ const createProjectGroup = async (req, res, db) => {
         await db.exec(`
             CREATE TABLE IF NOT EXISTS "${projectGroupName}" (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
-              projectName TEXT
+              projectName TEXT UNIQUE
             )
         `);
         res.status(201).json({ message: "Project group created successfully" });
@@ -37,12 +37,13 @@ const createProject = async (req, res, db) => {
             return res.status(400).json({ message: 'Project Group Not Found' });
         }
         await db.run(`INSERT INTO ${projectGroupName} (projectName) VALUES (?)`, [projectName]);
+        await db.run(`INSERT INTO project (projectName, projectGroupName) VALUES (?, ?)`, [projectName, projectGroupName]);
         await db.exec(`
             CREATE TABLE IF NOT EXISTS "${projectName}" (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 memberName TEXT,
                 memberRole TEXT,
-                memberEmail TEXT
+                memberEmail TEXT UNIQUE
             )
         `);
         res.status(201).json({ message: "Project created successfully" });

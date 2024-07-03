@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReturnButton from "../Components/return";
 import "./Happiness.css";
 import {
@@ -15,20 +15,43 @@ import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import Button from "react-bootstrap/esm/Button";
 import ReactSlider from "react-slider";
 import moment from "moment";
+import { Line } from "react-chartjs-2";
 
-const Happiness: React.FC = () => {
+const Happiness: React.FC = (): React.ReactNode => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [projectName, setProjectName] = useState<string | null>("");
+  const [userName, setUserName] = useState<string | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(
+    null
+  );
   const [activeTab, setActiveTab] = useState("User");
   const [projectGroups, setProjectGroups] = useState<string[]>([]);
   const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
-  const [values, setValues] = useState([
-    new DateObject(),
-    new DateObject().add(1, "day"),
-  ]);
+  const [values, setValues] = useState<DateObject[]>([]);
+  const [happiness, setHappiness] = useState<number>(0);
+  const [happinessData, setHappinessData] = useState<any[]>([]);
+  const [currentSprint, setCurrentSprint] = useState<{
+    endDate: string;
+  } | null>(null);
 
   const handleNavigation = () => {
     navigate("/happiness");
   };
+
+  useEffect(() => {
+    const projectNameFromState = location.state?.projectName;
+    if (projectNameFromState) {
+      setProjectName(projectNameFromState);
+    }
+    const storedUserName = localStorage.getItem("username");
+    if (storedUserName) {
+      setUserName(storedUserName);
+    }
+  }, [location.state]);
+
+  console.log("Project Name:", projectName);
 
   useEffect(() => {
     const fetchProjectGroups = async () => {
@@ -47,40 +70,107 @@ const Happiness: React.FC = () => {
     fetchProjectGroups();
   }, []);
 
-  const handleDate = () => {
+  useEffect(() => {
+    const fetchSprints = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/sprints?projectGroupName=${encodeURIComponent(
+            selectedProjectGroup
+          )}`
+        );
+        const data = await response.json();
+        setCurrentSprint(data);
+        console.log("Fetched sprints:", data);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+      }
+    };
+
+    if (selectedProjectGroup) {
+      fetchSprints();
+    }
+  }, [selectedProjectGroup]);
+
+  const handleDate = async () => {
     const formattedDates = values.map((date) =>
-      moment(date.toDate()).format("DD/MM/YYYY HH:mm:ss")
+      moment(date.toDate()).format("YYYY-MM-DD HH:mm:ss")
     );
 
     console.log("Selected Dates:", formattedDates);
-    console.log("current date:", getDate());
 
-    const currentDate = new Date();
-    const nextDate = values.find((date) => date.toDate() > currentDate);
-
-    if (nextDate) {
-      console.log("Next Date:", moment(nextDate.toDate()).format("DD/MM/YYYY HH:mm:ss"));
-    } else {
-      console.log("No future dates selected");
+    try {
+      await fetch("http://localhost:3000/happiness/createSprints", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          projectGroupName: selectedProjectGroup,
+          dates: formattedDates,
+        }),
+      });
+      alert("Sprints created successfully");
+    } catch (error) {
+      console.error("Error creating sprints:", error);
     }
   };
-  const currentDate = new Date();
-  const nextDate = values.find((date) => date.toDate() > currentDate);
 
-  const formattedDates = nextDate ? moment(nextDate.toDate()).format(
-    "DD-MM-YYYY HH:mm:ss"
-  ) : "";
+  const handleHappinessSubmit = async () => {
+    try {
+      await fetch("http://localhost:3000/happiness/saveHappiness", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          projectGroupName: selectedProjectGroup,
+          projectName,
+          userEmail: user?.email,
+          happiness,
+        }),
+      });
+      alert("Happiness updated successfully");
+    } catch (error) {
+      console.error("Error updating happiness:", error);
+    }
+  };
 
+  const fetchHappinessData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/getHappinessData?projectName=${encodeURIComponent(
+          projectName ?? ""
+        )}`
+      );
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      setHappinessData(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Failed to fetch happiness data:", error);
+    }
+  };
 
-  const getDate = () => {
-    const today = new Date();
-    const month = today.getMonth() + 1;
-    const year = today.getFullYear();
-    const date = today.getDate();
-    const time = new Date();
-    const showTime =
-      time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
-    return `${date}/${month}/${year} ${showTime}`;
+  useEffect(() => {
+    if (projectName) {
+      fetchHappinessData();
+    }
+  }, [projectName ?? "", currentSprint]);
+
+  const chartData = {
+    labels: happinessData.map((data) => data.timestamp),
+    datasets: [
+      {
+        label: "Happiness Score",
+        data: happinessData.map((data) => data.happiness),
+        fill: false,
+        borderColor: "rgb(75, 192, 192)",
+        tension: 0.1,
+      },
+    ],
   };
 
   return (
@@ -89,8 +179,8 @@ const Happiness: React.FC = () => {
       <div className="DashboardContainer">
         <h1>Happiness</h1>
       </div>
-      <Tabs defaultValue="User" className="w-[400px]">
-        <TabsList className="grid w-full grid-cols-2 TabsList">
+      <Tabs defaultValue="User" className="Tabs">
+        <TabsList className="TabsList">
           <TabsTrigger
             value="Admin"
             onClick={() => setActiveTab("Admin")}
@@ -155,7 +245,8 @@ const Happiness: React.FC = () => {
         <TabsContent value="User">
           <div className="BigContainerUser">
             <div className="UserSentence1">
-              Please Enter Before {formattedDates}
+              Please Enter Before{" "}
+              {moment(currentSprint?.endDate).format("DD-MM-YYYY HH:mm:ss")}
             </div>
             <div className="UserSentence2">
               How happy are you doing this project?
@@ -169,10 +260,16 @@ const Happiness: React.FC = () => {
                 max={3}
                 thumbClassName="example-thumb"
                 trackClassName="example-track"
-                renderThumb={(props, state) => (
-                  <div {...props}>{state.valueNow}</div>
-                )}
-              />{" "}
+                renderThumb={(props, state) => {
+                  const { key, ...otherProps } = props;
+                  return (
+                    <div key={state.index} {...otherProps}>
+                      {state.valueNow}
+                    </div>
+                  );
+                }}
+                onChange={(value) => setHappiness(value)}
+              />
               <div className="scale">
                 <span>-3</span>
                 <span>-2</span>
@@ -181,15 +278,21 @@ const Happiness: React.FC = () => {
                 <span>1</span>
                 <span>2</span>
                 <span>3</span>
-              </div>{" "}
+              </div>
             </div>
-            <Button className="confirm" type="submit">
+            <Button
+              className="confirm"
+              type="submit"
+              onClick={handleHappinessSubmit}
+            >
               Confirm
             </Button>
           </div>
         </TabsContent>
         <TabsContent value="Display">
-          <div className="BigContainerDisplay">Display</div>
+          <div className="BigContainerDisplay">
+            <Line data={chartData} />
+          </div>
         </TabsContent>
       </Tabs>
     </div>
