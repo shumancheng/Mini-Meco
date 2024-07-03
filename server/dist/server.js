@@ -25,6 +25,8 @@ app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
     app.get('/project-groups', (req, res) => { (0, projMgmt_1.getProjectGroups)(req, res, db); });
     app.get('/projects', (req, res) => { (0, projMgmt_1.getProjects)(req, res, db); });
     app.get('/userProjects', (req, res) => { (0, projMgmt_1.getUserProjects)(req, res, db); });
+    app.get('/getHappinessData', (req, res) => { (0, projFeat_1.getHappinessData)(req, res, db); });
+    app.get('/sprints', (req, res) => { (0, projFeat_1.getSprints)(req, res, db); });
     app.post('/register', (req, res) => (0, auth_1.register)(req, res, db));
     app.post('/login', (req, res) => (0, auth_1.login)(req, res, db));
     app.post('/forgotPassword', (req, res) => (0, auth_1.forgotPassword)(req, res, db));
@@ -34,6 +36,8 @@ app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
     app.post('/settings/joinProject', (req, res) => (0, projMgmt_1.joinProject)(req, res, db));
     app.post('/settings/leaveProject', (req, res) => (0, projMgmt_1.leaveProject)(req, res, db));
     app.post('/projects/sendStandupsEmail', (req, res) => (0, projFeat_1.sendStandupsEmail)(req, res, db));
+    app.post('/happiness/saveHappiness', (req, res) => (0, projFeat_1.saveHappiness)(req, res, db));
+    app.post('/happiness/createSprints', (req, res) => (0, projFeat_1.createSprints)(req, res, db));
     app.listen(port, () => {
         console.log(`Server running on http://localhost:${port}`);
     });

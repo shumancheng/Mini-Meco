@@ -22,6 +22,7 @@ const Standups: React.FC = () => {
   }, [location.state]);
 
   console.log("Project Name:", projectName);
+  
   const handleStandups = () => {
     navigate("/standups");
   };

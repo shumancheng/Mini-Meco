@@ -43,3 +43,92 @@ export const sendStandupsEmail = async (req: Request, res: Response, db: Databas
     }
   };
 
+  
+  export const createSprints = async (req: Request, res: Response, db: Database) => {
+    const { projectGroupName, dates } = req.body;
+  
+    try {
+      const latestSprint = await db.get(`SELECT sprintName FROM sprints WHERE projectGroupName = ? ORDER BY sprintName DESC LIMIT 1`, [projectGroupName]);
+      let newSprintNumber = 0;
+      if (latestSprint && latestSprint.sprintName) {
+        newSprintNumber = parseInt(latestSprint.sprintName.replace("sprint", "")) + 1;
+      }
+  
+      for (let i = 0; i < dates.length; i++) {
+        const endDate = dates[i];
+        const sprintName = `sprint${newSprintNumber + i}`;
+        await db.run(`INSERT INTO sprints (projectGroupName, sprintName, endDate) VALUES (?, ?, ?)`, [projectGroupName, sprintName, endDate]);
+      }
+  
+      res.status(201).json({ message: "Sprints created successfully" });
+    } catch (error) {
+      console.error("Error creating sprints:", error);
+      res.status(500).json({ message: "Failed to create sprints", error });
+    }
+  };
+  
+  
+  export const saveHappiness = async (req: Request, res: Response, db: Database) => {
+      const { projectGroupName, projectName, userEmail, happiness } = req.body;
+      const timestamp = new Date().toISOString();
+    
+      try {
+        await db.run(`INSERT INTO happiness (projectGroupName, projectName, userEmail, happiness, timestamp ) VALUES (?, ?, ?, ?, ? )`, [projectGroupName, projectName, userEmail, happiness, timestamp]);
+        console.log("Selected Project Group:" + projectGroupName);
+        res.status(200).json({ message: "Happiness updated successfully" });
+      } catch (error) {
+        console.error("Error updating happiness:", error);
+        res.status(500).json({ message: "Failed to update happiness", error });
+      }
+    }
+    
+    export const getHappinessData = async (req: Request, res: Response, db: Database) => {
+      const { projectName } = req.query;
+    
+      try {
+        const currentDate = new Date().toISOString();
+        const projectGroup = await db.get(`SELECT projectGroupName FROM project WHERE projectName = ?`, [projectName]);
+    
+        if (!projectGroup) {
+          return res.status(400).json({ message: "Project not found" });
+        }
+    
+        const currentSprint = await db.get(`
+          SELECT * FROM sprints 
+          WHERE projectGroupName = ? 
+          AND (endDate IS NULL OR endDate >= ?)
+          ORDER BY endDate DESC LIMIT 1
+        `, [projectGroup.projectGroupName, currentDate, currentDate]);
+    
+        if (!currentSprint) {
+          return res.status(400).json({ message: "No current sprint found" });
+        }
+    
+        const happinessData = await db.all(`
+          SELECT * FROM happiness 
+          WHERE projectName = ? 
+          AND timestamp >= ? 
+          AND timestamp <= ?
+        `, [projectName, currentSprint.endDate || currentDate]);
+    
+        res.json(happinessData);
+      } catch (error) {
+        console.error("Error retrieving happiness data:", error);
+        res.status(500).json({ message: "Failed to retrieve happiness data", error });
+      }
+    };
+    
+    export const getSprints = async (req: Request, res: Response, db: Database) => {
+      const { projectGroupName } = req.query;
+    
+      try {
+        const sprints = await db.all(
+          `SELECT * FROM sprints WHERE projectGroupName = ? ORDER BY endDate ASC`,
+          [projectGroupName]
+        );
+        res.json(sprints);
+      } catch (error) {
+        console.error('Error fetching sprints:', error);
+        res.status(500).json({ message: 'Failed to fetch sprints', error });
+      }
+    };

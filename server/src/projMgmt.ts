@@ -16,7 +16,7 @@ export const createProjectGroup = async (req: Request, res: Response, db: Databa
         await db.exec(`
             CREATE TABLE IF NOT EXISTS "${projectGroupName}" (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
-              projectName TEXT
+              projectName TEXT UNIQUE
             )
         `);
         res.status(201).json({ message: "Project group created successfully" });
@@ -40,12 +40,13 @@ export const createProject = async (req: Request, res: Response, db: Database) =
         }
 
         await db.run(`INSERT INTO ${projectGroupName} (projectName) VALUES (?)`, [projectName]);
+        await db.run(`INSERT INTO project (projectName, projectGroupName) VALUES (?, ?)`, [projectName, projectGroupName]);
         await db.exec(`
             CREATE TABLE IF NOT EXISTS "${projectName}" (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 memberName TEXT,
                 memberRole TEXT,
-                memberEmail TEXT
+                memberEmail TEXT UNIQUE
             )
         `);
         res.status(201).json({ message: "Project created successfully" });
