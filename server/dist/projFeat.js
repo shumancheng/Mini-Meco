@@ -60,11 +60,16 @@ const createSprints = async (req, res, db) => {
 };
 exports.createSprints = createSprints;
 const saveHappiness = async (req, res, db) => {
-    const { projectGroupName, projectName, userEmail, happiness } = req.body;
+    const { projectName, userEmail, happiness, sprintName } = req.body;
     const timestamp = new Date().toISOString();
     try {
-        await db.run(`INSERT INTO happiness (projectGroupName, projectName, userEmail, happiness, timestamp ) VALUES (?, ?, ?, ?, ? )`, [projectGroupName, projectName, userEmail, happiness, timestamp]);
-        console.log("Selected Project Group:" + projectGroupName);
+        //this return { projectGroupName: "AMOSXX" } [object Object], so we need to change it into string
+        const projectGroupNameObj = await db.get(`SELECT projectGroupName FROM project WHERE projectName = ?`, [projectName]);
+        const projectGroupName = projectGroupNameObj === null || projectGroupNameObj === void 0 ? void 0 : projectGroupNameObj.projectGroupName;
+        if (!projectGroupName) {
+            return res.status(404).json({ message: "Project group not found" });
+        }
+        await db.run(`INSERT INTO happiness (projectGroupName, projectName, userEmail, happiness, sprintName, timestamp ) VALUES (?, ?, ?, ?, ?, ? )`, [projectGroupName, projectName, userEmail, happiness, sprintName, timestamp]);
         res.status(200).json({ message: "Happiness updated successfully" });
     }
     catch (error) {

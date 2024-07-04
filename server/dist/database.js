@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS sprints (
       projectName TEXT,
       userEmail TEXT,
       happiness INTEGER,
+      sprintName TEXT,
       timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)
       `);
     return db;
