@@ -34,6 +34,7 @@ const Happiness: React.FC = (): React.ReactNode => {
   const [happinessData, setHappinessData] = useState<any[]>([]);
   const [currentSprint, setCurrentSprint] = useState<{
     endDate: string;
+    sprintName?: string;
   } | null>(null);
 
   const handleNavigation = () => {
@@ -71,25 +72,31 @@ const Happiness: React.FC = (): React.ReactNode => {
   }, []);
 
   useEffect(() => {
-    const fetchSprints = async () => {
+    const fetchCurrentSprint = async () => {
       try {
         const response = await fetch(
           `http://localhost:3000/sprints?projectGroupName=${encodeURIComponent(
             selectedProjectGroup
           )}`
         );
-        const data = await response.json();
-        setCurrentSprint(data);
-        console.log("Fetched sprints:", data);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error(error.message);
+        const sprints = await response.json();
+        const currentDate = new Date();
+
+        const currentSprint = sprints.find(
+          (sprint: { endDate: string; sprintName?: string }) =>
+            new Date(sprint.endDate) > currentDate
+        );
+
+        if (currentSprint) {
+          setCurrentSprint(currentSprint);
         }
+      } catch (error) {
+        console.error("Error fetching current sprint:", error);
       }
     };
 
     if (selectedProjectGroup) {
-      fetchSprints();
+      fetchCurrentSprint();
     }
   }, [selectedProjectGroup]);
 
@@ -125,10 +132,10 @@ const Happiness: React.FC = (): React.ReactNode => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          projectGroupName: selectedProjectGroup,
           projectName,
           userEmail: user?.email,
           happiness,
+          sprintName: currentSprint?.sprintName,
         }),
       });
       alert("Happiness updated successfully");
@@ -136,7 +143,7 @@ const Happiness: React.FC = (): React.ReactNode => {
       console.error("Error updating happiness:", error);
     }
   };
-
+  /*
   const fetchHappinessData = async () => {
     try {
       const response = await fetch(
@@ -158,7 +165,7 @@ const Happiness: React.FC = (): React.ReactNode => {
     if (projectName) {
       fetchHappinessData();
     }
-  }, [projectName ?? "", currentSprint]);
+  }, [projectName, currentSprint]);
 
   const chartData = {
     labels: happinessData.map((data) => data.timestamp),
@@ -172,7 +179,7 @@ const Happiness: React.FC = (): React.ReactNode => {
       },
     ],
   };
-
+*/
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -246,7 +253,8 @@ const Happiness: React.FC = (): React.ReactNode => {
           <div className="BigContainerUser">
             <div className="UserSentence1">
               Please Enter Before{" "}
-              {moment(currentSprint?.endDate).format("DD-MM-YYYY HH:mm:ss")}
+              {currentSprint &&
+                moment(currentSprint.endDate).format("DD-MM-YYYY HH:mm:ss")}
             </div>
             <div className="UserSentence2">
               How happy are you doing this project?
@@ -290,9 +298,7 @@ const Happiness: React.FC = (): React.ReactNode => {
           </div>
         </TabsContent>
         <TabsContent value="Display">
-          <div className="BigContainerDisplay">
-            <Line data={chartData} />
-          </div>
+          <div className="BigContainerDisplay">DIsplay</div>
         </TabsContent>
       </Tabs>
     </div>
