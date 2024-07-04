@@ -1,4 +1,3 @@
-import React from "react";
 import Settings from "./Settings";
 import ProjectConfig from "./ProjectConfig";
 import "./Configuration.css";

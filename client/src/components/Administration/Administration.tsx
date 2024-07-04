@@ -1,4 +1,3 @@
-import React from "react";
 import UserAdmin from "./UserAdmin";
 import ProjectAdmin from "./ProjectAdmin";
 import "./Administration.css";

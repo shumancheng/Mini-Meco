@@ -1,57 +1,45 @@
 # Mini-Meco
 
-Mini-Meco is a web application that provides agile tooling for teams to enhance their productivity and streamline their workflow. 
+Mini-Meco is a web application that provides agile tooling for teams to enhance their productivity and streamline their workflow.
 
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Frontend](#frontend)
-  - [Backend](#backend)
 
 ## Installation
 
-Before you start, ensure you have [Node.js](https://nodejs.org/) installed on your machine. This project uses both a client-side (frontend) and server-side (backend) application, which need to be set up separately.
+Before you start, ensure you have [Node.js](https://nodejs.org/) installed on your machine. This project uses both a client-side (frontend) and server-side (backend) application, which need to be set up together.
 
-### Frontend
+### Installation Steps
 
-To set up the frontend, follow these steps:
-
-1. Navigate to the `client` directory:
+1. Clone the repository:
     ```bash
-    cd client
+    git clone https://github.com/shumancheng/Mini-Meco.git
+    cd Mini-Meco
     ```
 
-2. Install the necessary dependencies:
+2. Install all necessary dependencies for both frontend and backend:
     ```bash
-    npm install
+    npm run install-all
     ```
 
-3. Start the development server:
-    ```bash
-    npm run dev
-    ```
+## Usage
 
-This will start the frontend on your local machine, typically at `http://localhost:3000`.
+To run the project, use the following command:
 
-### Backend
+```bash
+npm run dev
+```
 
-To set up the backend, follow these steps:
+This command will start both the frontend and backend development servers concurrently.
 
-1. Navigate to the `server` directory:
-    ```bash
-    cd server
-    ```
+- Frontend will typically run at http://localhost:5173.
+- Backend will typically run at http://localhost:3000.
 
-2. Compile the TypeScript files to JavaScript:
-    ```bash
-    tsc
-    ```
+## Scripts Overview
+- npm run install-all: Installs all dependencies for both client and server.
+- npm run build-all: Builds both the client and server projects.
+- npm run dev: Starts both the client and server development servers concurrently.
+- npm start: Starts both the client and server production servers concurrently.
 
-3. Start the server:
-    ```bash
-    node dist/server.js
-    ```
-
-This will start the backend server, typically at `http://localhost:5000`.
-
-
+By following these instructions, you can set up, develop, and run the Mini-Meco project efficiently.
