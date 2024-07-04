@@ -10,19 +10,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DatePicker, { Calendar, DateObject } from "react-multi-date-picker";
+import { Calendar, DateObject } from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import Button from "react-bootstrap/esm/Button";
 import ReactSlider from "react-slider";
 import moment from "moment";
-import { Line } from "react-chartjs-2";
 
 const Happiness: React.FC = (): React.ReactNode => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [projectName, setProjectName] = useState<string | null>("");
+  // @ts-ignore: suppress unused variable warning
   const [userName, setUserName] = useState<string | null>(null);
+  // @ts-ignore: suppress unused variable warning
   const [user, setUser] = useState<{ name: string; email: string } | null>(
     null
   );
@@ -31,7 +32,7 @@ const Happiness: React.FC = (): React.ReactNode => {
   const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
   const [values, setValues] = useState<DateObject[]>([]);
   const [happiness, setHappiness] = useState<number>(0);
-  const [happinessData, setHappinessData] = useState<any[]>([]);
+  // const [happinessData, setHappinessData] = useState<any[]>([]);
   const [currentSprint, setCurrentSprint] = useState<{
     endDate: string;
     sprintName?: string;
