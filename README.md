@@ -40,6 +40,6 @@ This command will start both the frontend and backend development servers concur
 - npm run install-all: Installs all dependencies for both client and server.
 - npm run build-all: Builds both the client and server projects.
 - npm run dev: Starts both the client and server development servers concurrently.
-- npm start: Starts both the client and server production servers concurrently.
+
 
 By following these instructions, you can set up, develop, and run the Mini-Meco project efficiently.
