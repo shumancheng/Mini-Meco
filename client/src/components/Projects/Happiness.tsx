@@ -68,12 +68,13 @@ const Happiness: React.FC = (): React.ReactNode => {
         }
       }
     };
-
     fetchProjectGroups();
   }, []);
 
   useEffect(() => {
-    const fetchCurrentSprint = async () => {
+    const fetchSprints = async () => {
+      if (!selectedProjectGroup) return;
+
       try {
         const response = await fetch(
           `http://localhost:3000/sprints?projectGroupName=${encodeURIComponent(
@@ -91,14 +92,19 @@ const Happiness: React.FC = (): React.ReactNode => {
         if (currentSprint) {
           setCurrentSprint(currentSprint);
         }
+
+        setValues(
+          sprints.map(
+            (sprint: { endDate: string }) =>
+              new DateObject({ date: new Date(sprint.endDate) })
+          )
+        );
       } catch (error) {
-        console.error("Error fetching current sprint:", error);
+        console.error("Error fetching sprints:", error);
       }
     };
 
-    if (selectedProjectGroup) {
-      fetchCurrentSprint();
-    }
+    fetchSprints();
   }, [selectedProjectGroup]);
 
   const handleDate = async () => {
