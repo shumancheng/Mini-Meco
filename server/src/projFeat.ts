@@ -151,3 +151,21 @@ export const sendStandupsEmail = async (req: Request, res: Response, db: Databas
       }
     };
     
+    export const getCurrentSprint = async (req: Request, res: Response, db: Database) => {
+      const { projectName } = req.query;
+    
+      try {
+        const projectGroupNameObj = await db.get(`SELECT projectGroupName FROM project WHERE projectName = ?`, [projectName]);
+        const projectGroupName = projectGroupNameObj?.projectGroupName;
+        
+        const sprints = await db.all(
+          `SELECT * FROM sprints WHERE projectGroupName = ? ORDER BY endDate ASC`,
+          [projectGroupName]
+        );
+        
+        res.json(sprints);
+      } catch (error) {
+        console.error('Error fetching sprints:', error);
+        res.status(500).json({ message: 'Failed to fetch sprints', error });
+      }
+    };
