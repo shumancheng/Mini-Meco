@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSprints = exports.getHappinessData = exports.saveHappiness = exports.createSprints = exports.sendStandupsEmail = void 0;
+exports.getCurrentSprint = exports.getSprints = exports.getHappinessData = exports.saveHappiness = exports.createSprints = exports.sendStandupsEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const sendStandupsEmail = async (req, res, db) => {
     const { projectName, userName, doneText, plansText, challengesText } = req.body;
@@ -130,3 +130,19 @@ const getSprints = async (req, res, db) => {
     }
 };
 exports.getSprints = getSprints;
+const getCurrentSprint = async (req, res, db) => {
+    const { projectName } = req.query;
+    try {
+        const projectGroupNameObj = await db.get(`SELECT projectGroupName FROM project WHERE projectName = ?`, [projectName]);
+        const projectGroupName = projectGroupNameObj === null || projectGroupNameObj === void 0 ? void 0 : projectGroupNameObj.projectGroupName;
+        console.log(projectGroupName);
+        const sprints = await db.all(`SELECT * FROM sprints WHERE projectGroupName = ? ORDER BY endDate ASC`, [projectGroupName]);
+        console.log(sprints);
+        res.json(sprints);
+    }
+    catch (error) {
+        console.error('Error fetching sprints:', error);
+        res.status(500).json({ message: 'Failed to fetch sprints', error });
+    }
+};
+exports.getCurrentSprint = getCurrentSprint;

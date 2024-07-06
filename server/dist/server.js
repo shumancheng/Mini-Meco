@@ -27,6 +27,7 @@ app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
     app.get('/userProjects', (req, res) => { (0, projMgmt_1.getUserProjects)(req, res, db); });
     app.get('/getHappinessData', (req, res) => { (0, projFeat_1.getHappinessData)(req, res, db); });
     app.get('/sprints', (req, res) => { (0, projFeat_1.getSprints)(req, res, db); });
+    app.get('/currentSprint', (req, res) => { (0, projFeat_1.getCurrentSprint)(req, res, db); });
     app.post('/register', (req, res) => (0, auth_1.register)(req, res, db));
     app.post('/login', (req, res) => (0, auth_1.login)(req, res, db));
     app.post('/forgotPassword', (req, res) => (0, auth_1.forgotPassword)(req, res, db));

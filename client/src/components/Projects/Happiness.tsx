@@ -72,13 +72,39 @@ const Happiness: React.FC = (): React.ReactNode => {
   }, []);
 
   useEffect(() => {
-    const fetchSprints = async () => {
+    const fetchAllSprints = async () => {
       if (!selectedProjectGroup) return;
 
       try {
         const response = await fetch(
           `http://localhost:3000/sprints?projectGroupName=${encodeURIComponent(
             selectedProjectGroup
+          )}`
+        );
+        const sprints = await response.json();
+
+        setValues(
+          sprints.map(
+            (sprint: { endDate: string }) =>
+              new DateObject({ date: new Date(sprint.endDate) })
+          )
+        );
+      } catch (error) {
+        console.error("Error fetching sprints:", error);
+      }
+    };
+
+    fetchAllSprints();
+  }, [selectedProjectGroup]);
+
+  useEffect(() => {
+    const fetchCurrentSprints = async () => {
+      if (!projectName) return;
+
+      try {
+        const response = await fetch(
+          `http://localhost:3000/currentSprint?projectName=${encodeURIComponent(
+            projectName
           )}`
         );
         const sprints = await response.json();
@@ -92,20 +118,13 @@ const Happiness: React.FC = (): React.ReactNode => {
         if (currentSprint) {
           setCurrentSprint(currentSprint);
         }
-
-        setValues(
-          sprints.map(
-            (sprint: { endDate: string }) =>
-              new DateObject({ date: new Date(sprint.endDate) })
-          )
-        );
       } catch (error) {
         console.error("Error fetching sprints:", error);
       }
     };
 
-    fetchSprints();
-  }, [selectedProjectGroup]);
+    fetchCurrentSprints();
+  }, [projectName]);
 
   const handleDate = async () => {
     const formattedDates = values.map((date) =>
