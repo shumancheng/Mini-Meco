@@ -135,9 +135,7 @@ const getCurrentSprint = async (req, res, db) => {
     try {
         const projectGroupNameObj = await db.get(`SELECT projectGroupName FROM project WHERE projectName = ?`, [projectName]);
         const projectGroupName = projectGroupNameObj === null || projectGroupNameObj === void 0 ? void 0 : projectGroupNameObj.projectGroupName;
-        console.log(projectGroupName);
         const sprints = await db.all(`SELECT * FROM sprints WHERE projectGroupName = ? ORDER BY endDate ASC`, [projectGroupName]);
-        console.log(sprints);
         res.json(sprints);
     }
     catch (error) {

@@ -23,7 +23,6 @@ const Happiness: React.FC = (): React.ReactNode => {
   const [projectName, setProjectName] = useState<string | null>("");
   // @ts-ignore: suppress unused variable warning
   const [userName, setUserName] = useState<string | null>(null);
-  // @ts-ignore: suppress unused variable warning
   const [user, setUser] = useState<{ name: string; email: string } | null>(
     null
   );
@@ -69,6 +68,20 @@ const Happiness: React.FC = (): React.ReactNode => {
       }
     };
     fetchProjectGroups();
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = () => {
+      const userName = localStorage.getItem("username");
+      const userEmail = localStorage.getItem("email");
+      if (userName && userEmail) {
+        setUser({ name: userName, email: userEmail });
+      } else {
+        console.warn("User data not found in localStorage");
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   useEffect(() => {
