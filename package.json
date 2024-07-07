@@ -9,8 +9,11 @@
     "start": "concurrently \"npm start --prefix client\" \"npm start --prefix server\""
   },
   "dependencies": {
+    "concurrently": "^8.0.1",
     "react-chartjs-2": "^5.2.0",
-    "concurrently": "^8.0.1"  
+    "recharts": "^2.12.7"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/recharts": "^1.8.29"
+  }
 }

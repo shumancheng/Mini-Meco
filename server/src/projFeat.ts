@@ -102,37 +102,12 @@ export const sendStandupsEmail = async (req: Request, res: Response, db: Databas
     
     export const getHappinessData = async (req: Request, res: Response, db: Database) => {
       const { projectName } = req.query;
-    
       try {
-        const currentDate = new Date().toISOString();
-        const projectGroup = await db.get(`SELECT projectGroupName FROM project WHERE projectName = ?`, [projectName]);
-    
-        if (!projectGroup) {
-          return res.status(400).json({ message: "Project not found" });
-        }
-    
-        const currentSprint = await db.get(`
-          SELECT * FROM sprints 
-          WHERE projectGroupName = ? 
-          AND (endDate IS NULL OR endDate >= ?)
-          ORDER BY endDate DESC LIMIT 1
-        `, [projectGroup.projectGroupName, currentDate, currentDate]);
-    
-        if (!currentSprint) {
-          return res.status(400).json({ message: "No current sprint found" });
-        }
-    
-        const happinessData = await db.all(`
-          SELECT * FROM happiness 
-          WHERE projectName = ? 
-          AND timestamp >= ? 
-          AND timestamp <= ?
-        `, [projectName, currentSprint.endDate || currentDate]);
-    
+        const happinessData = await db.all(`SELECT * FROM happiness WHERE projectName = ? ORDER BY sprintName ASC, timestamp ASC`, [projectName]);
         res.json(happinessData);
       } catch (error) {
-        console.error("Error retrieving happiness data:", error);
-        res.status(500).json({ message: "Failed to retrieve happiness data", error });
+        console.error("Error fetching happiness data:", error);
+        res.status(500).json({ message: "Failed to fetch happiness data", error });
       }
     };
     
