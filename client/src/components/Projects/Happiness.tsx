@@ -358,7 +358,7 @@ const Happiness: React.FC = (): React.ReactNode => {
             <ResponsiveContainer height={600} width="100%">
               <LineChart
                 data={chartData}
-                margin={{ top: 20, right: 50, left: 20, bottom: 1 }}
+                margin={{ top: 20, right: 70, left: 10, bottom: 0 }}
               >
                 <CartesianGrid strokeDasharray="1 1" />
                 <XAxis dataKey="sprintName" />
