@@ -15,6 +15,8 @@ import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import Button from "react-bootstrap/esm/Button";
 import ReactSlider from "react-slider";
 import moment from "moment";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+
 
 const Happiness: React.FC = (): React.ReactNode => {
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ const Happiness: React.FC = (): React.ReactNode => {
   const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
   const [values, setValues] = useState<DateObject[]>([]);
   const [happiness, setHappiness] = useState<number>(0);
-  // const [happinessData, setHappinessData] = useState<any[]>([]);
+  const [happinessData, setHappinessData] = useState<any[]>([]);
   const [currentSprint, setCurrentSprint] = useState<{
     endDate: string;
     sprintName?: string;
@@ -182,7 +184,7 @@ const Happiness: React.FC = (): React.ReactNode => {
       console.error("Error updating happiness:", error);
     }
   };
-  /*
+
   const fetchHappinessData = async () => {
     try {
       const response = await fetch(
@@ -194,7 +196,7 @@ const Happiness: React.FC = (): React.ReactNode => {
         throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
-      setHappinessData(Array.isArray(data) ? data : []);
+      setHappinessData(Array.isArray(data) ? data : []); 
     } catch (error) {
       console.error("Failed to fetch happiness data:", error);
     }
@@ -204,21 +206,26 @@ const Happiness: React.FC = (): React.ReactNode => {
     if (projectName) {
       fetchHappinessData();
     }
-  }, [projectName, currentSprint]);
+  }, [projectName]);
 
-  const chartData = {
-    labels: happinessData.map((data) => data.timestamp),
-    datasets: [
-      {
-        label: "Happiness Score",
-        data: happinessData.map((data) => data.happiness),
-        fill: false,
-        borderColor: "rgb(75, 192, 192)",
-        tension: 0.1,
-      },
-    ],
-  };
-*/
+  const emailColors: { [email: string]: string } = {}; 
+  const uniqueEmails = [...new Set(happinessData.map(data => data.userEmail))];
+  uniqueEmails.forEach((email, index) => {
+    emailColors[email] = `hsl(${index * 360 / uniqueEmails.length}, 100%, 50%)`; 
+  });
+
+  const formattedData: { [sprintName: string]: any } = {};
+  happinessData.forEach((data) => { 
+    if (!formattedData[data.sprintName]) {
+      formattedData[data.sprintName] = { sprintName: data.sprintName }; 
+    }
+    formattedData[data.sprintName][data.userEmail] = data.happiness;
+  });
+
+    // Convert to array for recharts
+    const chartData = Object.values(formattedData);
+
+
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -337,7 +344,26 @@ const Happiness: React.FC = (): React.ReactNode => {
           </div>
         </TabsContent>
         <TabsContent value="Display">
-          <div className="BigContainerDisplay">DIsplay</div>
+        <div className="BigContainerDisplay">
+          <div className="projectTitle">{projectName}</div>
+            <ResponsiveContainer height={600} width="100%">
+              <LineChart data={chartData} margin={{ top: 20, right: 50, left: 20, bottom: 1 }}>
+                <CartesianGrid strokeDasharray="1 1" />
+                <XAxis dataKey="sprintName" />
+                <YAxis domain={[-3, 3]} ticks={[-3, -2, -1, 0, 1, 2, 3]} />
+                <Tooltip />
+                <Legend />
+                {uniqueEmails.map(email => (
+                  <Line
+                    key={email} 
+                    type="monotone" 
+                    dataKey={email} 
+                    stroke={emailColors[email]} 
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

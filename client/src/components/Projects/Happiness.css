@@ -277,3 +277,14 @@ margin-bottom: 170px;
     margin-right: 20px;
     margin-top: 20px;
   }
+
+  .projectTitle{
+    color: #000;
+    font-family: "Kaisei Decol";
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
