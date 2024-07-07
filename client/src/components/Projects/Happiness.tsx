@@ -211,13 +211,19 @@ const Happiness: React.FC = (): React.ReactNode => {
   const emailColors: { [email: string]: string } = {}; 
   const uniqueEmails = [...new Set(happinessData.map(data => data.userEmail))];
   uniqueEmails.forEach((email, index) => {
-    emailColors[email] = `hsl(${index * 360 / uniqueEmails.length}, 100%, 50%)`;
+    emailColors[email] = `hsl(${index * 360 / uniqueEmails.length}, 100%, 50%)`; 
   });
 
-  const formattedData = happinessData.map(data => ({
-    sprintName: data.sprintName,
-    [data.userEmail]: data.happiness,
-  }));
+  const formattedData: { [sprintName: string]: any } = {};
+  happinessData.forEach((data) => { 
+    if (!formattedData[data.sprintName]) {
+      formattedData[data.sprintName] = { sprintName: data.sprintName }; 
+    }
+    formattedData[data.sprintName][data.userEmail] = data.happiness;
+  });
+
+    // Convert to array for recharts
+    const chartData = Object.values(formattedData);
 
 
   return (
@@ -339,15 +345,16 @@ const Happiness: React.FC = (): React.ReactNode => {
         </TabsContent>
         <TabsContent value="Display">
         <div className="BigContainerDisplay">
-            <ResponsiveContainer height={400} width="100%">
-              <LineChart data={formattedData}>
-                <CartesianGrid strokeDasharray="3 3" />
+          <div className="projectTitle">{projectName}</div>
+            <ResponsiveContainer height={600} width="100%">
+              <LineChart data={chartData} margin={{ top: 20, right: 50, left: 20, bottom: 1 }}>
+                <CartesianGrid strokeDasharray="1 1" />
                 <XAxis dataKey="sprintName" />
-                <YAxis />
+                <YAxis domain={[-3, 3]} ticks={[-3, -2, -1, 0, 1, 2, 3]} />
                 <Tooltip />
                 <Legend />
                 {uniqueEmails.map(email => (
-                  <Line 
+                  <Line
                     key={email} 
                     type="monotone" 
                     dataKey={email} 
