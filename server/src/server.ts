@@ -6,6 +6,7 @@ import { initializeDb } from './database';
 import dotenv from 'dotenv';
 import { createProjectGroup, createProject, getProjectGroups, getProjects, getSemesters, joinProject, leaveProject, getUserProjects } from './projMgmt';
 import { sendStandupsEmail, saveHappiness, createSprints, getHappinessData, getSprints, getCurrentSprint } from './projFeat';
+import { ChangeEmail, ChangePassword } from './projConfig';
 
 dotenv.config();
 
@@ -41,6 +42,8 @@ initializeDb().then((db) => {
   app.post('/projects/sendStandupsEmail', (req, res) => sendStandupsEmail(req, res, db));
   app.post('/happiness/saveHappiness', (req, res) => saveHappiness(req, res, db));
   app.post('/happiness/createSprints', (req, res) => createSprints(req, res, db));
+  app.post('/settings/changeEmail', (req, res) => ChangeEmail(req, res, db));
+  app.post('/settings/changePassword', (req, res) => ChangePassword(req, res, db));
 
   app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);

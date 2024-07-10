@@ -30,6 +30,8 @@ const Settings: React.FC = () => {
   };
 
   const [role, setRole] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const [projectGroups, setProjectGroups] = useState<string[]>([]);
@@ -134,7 +136,7 @@ const Settings: React.FC = () => {
 
       setMessage(data.message || "Successfully joined the project!");
       if (data.message.includes("successfully")) {
-        window.location.reload(); 
+        window.location.reload();
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -173,7 +175,85 @@ const Settings: React.FC = () => {
 
       setMessage(data.message || "Successfully left the project!");
       if (data.message.includes("successfully")) {
-        window.location.reload(); 
+        window.location.reload();
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        setMessage(error.message);
+      }
+    }
+  };
+
+  const handleEmailChange = async () => {
+    if (!user) {
+      setMessage("User data not available. Please log in again.");
+      return;
+    }
+
+    const body = {
+      newEmail: newEmail,
+      oldEmail: user.email,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/settings/changeEmail",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setMessage(data.message || "Email changed successfully!");
+      if (data.message.includes("successfully")) {
+        window.location.reload();
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        setMessage(error.message);
+      }
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    if (!user) {
+      setMessage("User data not available. Please log in again.");
+      return;
+    }
+
+    const body = {
+      email: user.email,
+      password: newPassword,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/settings/changePassword",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setMessage(data.message || "Password changed successfully!");
+      if (data.message.includes("successfully")) {
+        window.location.reload();
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -199,11 +279,74 @@ const Settings: React.FC = () => {
               <div className="Email">
                 Email: {user?.email || "Email not available"}
               </div>
-              <img className="Edit2" src={Edit} />
+
+              <Dialog>
+                <DialogTrigger className="DialogTrigger">
+                  <img className="Edit" src={Edit} />
+                </DialogTrigger>
+                <DialogContent className="DialogContent">
+                  <DialogHeader>
+                    <DialogTitle className="DialogTitle">
+                      Change Email Address
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="EmailInput">
+                    <div className="newEmail">New Email: </div>
+                    <input
+                      type="text"
+                      className="NewEmail-inputBox"
+                      placeholder="Enter your new email"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                    />
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      className="create"
+                      variant="primary"
+                      onClick={handleEmailChange}
+                    >
+                      Change
+                    </Button>
+                  </DialogFooter>
+                  {message && <div className="Message">{message}</div>}
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="PersonalData">
               <div className="Password">Password: ********</div>
-              <img className="Edit2" src={Edit} />
+              <Dialog>
+                <DialogTrigger className="DialogTrigger">
+                  <img className="Edit2" src={Edit} />
+                </DialogTrigger>
+                <DialogContent className="DialogContent">
+                  <DialogHeader>
+                    <DialogTitle className="DialogTitle">
+                      Change Password
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="EmailInput">
+                    <div className="newEmail">New Password: </div>
+                    <input
+                      type="text"
+                      className="NewEmail-inputBox"
+                      placeholder="Enter your new password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                    />
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      className="create"
+                      variant="primary"
+                      onClick={handlePasswordChange}
+                    >
+                      Change
+                    </Button>
+                  </DialogFooter>
+                  {message && <div className="Message">{message}</div>}
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>
@@ -234,64 +377,63 @@ const Settings: React.FC = () => {
               <div className="ProjectItem3" key={project.id}>
                 <div className="ProjectName">{project.projectName}</div>
                 <div className="Imgs">
-
-                <Dialog>
-                  <DialogTrigger className="DialogTrigger">
-                    <img className="Add" src={Add} alt="Add" />
-                  </DialogTrigger>
-                  <DialogContent className="DialogContent">
-                    <DialogHeader>
-                      <DialogTitle className="DialogTitle">
-                        Join Project
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="RoleInput">
-                      <div className="Role">Role: </div>
-                      <input
-                        type="text"
-                        className="ProjAdmin-inputBox"
-                        placeholder="Enter your role"
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                      />
-                    </div>
-                    <DialogFooter>
-                      <Button
-                        className="create"
-                        variant="primary"
-                        onClick={() => handleJoin(project.projectName)}
-                      >
-                        Join
-                      </Button>
-                    </DialogFooter>
-                    {message && <div className="Message">{message}</div>}
-                  </DialogContent>
-                </Dialog>
-                <Dialog>
-                  <DialogTrigger className="DialogTrigger">
-                    <img className="Delete" src={Delete} alt="Delete" />
-                  </DialogTrigger>
-                  <DialogContent className="DialogContent">
-                    <DialogHeader>
-                      <DialogTitle className="DialogTitle">
-                        Leave Project
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="LeaveText">
-                      Are you sure you want to leave {project.projectName} ?{" "}
-                    </div>
-                    <DialogFooter>
-                      <Button
-                        className="create"
-                        variant="primary"
-                        onClick={() => handleLeave(project.projectName)}
-                      >
-                        Confirm
-                      </Button>
-                    </DialogFooter>
-                    {message && <div className="Message">{message}</div>}
-                  </DialogContent>
-                </Dialog>
+                  <Dialog>
+                    <DialogTrigger className="DialogTrigger">
+                      <img className="Add" src={Add} alt="Add" />
+                    </DialogTrigger>
+                    <DialogContent className="DialogContent">
+                      <DialogHeader>
+                        <DialogTitle className="DialogTitle">
+                          Join Project
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="RoleInput">
+                        <div className="Role">Role: </div>
+                        <input
+                          type="text"
+                          className="ProjAdmin-inputBox"
+                          placeholder="Enter your role"
+                          value={role}
+                          onChange={(e) => setRole(e.target.value)}
+                        />
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          className="create"
+                          variant="primary"
+                          onClick={() => handleJoin(project.projectName)}
+                        >
+                          Join
+                        </Button>
+                      </DialogFooter>
+                      {message && <div className="Message">{message}</div>}
+                    </DialogContent>
+                  </Dialog>
+                  <Dialog>
+                    <DialogTrigger className="DialogTrigger">
+                      <img className="Delete" src={Delete} alt="Delete" />
+                    </DialogTrigger>
+                    <DialogContent className="DialogContent">
+                      <DialogHeader>
+                        <DialogTitle className="DialogTitle">
+                          Leave Project
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="LeaveText">
+                        Are you sure you want to leave {project.projectName} ?{" "}
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          className="create"
+                          variant="primary"
+                          onClick={() => handleLeave(project.projectName)}
+                        >
+                          Confirm
+                        </Button>
+                      </DialogFooter>
+                      {message && <div className="Message">{message}</div>}
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 <hr className="ProjectDivider" />
               </div>
