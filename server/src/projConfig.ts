@@ -1,5 +1,6 @@
 import { Database } from "sqlite";
 import { Request, Response } from "express";
+import bcrypt from 'bcryptjs';
 
 export const ChangeEmail = async (req: Request, res: Response, db: Database) => {
     const { newEmail, oldEmail } = req.body;
@@ -30,8 +31,10 @@ export const ChangeEmail = async (req: Request, res: Response, db: Database) => 
 export const ChangePassword = async (req: Request, res: Response, db: Database) => {
     const { email, password } = req.body;
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     try {
-        await db.run(`UPDATE member SET password = ? WHERE memberEmail = ?`, [password, email]);
+        await db.run(`UPDATE users SET password = ? WHERE email = ?`, [hashedPassword, email]);
         res.status(200).json({ message: "Password updated successfully" });
     } catch (error) {
         console.error("Error updating password:", error);

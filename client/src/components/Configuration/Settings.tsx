@@ -331,7 +331,7 @@ const Settings: React.FC = () => {
                   <div className="EmailInput">
                     <div className="newEmail">New Password: </div>
                     <input
-                      type="text"
+                      type="password"
                       className="NewEmail-inputBox"
                       placeholder="Enter your new password"
                       value={newPassword}
