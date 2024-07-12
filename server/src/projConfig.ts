@@ -3,6 +3,12 @@ import { Request, Response } from "express";
 
 export const ChangeEmail = async (req: Request, res: Response, db: Database) => {
     const { newEmail, oldEmail } = req.body;
+    if (!newEmail) {
+        return res.status(400).json({ message: 'Please fill in new email!' });
+      }
+      else if (!newEmail.includes('@')) {
+        return res.status(400).json({ message: 'Invalid email address' });
+      }
 
     try {
         const projects = await db.all(`SELECT projectName FROM user_projects WHERE userEmail = ?`, [oldEmail])
