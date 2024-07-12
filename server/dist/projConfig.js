@@ -3,10 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChangePassword = exports.ChangeEmail = void 0;
 const ChangeEmail = async (req, res, db) => {
     const { newEmail, oldEmail } = req.body;
-    console.log('Request body:', req.body);
     try {
         const projects = await db.all(`SELECT projectName FROM user_projects WHERE userEmail = ?`, [oldEmail]);
-        console.log('Projects found:', projects);
         await db.run(`UPDATE users SET email = ? WHERE email = ?`, [newEmail, oldEmail]);
         await db.run(`UPDATE user_projects SET userEmail = ? WHERE userEmail = ?`, [newEmail, oldEmail]);
         await db.run(`UPDATE happiness SET userEmail = ? WHERE userEmail = ?`, [newEmail, oldEmail]);

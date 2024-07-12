@@ -214,6 +214,9 @@ const Settings: React.FC = () => {
 
       setMessage(data.message || "Email changed successfully!");
       if (data.message.includes("successfully")) {
+        const updatedUser = { ...user, email: newEmail };
+        setUser(updatedUser);
+        localStorage.setItem("email", newEmail);
         window.location.reload();
       }
     } catch (error: unknown) {
