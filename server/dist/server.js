@@ -11,6 +11,7 @@ const database_1 = require("./database");
 const dotenv_1 = __importDefault(require("dotenv"));
 const projMgmt_1 = require("./projMgmt");
 const projFeat_1 = require("./projFeat");
+const projConfig_1 = require("./projConfig");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = 3000;
@@ -39,6 +40,8 @@ app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
     app.post('/projects/sendStandupsEmail', (req, res) => (0, projFeat_1.sendStandupsEmail)(req, res, db));
     app.post('/happiness/saveHappiness', (req, res) => (0, projFeat_1.saveHappiness)(req, res, db));
     app.post('/happiness/createSprints', (req, res) => (0, projFeat_1.createSprints)(req, res, db));
+    app.post('/settings/changeEmail', (req, res) => (0, projConfig_1.ChangeEmail)(req, res, db));
+    app.post('/settings/changePassword', (req, res) => (0, projConfig_1.ChangePassword)(req, res, db));
     app.listen(port, () => {
         console.log(`Server running on http://localhost:${port}`);
     });
