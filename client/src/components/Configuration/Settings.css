@@ -177,15 +177,10 @@ body {
     width: 40px;
     height: 40px;
     cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
 
   }
 
-  .Edit2 {
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-
-  }
   
   .ProjectDivider {
     border: none;
@@ -206,7 +201,7 @@ body {
     justify-content: space-between;
     width: 100%;
     margin: 40px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
   }
   
   .Email, .Password {
