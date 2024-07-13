@@ -1,8 +1,15 @@
 import { Database } from "sqlite";
 import { Request, Response } from "express";
+import bcrypt from 'bcryptjs';
 
 export const ChangeEmail = async (req: Request, res: Response, db: Database) => {
     const { newEmail, oldEmail } = req.body;
+    if (!newEmail) {
+        return res.status(400).json({ message: 'Please fill in new email!' });
+      }
+      else if (!newEmail.includes('@')) {
+        return res.status(400).json({ message: 'Invalid email address' });
+      }
 
     try {
         const projects = await db.all(`SELECT projectName FROM user_projects WHERE userEmail = ?`, [oldEmail])
@@ -24,8 +31,17 @@ export const ChangeEmail = async (req: Request, res: Response, db: Database) => 
 export const ChangePassword = async (req: Request, res: Response, db: Database) => {
     const { email, password } = req.body;
 
+    if (!password) {
+        return res.status(400).json({ message: 'Please fill in new password!' });
+      }
+      else if (password.length < 8) {
+        return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+      }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     try {
-        await db.run(`UPDATE member SET password = ? WHERE memberEmail = ?`, [password, email]);
+        await db.run(`UPDATE users SET password = ? WHERE email = ?`, [hashedPassword, email]);
         res.status(200).json({ message: "Password updated successfully" });
     } catch (error) {
         console.error("Error updating password:", error);

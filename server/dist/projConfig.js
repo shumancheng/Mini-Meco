@@ -1,8 +1,18 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChangePassword = exports.ChangeEmail = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const ChangeEmail = async (req, res, db) => {
     const { newEmail, oldEmail } = req.body;
+    if (!newEmail) {
+        return res.status(400).json({ message: 'Please fill in new email!' });
+    }
+    else if (!newEmail.includes('@')) {
+        return res.status(400).json({ message: 'Invalid email address' });
+    }
     try {
         const projects = await db.all(`SELECT projectName FROM user_projects WHERE userEmail = ?`, [oldEmail]);
         await db.run(`UPDATE users SET email = ? WHERE email = ?`, [newEmail, oldEmail]);
@@ -21,8 +31,9 @@ const ChangeEmail = async (req, res, db) => {
 exports.ChangeEmail = ChangeEmail;
 const ChangePassword = async (req, res, db) => {
     const { email, password } = req.body;
+    const hashedPassword = await bcryptjs_1.default.hash(password, 10);
     try {
-        await db.run(`UPDATE member SET password = ? WHERE memberEmail = ?`, [password, email]);
+        await db.run(`UPDATE users SET password = ? WHERE email = ?`, [hashedPassword, email]);
         res.status(200).json({ message: "Password updated successfully" });
     }
     catch (error) {
