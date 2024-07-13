@@ -320,7 +320,7 @@ const Settings: React.FC = () => {
               <div className="Password">Password: ********</div>
               <Dialog>
                 <DialogTrigger className="DialogTrigger">
-                  <img className="Edit2" src={Edit} />
+                  <img className="Edit" src={Edit} />
                 </DialogTrigger>
                 <DialogContent className="DialogContent">
                   <DialogHeader>
