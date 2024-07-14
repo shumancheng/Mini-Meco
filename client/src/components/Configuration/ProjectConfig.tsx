@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReturnButton from "../Components/return";
 import "./ProjectConfig.css";
@@ -9,15 +9,16 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import Button from "react-bootstrap/esm/Button";
 
 const ProjectConfig: React.FC = () => {
   const navigate = useNavigate();
-
 
   const handleNavigation = () => {
     navigate("/project-config");
   };
 
+  const [url, setUrl] = useState<string[]>([]); 
   const [projects, setProjects] = useState<string[]>([]);
   // @ts-ignore: suppress unused variable warning
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
@@ -36,7 +37,9 @@ const ProjectConfig: React.FC = () => {
             `http://localhost:3000/userProjects?userEmail=${userEmail}`
           );
           const data = await response.json();
-          setProjects(data.map((project: { projectName: string }) => project.projectName));
+          setProjects(
+            data.map((project: { projectName: string }) => project.projectName)
+          );
         } catch (error) {
           console.error("Error fetching projects:", error);
         }
@@ -50,7 +53,6 @@ const ProjectConfig: React.FC = () => {
     setSelectedProject(projectName);
   };
 
-
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -59,7 +61,7 @@ const ProjectConfig: React.FC = () => {
       </div>
       <div className="BigContainerProjConfig">
         <div className="margintop">
-      <Select onValueChange={handleProjectChange}>
+          <Select onValueChange={handleProjectChange}>
             <SelectTrigger className="SelectTriggerProject">
               <SelectValue placeholder="Select Project" />
             </SelectTrigger>
@@ -71,8 +73,19 @@ const ProjectConfig: React.FC = () => {
               ))}
             </SelectContent>
           </Select>
-          </div>
-          <div className="gitURL">Git URL</div>
+        </div>
+        <div className="gitURL">Git URL</div>
+        <input
+          className="gitURLInput"
+          type="url"
+          placeholder="Please Add Git URL"
+        />
+                    <Button
+              className="confirm"
+              type="submit"
+            >
+              Confirm
+            </Button>
       </div>
     </div>
   );

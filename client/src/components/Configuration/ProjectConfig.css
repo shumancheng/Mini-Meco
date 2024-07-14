@@ -22,7 +22,7 @@
   .BigContainerProjConfig {
     width: 1300px;
     border-radius: 5px;
-    height: 550px;
+    height: 580px;
     flex-shrink: 0;
     background: #FFF;
     padding: 10px;
@@ -36,5 +36,30 @@
   }
 
   .gitURL{
+    width: 313px;
+    height: 55px;
+    flex-shrink: 0;
+    color: #000;
+font-family: "Kaisei Decol";
+font-size: 23px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+margin-top: 50px;
+margin-bottom: 30px;
+  }
 
+  .gitURLInput{
+    width: 993px;
+height: 37px;
+flex-shrink: 0;
+background: #EAF0F7;
+color: 000;
+font-family: "Kaisei Decol";
+font-size: 20px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+border-color: transparent;
+border-radius: 5px;
   }
