@@ -39,6 +39,7 @@ async function initializeDb() {
     CREATE TABLE IF NOT EXISTS user_projects (
       userEmail TEXT,
       projectName TEXT,
+      url TEXT,
       PRIMARY KEY (userEmail, projectName),
       FOREIGN KEY (userEmail) REFERENCES users(email)
     )

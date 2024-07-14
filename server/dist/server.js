@@ -42,6 +42,7 @@ app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
     app.post('/happiness/createSprints', (req, res) => (0, projFeat_1.createSprints)(req, res, db));
     app.post('/settings/changeEmail', (req, res) => (0, projConfig_1.ChangeEmail)(req, res, db));
     app.post('/settings/changePassword', (req, res) => (0, projConfig_1.ChangePassword)(req, res, db));
+    app.post('/projConfig/addURL', (req, res) => (0, projConfig_1.addURL)(req, res, db));
     app.listen(port, () => {
         console.log(`Server running on http://localhost:${port}`);
     });
