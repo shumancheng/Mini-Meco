@@ -18,6 +18,7 @@ const ProjectConfig: React.FC = () => {
     navigate("/project-config");
   };
 
+  const [url, setUrl] = useState<string[]>([]); 
   const [projects, setProjects] = useState<string[]>([]);
   // @ts-ignore: suppress unused variable warning
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
