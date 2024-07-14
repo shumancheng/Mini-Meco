@@ -31,6 +31,12 @@ const ChangeEmail = async (req, res, db) => {
 exports.ChangeEmail = ChangeEmail;
 const ChangePassword = async (req, res, db) => {
     const { email, password } = req.body;
+    if (!password) {
+        return res.status(400).json({ message: 'Please fill in new password!' });
+    }
+    else if (password.length < 8) {
+        return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+    }
     const hashedPassword = await bcryptjs_1.default.hash(password, 10);
     try {
         await db.run(`UPDATE users SET password = ? WHERE email = ?`, [hashedPassword, email]);
