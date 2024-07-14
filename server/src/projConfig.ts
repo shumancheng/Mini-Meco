@@ -50,7 +50,7 @@ export const ChangePassword = async (req: Request, res: Response, db: Database) 
 }
 
 export const addURL = async (req: Request, res: Response, db: Database) => {
-  const {email, URL} = req.body;
+  const {email, URL, project} = req.body;
 
   if (!URL) {
     return res.status(400).json({ message: 'Please fill in URL!' });
@@ -60,7 +60,7 @@ export const addURL = async (req: Request, res: Response, db: Database) => {
   }
 
   try {
-    await db.run(`UPDATE user_projects SET url = ? WHERE userEmail = ?`, [URL, email]);
+    await db.run(`UPDATE user_projects SET url = ? WHERE userEmail = ? AND projectName = ?`, [URL, email, project]);
     res.status(200).json({ message: "URL added successfully" });
   } catch (error) {
     console.error("Error adding URL:", error);
