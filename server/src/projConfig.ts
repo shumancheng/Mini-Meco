@@ -48,3 +48,22 @@ export const ChangePassword = async (req: Request, res: Response, db: Database) 
         res.status(500).json({ message: "Failed to update password", error });
     }
 }
+
+export const addURL = async (req: Request, res: Response, db: Database) => {
+  const {email, URL} = req.body;
+
+  if (!URL) {
+    return res.status(400).json({ message: 'Please fill in URL!' });
+  }
+  else if (!URL.includes('git')) {
+    return res.status(400).json({ message: 'Invalid URL' });
+  }
+
+  try {
+    await db.run(`UPDATE user_projects SET url = ? WHERE userEmail = ?`, [URL, email]);
+    res.status(200).json({ message: "URL added successfully" });
+  } catch (error) {
+    console.error("Error adding URL:", error);
+    res.status(500).json({ message: "Failed to add URL", error });
+  }
+}
