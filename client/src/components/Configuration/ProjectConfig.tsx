@@ -76,13 +76,21 @@ const ProjectConfig: React.FC = () => {
           },
         }
       );
-      const data = await response.json();
-      console.log(data);
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error fetching URL:", errorData);
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Fetched URL data:', JSON.stringify(data)); // Log the data to see the structure
+        
+      if (data && data.url && data.url.url) {
+        console.log("Extracted URL:", data.url.url);
+        setURL(data.url.url); // Use the correct data structure
       } else {
-        setURL(data.url || "");
+        setURL("");
       }
     } catch (error) {
       console.error("Error fetching URL:", error);
