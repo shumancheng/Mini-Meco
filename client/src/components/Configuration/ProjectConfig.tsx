@@ -52,6 +52,41 @@ const ProjectConfig: React.FC = () => {
 
   const handleProjectChange = (projectName: string) => {
     setSelectedProject(projectName);
+    fetchProjectURL(projectName);
+  };
+
+  const fetchProjectURL = async (projectName: string) => {
+    if (!projectName) {
+      console.error("Selected project is missing");
+      return;
+    } else if (!localStorage.getItem("email")) {
+      console.error("User email is missing");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/getGitURL?email=${localStorage.getItem(
+          "email"
+        )}&project=${projectName}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error fetching URL:", errorData);
+      } else {
+        setURL(data.url || "");
+      }
+    } catch (error) {
+      console.error("Error fetching URL:", error);
+    }
   };
 
   const handleAddURL = async () => {

@@ -6,7 +6,7 @@ import { initializeDb } from './database';
 import dotenv from 'dotenv';
 import { createProjectGroup, createProject, getProjectGroups, getProjects, getSemesters, joinProject, leaveProject, getUserProjects } from './projMgmt';
 import { sendStandupsEmail, saveHappiness, createSprints, getHappinessData, getSprints, getCurrentSprint } from './projFeat';
-import { ChangeEmail, ChangePassword, addURL } from './projConfig';
+import { ChangeEmail, ChangePassword, addURL, getURL } from './projConfig';
 
 dotenv.config();
 
@@ -30,6 +30,7 @@ initializeDb().then((db) => {
   app.get('/getHappinessData', (req, res) => { getHappinessData(req, res, db) });
   app.get('/sprints', (req, res) => { getSprints(req, res, db) });
   app.get('/currentSprint', (req, res) => { getCurrentSprint(req, res, db) });
+  app.get('/getGitURL', (req, res) => { getURL(req, res, db) });
 
   app.post('/register', (req, res) => register(req, res, db));
   app.post('/login', (req, res) => login(req, res, db));

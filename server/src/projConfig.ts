@@ -67,3 +67,15 @@ export const addURL = async (req: Request, res: Response, db: Database) => {
     res.status(500).json({ message: "Failed to add URL", error });
   }
 }
+
+export const getURL = async (req: Request, res: Response, db: Database) => {
+  const {email, project} = req.query;
+
+  try {
+    const url = await db.get(`SELECT url FROM user_projects WHERE userEmail = ? AND projectName = ?`, [email, project]);
+    res.status(200).json({ url });
+  } catch (error) {
+    console.error("Error fetching URL:", error);
+    res.status(500).json({ message: "Failed to fetch URL", error });
+  }
+}
