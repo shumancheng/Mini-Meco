@@ -69,7 +69,8 @@ exports.addURL = addURL;
 const getURL = async (req, res, db) => {
     const { email, project } = req.query;
     try {
-        const url = await db.get(`SELECT url FROM user_projects WHERE userEmail = ? AND projectName = ?`, [email, project]);
+        const urlObj = await db.get(`SELECT url FROM user_projects WHERE userEmail = ? AND projectName = ?`, [email, project]);
+        const url = urlObj ? urlObj.url : null;
         res.status(200).json({ url });
     }
     catch (error) {
