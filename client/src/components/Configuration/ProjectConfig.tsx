@@ -174,67 +174,70 @@ const ProjectConfig: React.FC = () => {
         </div>
         {selectedProject && (
           <>
-          
             <div className="gitURL">Git URL</div>
 
             {!edit ? (
               <>
-            <input
-              className="gitURLInput"
-              type="url"
-              placeholder="Please Add Git URL"
-              value={url}
-              onChange={(e) => setURL(e.target.value)}
-            />
-            <Button className="confirm" type="submit" onClick={handleAddURL}>
-              Confirm
-            </Button>
-            </>
-          ) : (
-              <div className="urlDisplay">
-                <span>{url}</span>
-
+                <input
+                  className="gitURLInput"
+                  type="url"
+                  placeholder="Please Add Git URL"
+                  value={url}
+                  onChange={(e) => setURL(e.target.value)}
+                />
+                <Button
+                  className="confirm"
+                  type="submit"
+                  onClick={handleAddURL}
+                >
+                  Confirm
+                </Button>
+              </>
+            ) : (
+              <div className="urlContainer">
+                <input
+                  type="text"
+                  className="urlDisplay"
+                  value={url}
+                  readOnly
+                />
                 <Dialog>
-                <DialogTrigger className="DialogTrigger">
-                  <img className="Edit" src={Edit} />
-                </DialogTrigger>
-                <DialogContent className="DialogContent URLDialog">
-                  <DialogHeader>
-                    <DialogTitle className="DialogTitle">
-                      Change GitHub URL
-                    </DialogTitle>
-                  </DialogHeader>
-                  <div className="URLInput">
-                    <div className="newURL">New URL: </div>
-                    <input
-                      type="text"
-                      className="NewURL-inputBox"
-                      placeholder="Enter new URL"
-                    />
-                  </div>
-                  <DialogFooter>
-                    <Button
-                      className="create"
-                      variant="primary"
-                      onClick={handleEditURL}
-                    >
-                      Change
-                    </Button>
-                  </DialogFooter>
-                  {message && <div className="Message">{message}</div>}
-                </DialogContent>
-              </Dialog>
-
+                  <DialogTrigger className="DialogTrigger">
+                    <img className="Edit gitEdit" src={Edit} />
+                  </DialogTrigger>
+                  <DialogContent className="DialogContent URLDialog">
+                    <DialogHeader>
+                      <DialogTitle className="DialogTitle">
+                        Change GitHub URL
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="URLInput">
+                      <div className="newURL">New URL: </div>
+                      <input
+                        type="text"
+                        className="NewURL-inputBox"
+                        placeholder="Enter new URL"
+                      />
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        className="create"
+                        variant="primary"
+                        onClick={handleEditURL}
+                      >
+                        Change
+                      </Button>
+                    </DialogFooter>
+                    {message && <div className="Message">{message}</div>}
+                  </DialogContent>
+                </Dialog>
               </div>
             )}
-            
-            
           </>
         )}
         {message && <div className="message">{message}</div>}
       </div>
     </div>
-  
   );
 };
 

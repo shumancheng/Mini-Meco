@@ -64,23 +64,25 @@ border-color: transparent;
 border-radius: 5px;
   }
 
-  .urlDisplay{
-    width: 993px;
-height: 37px;
-flex-shrink: 0;
-background: #EAF0F7;
-color: 000;
-font-family: "Kaisei Decol";
-font-size: 20px;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
-border-color: transparent;
-border-radius: 5px;
-justify-content: center;
-text-align: left;
+  .urlContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between input and button */
+    margin-top: 30px; /* Space above the container */
+    margin-left: 130px;
   }
-
+  
+  .urlDisplay {
+    flex: 1; /* Takes up available space */
+    background: #EAF0F7;
+    color: #000;
+    font-family: "Kaisei Decol";
+    font-size: 20px;
+    font-weight: 700;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+  }
   
 .URLInput{
   display: flex;
