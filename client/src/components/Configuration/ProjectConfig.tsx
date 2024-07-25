@@ -10,6 +10,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Button from "react-bootstrap/esm/Button";
+import Edit from "./../../assets/Edit.png";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const ProjectConfig: React.FC = () => {
   const navigate = useNavigate();
@@ -184,9 +193,38 @@ const ProjectConfig: React.FC = () => {
           ) : (
               <div className="urlDisplay">
                 <span>{url}</span>
-                <Button className="edit" onClick={handleEditURL}>
-                  Edit
-                </Button>
+
+                <Dialog>
+                <DialogTrigger className="DialogTrigger">
+                  <img className="Edit" src={Edit} />
+                </DialogTrigger>
+                <DialogContent className="DialogContent URLDialog">
+                  <DialogHeader>
+                    <DialogTitle className="DialogTitle">
+                      Change GitHub URL
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="URLInput">
+                    <div className="newURL">New URL: </div>
+                    <input
+                      type="text"
+                      className="NewURL-inputBox"
+                      placeholder="Enter new URL"
+                    />
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      className="create"
+                      variant="primary"
+                      onClick={handleEditURL}
+                    >
+                      Change
+                    </Button>
+                  </DialogFooter>
+                  {message && <div className="Message">{message}</div>}
+                </DialogContent>
+              </Dialog>
+
               </div>
             )}
             

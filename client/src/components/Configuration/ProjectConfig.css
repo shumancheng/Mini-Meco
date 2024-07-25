@@ -63,3 +63,50 @@ line-height: normal;
 border-color: transparent;
 border-radius: 5px;
   }
+
+  .urlDisplay{
+    width: 993px;
+height: 37px;
+flex-shrink: 0;
+background: #EAF0F7;
+color: 000;
+font-family: "Kaisei Decol";
+font-size: 20px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+border-color: transparent;
+border-radius: 5px;
+justify-content: center;
+text-align: left;
+  }
+
+  
+.URLInput{
+  display: flex;
+}
+
+
+.newURL{
+  color: #000;
+  font-family: "Kaisei Decol";
+  font-size: 23px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-left: 20px;
+}
+
+.NewURL-inputBox{
+  border: none;
+  width: 70%;
+  height: 50px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.40);
+  font-size: medium;
+  margin-left: 100px;
+  font-family: var(--font-kaisei-decol);
+}
+
+.URLDialog{
+  margin-top: 50px;
+}
