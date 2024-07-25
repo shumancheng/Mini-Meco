@@ -20,7 +20,6 @@ const ProjectConfig: React.FC = () => {
 
   const [url, setURL] = useState("");
   const [projects, setProjects] = useState<string[]>([]);
-  // @ts-ignore: suppress unused variable warning
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [message, setMessage] = useState("");
 
@@ -51,6 +50,7 @@ const ProjectConfig: React.FC = () => {
   }, [navigate]);
 
   const handleProjectChange = (projectName: string) => {
+    console.log("Selected project:", projectName);
     setSelectedProject(projectName);
     fetchProjectURL(projectName);
   };
@@ -84,9 +84,11 @@ const ProjectConfig: React.FC = () => {
       }
 
       const data = await response.json();
+      console.log("Fetched URL data:", data);
 
       if (data && data.url && data.url.url) {
         setURL(data.url.url);
+        console.log(data.url.url);
       } else {
         setURL("");
       }
@@ -152,17 +154,21 @@ const ProjectConfig: React.FC = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="gitURL">Git URL</div>
-        <input
-          className="gitURLInput"
-          type="url"
-          placeholder="Please Add Git URL"
-          value={url}
-          onChange={(e) => setURL(e.target.value)}
-        />
-        <Button className="confirm" type="submit" onClick={handleAddURL}>
-          Confirm
-        </Button>
+        {selectedProject && (
+          <>
+            <div className="gitURL">Git URL</div>
+            <input
+              className="gitURLInput"
+              type="url"
+              placeholder="Please Add Git URL"
+              value={url ?? ""}
+              onChange={(e) => setURL(e.target.value)}
+            />
+            <Button className="confirm" type="submit" onClick={handleAddURL}>
+              Confirm
+            </Button>
+          </>
+        )}
         {message && <div className="message">{message}</div>}
       </div>
     </div>
