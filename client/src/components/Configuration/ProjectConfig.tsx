@@ -22,6 +22,7 @@ const ProjectConfig: React.FC = () => {
   const [projects, setProjects] = useState<string[]>([]);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+  const [edit, setEdit] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -86,11 +87,15 @@ const ProjectConfig: React.FC = () => {
       const data = await response.json();
       console.log("Fetched URL data:", data);
 
-      if (data && data.url && data.url.url) {
-        setURL(data.url.url);
-        console.log(data.url.url);
+      if (data && data.url) {
+        setURL(data.url || "");
+        setEdit(!!data.url);
+        console.log("URL set:", data.url);
+        console.log("Edit set:", !!data.url);
       } else {
         setURL("");
+        setEdit(false);
+        console.log("Edit set:", false);
       }
     } catch (error) {
       console.error("Error fetching URL:", error);
@@ -133,6 +138,10 @@ const ProjectConfig: React.FC = () => {
     }
   };
 
+  const handleEditURL = () => {
+    setEdit(true);
+  };
+
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -156,22 +165,38 @@ const ProjectConfig: React.FC = () => {
         </div>
         {selectedProject && (
           <>
+          
             <div className="gitURL">Git URL</div>
+
+            {!edit ? (
+              <>
             <input
               className="gitURLInput"
               type="url"
               placeholder="Please Add Git URL"
-              value={url ?? ""}
+              value={url}
               onChange={(e) => setURL(e.target.value)}
             />
             <Button className="confirm" type="submit" onClick={handleAddURL}>
               Confirm
             </Button>
+            </>
+          ) : (
+              <div className="urlDisplay">
+                <span>{url}</span>
+                <Button className="edit" onClick={handleEditURL}>
+                  Edit
+                </Button>
+              </div>
+            )}
+            
+            
           </>
         )}
         {message && <div className="message">{message}</div>}
       </div>
     </div>
+  
   );
 };
 
