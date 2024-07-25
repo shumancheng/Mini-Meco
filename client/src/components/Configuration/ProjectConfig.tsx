@@ -28,6 +28,7 @@ const ProjectConfig: React.FC = () => {
   };
 
   const [url, setURL] = useState("");
+  const [newURL, setNewURL] = useState("");
   const [projects, setProjects] = useState<string[]>([]);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [message, setMessage] = useState("");
@@ -147,8 +148,40 @@ const ProjectConfig: React.FC = () => {
     }
   };
 
-  const handleEditURL = () => {
-    setEdit(true);
+  const handleChangeURL = async () => {
+    const userEmail = localStorage.getItem("email");
+    if (userEmail && selectedProject) {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/projConfig/addURL",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: userEmail,
+              URL: newURL,
+              project: selectedProject,
+            }),
+          }
+        );
+        const data = await response.json();
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Error changing URL:", errorData);
+        } else {
+          setMessage(data.message || "URL changed successfully");
+          if (data.message.includes("successfully")) {
+            window.location.reload();
+          }
+        }
+      } catch (error) {
+        console.error("Error changed URL:", error);
+      }
+    } else {
+      console.error("User email or selected project is missing");
+    }
   };
 
   return (
@@ -217,13 +250,15 @@ const ProjectConfig: React.FC = () => {
                         type="text"
                         className="NewURL-inputBox"
                         placeholder="Enter new URL"
+                        value={newURL}
+                        onChange={(e) => setNewURL(e.target.value)}
                       />
                     </div>
                     <DialogFooter>
                       <Button
                         className="create"
                         variant="primary"
-                        onClick={handleEditURL}
+                        onClick={handleChangeURL}
                       >
                         Change
                       </Button>
