@@ -63,3 +63,52 @@ line-height: normal;
 border-color: transparent;
 border-radius: 5px;
   }
+
+  .urlContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    margin-top: 30px; 
+    margin-left: 130px;
+  }
+  
+  .urlDisplay {
+    flex: 1; 
+    background: #EAF0F7;
+    color: #000;
+    font-family: "Kaisei Decol";
+    font-size: 20px;
+    font-weight: 700;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+.URLInput{
+  display: flex;
+}
+
+
+.newURL{
+  color: #000;
+  font-family: "Kaisei Decol";
+  font-size: 23px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-left: 20px;
+}
+
+.NewURL-inputBox{
+  border: none;
+  width: 70%;
+  height: 50px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.40);
+  font-size: medium;
+  margin-left: 100px;
+  font-family: var(--font-kaisei-decol);
+}
+
+.URLDialog{
+  margin-top: 50px;
+}

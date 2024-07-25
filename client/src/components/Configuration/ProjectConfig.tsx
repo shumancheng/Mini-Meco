@@ -10,6 +10,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Button from "react-bootstrap/esm/Button";
+import Edit from "./../../assets/Edit.png";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const ProjectConfig: React.FC = () => {
   const navigate = useNavigate();
@@ -19,10 +28,11 @@ const ProjectConfig: React.FC = () => {
   };
 
   const [url, setURL] = useState("");
+  const [newURL, setNewURL] = useState("");
   const [projects, setProjects] = useState<string[]>([]);
-  // @ts-ignore: suppress unused variable warning
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+  const [edit, setEdit] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -51,7 +61,55 @@ const ProjectConfig: React.FC = () => {
   }, [navigate]);
 
   const handleProjectChange = (projectName: string) => {
+    console.log("Selected project:", projectName);
     setSelectedProject(projectName);
+    fetchProjectURL(projectName);
+  };
+
+  const fetchProjectURL = async (projectName: string) => {
+    if (!projectName) {
+      console.error("Selected project is missing");
+      return;
+    } else if (!localStorage.getItem("email")) {
+      console.error("User email is missing");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/getGitURL?email=${localStorage.getItem(
+          "email"
+        )}&project=${projectName}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error fetching URL:", errorData);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Fetched URL data:", data);
+
+      if (data && data.url) {
+        setURL(data.url || "");
+        setEdit(!!data.url);
+        console.log("URL set:", data.url);
+        console.log("Edit set:", !!data.url);
+      } else {
+        setURL("");
+        setEdit(false);
+        console.log("Edit set:", false);
+      }
+    } catch (error) {
+      console.error("Error fetching URL:", error);
+    }
   };
 
   const handleAddURL = async () => {
@@ -90,6 +148,42 @@ const ProjectConfig: React.FC = () => {
     }
   };
 
+  const handleChangeURL = async () => {
+    const userEmail = localStorage.getItem("email");
+    if (userEmail && selectedProject) {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/projConfig/addURL",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: userEmail,
+              URL: newURL,
+              project: selectedProject,
+            }),
+          }
+        );
+        const data = await response.json();
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Error changing URL:", errorData);
+        } else {
+          setMessage(data.message || "URL changed successfully");
+          if (data.message.includes("successfully")) {
+            window.location.reload();
+          }
+        }
+      } catch (error) {
+        console.error("Error changed URL:", error);
+      }
+    } else {
+      console.error("User email or selected project is missing");
+    }
+  };
+
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -111,17 +205,71 @@ const ProjectConfig: React.FC = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="gitURL">Git URL</div>
-        <input
-          className="gitURLInput"
-          type="url"
-          placeholder="Please Add Git URL"
-          value={url}
-          onChange={(e) => setURL(e.target.value)}
-        />
-        <Button className="confirm" type="submit" onClick={handleAddURL}>
-          Confirm
-        </Button>
+        {selectedProject && (
+          <>
+            <div className="gitURL">Git URL</div>
+
+            {!edit ? (
+              <>
+                <input
+                  className="gitURLInput"
+                  type="url"
+                  placeholder="Please Add Git URL"
+                  value={url}
+                  onChange={(e) => setURL(e.target.value)}
+                />
+                <Button
+                  className="confirm"
+                  type="submit"
+                  onClick={handleAddURL}
+                >
+                  Confirm
+                </Button>
+              </>
+            ) : (
+              <div className="urlContainer">
+                <input
+                  type="text"
+                  className="urlDisplay"
+                  value={url}
+                  readOnly
+                />
+                <Dialog>
+                  <DialogTrigger className="DialogTrigger">
+                    <img className="Edit gitEdit" src={Edit} />
+                  </DialogTrigger>
+                  <DialogContent className="DialogContent URLDialog">
+                    <DialogHeader>
+                      <DialogTitle className="DialogTitle">
+                        Change GitHub URL
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="URLInput">
+                      <div className="newURL">New URL: </div>
+                      <input
+                        type="text"
+                        className="NewURL-inputBox"
+                        placeholder="Enter new URL"
+                        value={newURL}
+                        onChange={(e) => setNewURL(e.target.value)}
+                      />
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        className="create"
+                        variant="primary"
+                        onClick={handleChangeURL}
+                      >
+                        Change
+                      </Button>
+                    </DialogFooter>
+                    {message && <div className="Message">{message}</div>}
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
+          </>
+        )}
         {message && <div className="message">{message}</div>}
       </div>
     </div>
