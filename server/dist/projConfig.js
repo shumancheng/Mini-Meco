@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addURL = exports.ChangePassword = exports.ChangeEmail = void 0;
+exports.getURL = exports.addURL = exports.ChangePassword = exports.ChangeEmail = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const ChangeEmail = async (req, res, db) => {
     const { newEmail, oldEmail } = req.body;
@@ -66,3 +66,16 @@ const addURL = async (req, res, db) => {
     }
 };
 exports.addURL = addURL;
+const getURL = async (req, res, db) => {
+    const { email, project } = req.query;
+    try {
+        const urlObj = await db.get(`SELECT url FROM user_projects WHERE userEmail = ? AND projectName = ?`, [email, project]);
+        const url = urlObj ? urlObj.url : null;
+        res.status(200).json({ url });
+    }
+    catch (error) {
+        console.error("Error fetching URL:", error);
+        res.status(500).json({ message: "Failed to fetch URL", error });
+    }
+};
+exports.getURL = getURL;

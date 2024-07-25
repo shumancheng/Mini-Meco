@@ -60,7 +60,6 @@ const Happiness: React.FC = (): React.ReactNode => {
     }
   }, [location.state]);
 
-  console.log("Project Name:", projectName);
 
   useEffect(() => {
     const fetchProjectGroups = async () => {
@@ -216,12 +215,12 @@ const Happiness: React.FC = (): React.ReactNode => {
 
   const emailColors: { [email: string]: string } = {};
   const uniqueEmails = [
-    ...new Set(happinessData.map((data) => data.userEmail)),
+    ...new Set(happinessData.map((data) => data.userEmail)), 
   ];
   uniqueEmails.forEach((email, index) => {
-    emailColors[email] = `hsl(${
-      (index * 360) / uniqueEmails.length
-    }, 100%, 50%)`;
+    emailColors[email] = `hsl(${ 
+      (index * 360) / uniqueEmails.length 
+    }, 100%, 50%)`; 
   });
 
   const formattedData: { [sprintName: string]: any } = {};
