@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getURL = exports.addURL = exports.ChangePassword = exports.ChangeEmail = void 0;
+exports.changeURL = exports.getURL = exports.addURL = exports.ChangePassword = exports.ChangeEmail = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const ChangeEmail = async (req, res, db) => {
     const { newEmail, oldEmail } = req.body;
@@ -79,3 +79,21 @@ const getURL = async (req, res, db) => {
     }
 };
 exports.getURL = getURL;
+const changeURL = async (req, res, db) => {
+    const { email, URL, project } = req.body;
+    if (!URL) {
+        return res.status(400).json({ message: 'Please fill in URL!' });
+    }
+    else if (!URL.includes('git')) {
+        return res.status(400).json({ message: 'Invalid URL' });
+    }
+    try {
+        await db.run(`UPDATE user_projects SET url = ? WHERE userEmail = ? AND projectName = ?`, [URL, email, project]);
+        res.status(200).json({ message: "URL added successfully" });
+    }
+    catch (error) {
+        console.error("Error adding URL:", error);
+        res.status(500).json({ message: "Failed to add URL", error });
+    }
+};
+exports.changeURL = changeURL;
