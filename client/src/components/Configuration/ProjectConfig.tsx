@@ -61,7 +61,7 @@ const ProjectConfig: React.FC = () => {
   }, [navigate]);
 
   const handleProjectChange = (projectName: string) => {
-    console.log("Selected project:", projectName);
+
     setSelectedProject(projectName);
     fetchProjectURL(projectName);
   };
@@ -95,17 +95,14 @@ const ProjectConfig: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log("Fetched URL data:", data);
+      
 
       if (data && data.url) {
         setURL(data.url || "");
         setEdit(!!data.url);
-        console.log("URL set:", data.url);
-        console.log("Edit set:", !!data.url);
       } else {
         setURL("");
         setEdit(false);
-        console.log("Edit set:", false);
       }
     } catch (error) {
       console.error("Error fetching URL:", error);
