@@ -20,8 +20,8 @@ const CodeActivity: React.FC = () => {
       const response = await octokit.request(
         "GET /repos/{owner}/{repo}/commits",
         {
-          owner: "shumancheng",
-          repo: "Mini-Meco",
+          owner: "amosproj",
+          repo: "amos2024ss04-building-information-enhancer",
         }
       );
       setIssue(response.data);
