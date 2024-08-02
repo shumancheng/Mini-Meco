@@ -64,7 +64,6 @@ const Settings: React.FC = () => {
           if (!response.ok) {
             throw new Error(data.message || "Something went wrong");
           }
-          setUser(data);
           setGithubUsername(data.githubUsername || "");
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -408,7 +407,7 @@ const Settings: React.FC = () => {
               </Dialog>
             </div>
             <div className="PersonalData">
-              <div className="GitHub">GitHub username: {githubUsername}</div>
+              <div className="GitHub">GitHub Username: {githubUsername}</div>
               <Dialog>
                 <DialogTrigger className="DialogTrigger">
                   <img className="Edit" src={Edit} />
