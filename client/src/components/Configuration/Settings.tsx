@@ -33,6 +33,7 @@ const Settings: React.FC = () => {
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [githubUsername, setGithubUsername] = useState("");
 
   const [projectGroups, setProjectGroups] = useState<string[]>([]);
   const [projects, setProjects] = useState<
@@ -266,6 +267,40 @@ const Settings: React.FC = () => {
     }
   };
 
+  const handleAddGithubUsername = async () => {
+    const body = {
+      email: user?.email,
+      githubUsername: githubUsername,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/settings/addGithubUsername",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setMessage(data.message || "Email changed successfully!");
+      if (data.message.includes("successfully")) {
+        window.location.reload();
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        setMessage(error.message);
+      }
+    }
+  }
+
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -345,6 +380,41 @@ const Settings: React.FC = () => {
                       onClick={handlePasswordChange}
                     >
                       Change
+                    </Button>
+                  </DialogFooter>
+                  {message && <div className="Message">{message}</div>}
+                </DialogContent>
+              </Dialog>
+            </div>
+            <div className="PersonalData">
+              <div className="GitHub">GitHub username: Please add GitHub username</div>
+              <Dialog>
+                <DialogTrigger className="DialogTrigger">
+                  <img className="Edit" src={Edit} />
+                </DialogTrigger>
+                <DialogContent className="DialogContent">
+                  <DialogHeader>
+                    <DialogTitle className="DialogTitle">
+                      Add GitHub Username
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="EmailInput">
+                    <div className="newEmail">GitHub username: </div>
+                    <input
+                      type="text"
+                      className="NewEmail-inputBox"
+                      placeholder="Enter your GitHub username"
+                      value={githubUsername}
+                      onChange={(e) => setGithubUsername(e.target.value)}
+                    />
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      className="create"
+                      variant="primary"
+                      onClick={handleAddGithubUsername}
+                    >
+                      Confirm
                     </Button>
                   </DialogFooter>
                   {message && <div className="Message">{message}</div>}

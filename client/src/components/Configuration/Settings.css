@@ -193,7 +193,7 @@ body {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-
+margin-bottom: 50px;
   }
   .PersonalData {
     display: flex;
@@ -204,11 +204,16 @@ body {
     margin-bottom: 10px;
   }
   
-  .Email, .Password {
+  .Email, .Password, .GitHub {
     font-size: 20px;
     margin-left: 10px;
     font-family: "Kaisei Decol";
   }
+
+.GitHub{
+  margin-top: 15px;
+  margin-bottom: 50px;
+}
 
   .DialogTrigger {
     background-color: transparent;
