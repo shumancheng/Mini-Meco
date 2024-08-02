@@ -387,7 +387,7 @@ const Settings: React.FC = () => {
               </Dialog>
             </div>
             <div className="PersonalData">
-              <div className="GitHub">GitHub username: Please add GitHub username</div>
+              <div className="GitHub">GitHub username: {githubUsername}</div>
               <Dialog>
                 <DialogTrigger className="DialogTrigger">
                   <img className="Edit" src={Edit} />
@@ -398,11 +398,11 @@ const Settings: React.FC = () => {
                       Add GitHub Username
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="EmailInput">
-                    <div className="newEmail">GitHub username: </div>
+                  <div className="GitHubInput">
+                    <div className="GitHubusername">GitHub username: </div>
                     <input
                       type="text"
-                      className="NewEmail-inputBox"
+                      className="GitHubUsername-inputBox"
                       placeholder="Enter your GitHub username"
                       value={githubUsername}
                       onChange={(e) => setGithubUsername(e.target.value)}
