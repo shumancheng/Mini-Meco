@@ -111,3 +111,15 @@ export const addGitHubUsername = async (req: Request, res: Response, db: Databas
     res.status(500).json({ message: "Failed to add GitHub username}", error });
   }
 }
+
+export const getUserGitHubUsername = async (req: Request, res: Response, db: Database) => {
+  const {email} = req.query;
+  try {
+    const githubUsernameObj = await db.get(`SELECT githubUsername FROM users WHERE email = ?`, [email]);
+    const githubUsername = githubUsernameObj ? githubUsernameObj.githubUsername : null;
+    res.status(200).json({ githubUsername });
+  } catch (error) {
+    console.error("Error fetching GitHub username:", error);
+    res.status(500).json({ message: "Failed to fetch GitHub username", error });
+  }
+}

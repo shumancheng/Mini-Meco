@@ -46,13 +46,31 @@ const Settings: React.FC = () => {
   );
 
   useEffect(() => {
-    const fetchUserData = () => {
+    const fetchUserData = async () => {
       const userName = localStorage.getItem("username");
       const userEmail = localStorage.getItem("email");
       if (userName && userEmail) {
         setUser({ name: userName, email: userEmail });
       } else {
         console.warn("User data not found in localStorage");
+      }
+
+      if (userEmail) {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/getUserGitHubUsername?email=${userEmail}`
+          );
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.message || "Something went wrong");
+          }
+          setUser(data);
+          setGithubUsername(data.githubUsername || "");
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      } else {
+        console.warn("User email not found in localStorage");
       }
     };
 
@@ -275,7 +293,7 @@ const Settings: React.FC = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/settings/addGithubUsername",
+        "http://localhost:3000/settings/addGitHubUsername",
         {
           method: "POST",
           headers: {
@@ -284,13 +302,16 @@ const Settings: React.FC = () => {
           body: JSON.stringify(body),
         }
       );
+
+      console.log(response);
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Something went wrong");
       }
 
-      setMessage(data.message || "Email changed successfully!");
+      setMessage(data.message || "GitHub username added successfully!");
       if (data.message.includes("successfully")) {
+        setGithubUsername(githubUsername);
         window.location.reload();
       }
     } catch (error: unknown) {
@@ -299,7 +320,7 @@ const Settings: React.FC = () => {
         setMessage(error.message);
       }
     }
-  }
+  };
 
   return (
     <div onClick={handleNavigation}>

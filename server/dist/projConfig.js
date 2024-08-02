@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changeURL = exports.getURL = exports.addURL = exports.ChangePassword = exports.ChangeEmail = void 0;
+exports.getUserGitHubUsername = exports.addGitHubUsername = exports.changeURL = exports.getURL = exports.addURL = exports.ChangePassword = exports.ChangeEmail = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const ChangeEmail = async (req, res, db) => {
     const { newEmail, oldEmail } = req.body;
@@ -97,3 +97,31 @@ const changeURL = async (req, res, db) => {
     }
 };
 exports.changeURL = changeURL;
+const addGitHubUsername = async (req, res, db) => {
+    const { email, githubUsername } = req.body;
+    if (!githubUsername) {
+        return res.status(400).json({ message: 'Please fill in GitHub username!' });
+    }
+    try {
+        await db.run(`UPDATE users SET githubUsername = ? WHERE email = ?`, [githubUsername, email]);
+        res.status(200).json({ message: "GitHub username added successfully" });
+    }
+    catch (error) {
+        console.error("Error adding GitHub username:", error);
+        res.status(500).json({ message: "Failed to add GitHub username}", error });
+    }
+};
+exports.addGitHubUsername = addGitHubUsername;
+const getUserGitHubUsername = async (req, res, db) => {
+    const { email } = req.query;
+    try {
+        const githubUsernameObj = await db.get(`SELECT githubUsername FROM users WHERE email = ?`, [email]);
+        const githubUsername = githubUsernameObj ? githubUsernameObj.githubUsername : null;
+        res.status(200).json({ githubUsername });
+    }
+    catch (error) {
+        console.error("Error fetching GitHub username:", error);
+        res.status(500).json({ message: "Failed to fetch GitHub username", error });
+    }
+};
+exports.getUserGitHubUsername = getUserGitHubUsername;
