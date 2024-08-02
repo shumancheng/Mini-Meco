@@ -6,7 +6,7 @@ import { initializeDb } from './database';
 import dotenv from 'dotenv';
 import { createProjectGroup, createProject, getProjectGroups, getProjects, getSemesters, joinProject, leaveProject, getUserProjects } from './projMgmt';
 import { sendStandupsEmail, saveHappiness, createSprints, getHappinessData, getSprints, getCurrentSprint } from './projFeat';
-import { ChangeEmail, ChangePassword, addURL, getURL, changeURL } from './projConfig';
+import { ChangeEmail, ChangePassword, addGitHubUsername, getUserGitHubUsername, addURL, getURL, changeURL } from './projConfig';
 
 dotenv.config();
 
@@ -31,6 +31,7 @@ initializeDb().then((db) => {
   app.get('/sprints', (req, res) => { getSprints(req, res, db) });
   app.get('/currentSprint', (req, res) => { getCurrentSprint(req, res, db) });
   app.get('/getGitURL', (req, res) => { getURL(req, res, db) });
+  app.get('/getUserGitHubUsername', (req, res) => { getUserGitHubUsername(req, res, db) });
 
   app.post('/register', (req, res) => register(req, res, db));
   app.post('/login', (req, res) => login(req, res, db));
@@ -40,13 +41,14 @@ initializeDb().then((db) => {
   app.post('/project-admin/createProject', (req, res) => createProject(req, res, db));
   app.post('/settings/joinProject', (req, res) => joinProject(req, res, db));
   app.post('/settings/leaveProject', (req, res) => leaveProject(req, res, db));
+  app.post('/settings/addGitHubUsername', (req, res) => addGitHubUsername(req, res, db));
   app.post('/projects/sendStandupsEmail', (req, res) => sendStandupsEmail(req, res, db));
   app.post('/happiness/saveHappiness', (req, res) => saveHappiness(req, res, db));
   app.post('/happiness/createSprints', (req, res) => createSprints(req, res, db));
   app.post('/settings/changeEmail', (req, res) => ChangeEmail(req, res, db));
   app.post('/settings/changePassword', (req, res) => ChangePassword(req, res, db));
   app.post('/projConfig/addURL', (req, res) => addURL(req, res, db));
-  app.post('/projConfig/changeURL', (req, res) => addURL(req, res, db));
+  app.post('/projConfig/changeURL', (req, res) => changeURL(req, res, db));
 
   app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);

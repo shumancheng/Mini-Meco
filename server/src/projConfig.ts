@@ -97,3 +97,29 @@ export const changeURL = async (req: Request, res: Response, db: Database) => {
     res.status(500).json({ message: "Failed to add URL", error });
   }
 }
+
+export const addGitHubUsername = async (req: Request, res: Response, db: Database) => {
+  const {email, githubUsername} = req.body;
+  if (!githubUsername) {
+    return res.status(400).json({ message: 'Please fill in GitHub username!' });
+  }
+  try {
+    await db.run(`UPDATE users SET githubUsername = ? WHERE email = ?`, [githubUsername, email]);
+    res.status(200).json({ message: "GitHub username added successfully" });
+  } catch (error) {
+    console.error("Error adding GitHub username:", error);
+    res.status(500).json({ message: "Failed to add GitHub username}", error });
+  }
+}
+
+export const getUserGitHubUsername = async (req: Request, res: Response, db: Database) => {
+  const {email} = req.query;
+  try {
+    const githubUsernameObj = await db.get(`SELECT githubUsername FROM users WHERE email = ?`, [email]);
+    const githubUsername = githubUsernameObj ? githubUsernameObj.githubUsername : null;
+    res.status(200).json({ githubUsername });
+  } catch (error) {
+    console.error("Error fetching GitHub username:", error);
+    res.status(500).json({ message: "Failed to fetch GitHub username", error });
+  }
+}

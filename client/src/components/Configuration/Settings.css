@@ -193,7 +193,7 @@ body {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-
+margin-bottom: 50px;
   }
   .PersonalData {
     display: flex;
@@ -204,11 +204,16 @@ body {
     margin-bottom: 10px;
   }
   
-  .Email, .Password {
+  .Email, .Password, .GitHub {
     font-size: 20px;
     margin-left: 10px;
     font-family: "Kaisei Decol";
   }
+
+.GitHub{
+  margin-top: 15px;
+  margin-bottom: 50px;
+}
 
   .DialogTrigger {
     background-color: transparent;
@@ -420,5 +425,30 @@ display: flex;
   border-bottom: 2px solid rgba(0, 0, 0, 0.40);
   font-size: medium;
   margin-left: 100px;
+  font-family: var(--font-kaisei-decol);
+}
+
+.GitHubInput{
+  display: flex;
+}
+
+
+.GitHubusername{
+  color: #000;
+  font-family: "Kaisei Decol";
+  font-size: 23px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-left: 20px;
+}
+
+.GitHubUsername-inputBox{
+  border: none;
+  width: 70%;
+  height: 50px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.40);
+  font-size: medium;
+margin-left: 50px;
   font-family: var(--font-kaisei-decol);
 }

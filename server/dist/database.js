@@ -15,6 +15,7 @@ async function initializeDb() {
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
+      githubUsername TEXT,
       email TEXT UNIQUE,
       password TEXT,
       resetPasswordToken TEXT,
