@@ -5,8 +5,9 @@ import { Octokit } from "@octokit/rest";
 
 const CodeActivity: React.FC = () => {
   const navigate = useNavigate();
+  const [commits, setCommits] = useState<any[]>([]);
 
-  const [issue, setIssue] = useState<any>(null);
+  
   const handleNavigation = () => {
     navigate("/code-activity");
   };
@@ -15,7 +16,7 @@ const CodeActivity: React.FC = () => {
     auth: import.meta.env.VITE_GITHUB_TOKEN,
   });
 
-  const getIssue = async () => {
+  const getCommits = async () => {
     try {
       const response = await octokit.request(
         "GET /repos/{owner}/{repo}/commits",
@@ -24,7 +25,7 @@ const CodeActivity: React.FC = () => {
           repo: "amos2024ss04-building-information-enhancer",
         }
       );
-      setIssue(response.data);
+      setCommits(response.data);
     } catch (error: any) {
       console.error(
         `Error! Status: ${error.status}. Message: ${error.response.data.message}`
@@ -33,14 +34,25 @@ const CodeActivity: React.FC = () => {
   };
 
   useEffect(() => {
-    getIssue();
+    getCommits();
   }, []);
 
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
       <h3>Code Activity</h3>
-      {issue ? <pre>{JSON.stringify(issue, null, 2)}</pre> : <p>Loading...</p>}
+      {commits.length > 0 ? (
+        <ul>
+          {commits.map((commit, index) => (
+            <li key={index}>
+              <p><strong>Username:</strong> {commit.author.login}</p>
+              <p><strong>Date:</strong> {commit.commit.author.date}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 };
