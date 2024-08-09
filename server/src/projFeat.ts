@@ -144,3 +144,21 @@ export const sendStandupsEmail = async (req: Request, res: Response, db: Databas
         res.status(500).json({ message: 'Failed to fetch sprints', error });
       }
     };
+
+    export const getProjectGitHubURL = async (req: Request, res: Response, db: Database) => {
+      const { projectName, email } = req.query;
+  
+      try {
+          const projectURL = await db.get(`SELECT url FROM user_projects WHERE projectName = ? AND userEmail = ?`, [projectName, email]);
+          if (projectURL) {
+              res.json(projectURL);
+          } else {
+              console.warn(`No URL found for project: ${projectName} and email: ${email}`);
+              res.status(404).json({ message: 'Project URL not found' });
+          }
+      } catch (error) {
+          console.error('Error fetching project URL:', error);
+          res.status(500).json({ message: 'Failed to fetch project URL', error });
+      }
+  };
+  
