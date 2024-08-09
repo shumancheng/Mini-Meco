@@ -159,3 +159,18 @@ export const getUserProjects = async (req: Request, res: Response, db: Database)
     }
   };
   
+  export const getUserProjectGroups = async (req: Request, res: Response, db: Database) => {
+    const { projectName } = req.query;
+
+    try {
+        const projectGroups = await db.get('SELECT projectGroupName FROM project WHERE projectName = ?', [projectName]);
+        if (projectGroups) {
+            res.json(projectGroups);
+        } else {
+            res.status(404).json({ message: "Project group not found" });
+        }
+    } catch (error) {
+        console.error("Error during retrieving user project groups:", error);
+        res.status(500).json({ message: "Failed to retrieve user project groups", error });
+    }
+};
