@@ -47,31 +47,30 @@ const CodeActivity: React.FC = () => {
   useEffect(() => {
     const fetchProjectGroup = async () => {
       if (!projectName) return;
-  
+
       try {
-          const response = await fetch(
-              `http://localhost:3000/getUserProjectGroups?projectName=${encodeURIComponent(projectName)}`
-          );
-          if (response.ok) {
-              const text = await response.text();
-              console.log("Response text:", text);
-              if (text) {
-                  const data = JSON.parse(text);
-                  console.log("Data:", data);
-                  if (data && data.projectGroupName) {
-                      setSelectedProjectGroup(data.projectGroupName);
-                  }
-              } else {
-                  console.error("Empty response body");
-              }
+        const response = await fetch(
+          `http://localhost:3000/getUserProjectGroups?projectName=${encodeURIComponent(
+            projectName
+          )}`
+        );
+        if (response.ok) {
+          const text = await response.text();
+          if (text) {
+            const data = JSON.parse(text);
+            if (data && data.projectGroupName) {
+              setSelectedProjectGroup(data.projectGroupName);
+            }
           } else {
-              console.error(`Error: ${response.status} ${response.statusText}`);
+            console.error("Empty response body");
           }
+        } else {
+          console.error(`Error: ${response.status} ${response.statusText}`);
+        }
       } catch (error) {
-          console.error("Error fetching project group:", error);
+        console.error("Error fetching project group:", error);
       }
-  };
-  
+    };
 
     fetchProjectGroup();
   }, [projectName]);
@@ -95,33 +94,46 @@ const CodeActivity: React.FC = () => {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    const fetchRepoUrl = async () => {
-      if (!projectName || !user?.email) return;
+  const extractOwnerAndRepo = (url: string) => {
+    const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
+    if (match) {
+      return { owner: match[1], repo: match[2] };
+    } else {
+      console.error("Failed to extract owner and repo from URL:", url);
+      return { owner: undefined, repo: undefined };
+    }
+  };
 
-      try {
-        const response = await fetch(
-          `http://localhost:3000/getProjectGitHubURL?email=${encodeURIComponent(
-            user.email
-          )}&projectName=${encodeURIComponent(projectName)}`
-        );
-        const data = await response.json();
-        console.log("Fetched repository URL:", data);
-        if (data && data.url) {
-          const urlSegments = data.url.split("/");
-          const owner = urlSegments[urlSegments.length - 2];
-          const repo = urlSegments[urlSegments.length - 1];
+  const fetchRepoUrl = async () => {
+    if (!projectName || !user?.email) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/getProjectGitHubURL?email=${encodeURIComponent(
+          user.email
+        )}&projectName=${encodeURIComponent(projectName)}`
+      );
+      const data = await response.json();
+
+      if (response.ok && data.url) {
+        console.log("Fetched repository URL:", data.url);
+        const { owner, repo } = extractOwnerAndRepo(data.url);
+        if (owner && repo) {
           setRepoDetails({ owner, repo });
+        } else {
+          console.error("Failed to extract owner and repo from URL:", data.url);
         }
-        const owner = repoDetails?.owner;
-        const repo = repoDetails?.repo;
         console.log("Owner:", owner);
         console.log("Repo:", repo);
-      } catch (error) {
-        console.error("Error fetching repository URL:", error);
+      } else {
+        console.error("Error:", data.message || "Unknown error");
       }
-    };
+    } catch (error) {
+      console.error("Error fetching repository URL:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchRepoUrl();
   }, [projectName, user]);
 
