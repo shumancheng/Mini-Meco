@@ -127,8 +127,6 @@ const getCurrentSprint = async (req, res, db) => {
 exports.getCurrentSprint = getCurrentSprint;
 const getProjectGitHubURL = async (req, res, db) => {
     const { projectName, email } = req.query;
-    console.log("project", projectName);
-    console.log("email", email);
     try {
         const projectURL = await db.get(`SELECT url FROM user_projects WHERE projectName = ? AND userEmail = ?`, [projectName, email]);
         if (projectURL) {

@@ -1,7 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, PureComponent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ReturnButton from "../Components/return";
 import { Octokit } from "@octokit/rest";
+import "./CodeActivity.css";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const CodeActivity: React.FC = () => {
   const navigate = useNavigate();
@@ -162,10 +173,15 @@ const CodeActivity: React.FC = () => {
   console.log("User:", user);
   console.log("Project Groups:", projectGroups);
 
-  // Updated getCommits function to filter commits by user and date range
-
   const getCommits = async (page: number) => {
-    if (!repoDetails) return;
+    if (!repoDetails || !sprints.length) {
+      console.log("Repo details or sprints data is missing, skipping commit fetch.");
+      return;
+    }
+  
+    console.log(`Fetching commits for page ${page}...`);
+
+    setLoading(true);
 
     try {
       const response = await octokit.request(
@@ -179,7 +195,8 @@ const CodeActivity: React.FC = () => {
         }
       );
 
-      // Filter commits based on the sprint date range
+      console.log("Fetched commits:", response.data);
+
       const filteredCommits = response.data.filter((commit) => {
         const commitDate = commit.commit.author?.date
           ? new Date(commit.commit.author.date)
@@ -191,23 +208,32 @@ const CodeActivity: React.FC = () => {
         });
       });
 
+      console.log("Filtered commits:", filteredCommits);
+
       setCommits((prevCommits) => [...prevCommits, ...filteredCommits]);
       if (response.data.length < 100) {
+        console.log("No more commits to fetch.");
         setHasMore(false);
+      } else {
+        console.log("There are more commits to fetch.");
       }
     } catch (error) {
       console.error(`Error fetching commits: ${error}`);
       setHasMore(false);
     } finally {
-      setLoading(false);
+      console.log("Stopping loading state");
+      setLoading(false); // Stop loading regardless of success or failure
     }
   };
 
   useEffect(() => {
-    if (hasMore) {
+    if (hasMore && repoDetails && sprints.length) {
+      console.log("Loading more commits...");
       getCommits(page);
+    } else {
+      console.log("Not loading more commits:", { hasMore, repoDetails, sprints });
     }
-  }, [page]);
+  }, [page, repoDetails, sprints]);
 
   const loadMoreCommits = () => {
     setPage((prevPage) => prevPage + 1);
@@ -216,29 +242,38 @@ const CodeActivity: React.FC = () => {
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
-      <h3>Code Activity</h3>
-      {commits.length > 0 ? (
-        <ul>
-          {commits.map((commit, index) => (
-            <li key={index}>
-              <p>
-                <strong>Username:</strong> {commit.author.login}
-              </p>
-              <p>
-                <strong>Date:</strong> {commit.commit.author.date}
-              </p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Loading...</p>
-      )}
-      {loading && <p>Loading more commits...</p>}
-      {hasMore && !loading && (
-        <button onClick={loadMoreCommits}>Load More</button>
-      )}
+      <div className="DashboardContainerStandups">
+        <h1>Code Activity</h1>
+      </div>
+      <div className="BigContainerCodeActivity">
+        <div className="GitHubTitle">
+          <h2>Commits on GitHub</h2>
+        </div>
+        {commits.length > 0 ? (
+          <ul>
+            {commits.map((commit, index) => (
+              <li key={index}>
+                <p>
+                  <strong>Username:</strong> {commit.author.login}
+                </p>
+                <p>
+                  <strong>Date:</strong> {commit.commit.author.date}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : loading ? (
+          <p>Loading...</p>
+        ) : (
+          <p>No commits found.</p>
+        )}
+        {loading && <p>Loading more commits...</p>}
+        {hasMore && !loading && (
+          <button onClick={loadMoreCommits}>Load More</button>
+        )}
+      </div>
     </div>
   );
 };
-
+  
 export default CodeActivity;
