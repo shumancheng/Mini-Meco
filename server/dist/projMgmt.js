@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
+exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
 const createProjectGroup = async (req, res, db) => {
     const { semester, projectGroupName } = req.body;
     const semesterRegex = /^(SS|WS)\d{2,4}$/; // Format: SS24 or WS2425
@@ -151,3 +151,20 @@ const getUserProjects = async (req, res, db) => {
     }
 };
 exports.getUserProjects = getUserProjects;
+const getUserProjectGroups = async (req, res, db) => {
+    const { projectName } = req.query;
+    try {
+        const projectGroups = await db.get('SELECT projectGroupName FROM project WHERE projectName = ?', [projectName]);
+        if (projectGroups) {
+            res.json(projectGroups);
+        }
+        else {
+            res.status(404).json({ message: "Project group not found" });
+        }
+    }
+    catch (error) {
+        console.error("Error during retrieving user project groups:", error);
+        res.status(500).json({ message: "Failed to retrieve user project groups", error });
+    }
+};
+exports.getUserProjectGroups = getUserProjectGroups;

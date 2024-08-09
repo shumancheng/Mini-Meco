@@ -31,6 +31,8 @@ app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
     app.get('/currentSprint', (req, res) => { (0, projFeat_1.getCurrentSprint)(req, res, db); });
     app.get('/getGitURL', (req, res) => { (0, projConfig_1.getURL)(req, res, db); });
     app.get('/getUserGitHubUsername', (req, res) => { (0, projConfig_1.getUserGitHubUsername)(req, res, db); });
+    app.get('/getUserProjectGroups', (req, res) => { (0, projMgmt_1.getUserProjectGroups)(req, res, db); });
+    app.get('/getProjectGitHubURL', (req, res) => { (0, projFeat_1.getProjectGitHubURL)(req, res, db); });
     app.post('/register', (req, res) => (0, auth_1.register)(req, res, db));
     app.post('/login', (req, res) => (0, auth_1.login)(req, res, db));
     app.post('/forgotPassword', (req, res) => (0, auth_1.forgotPassword)(req, res, db));
