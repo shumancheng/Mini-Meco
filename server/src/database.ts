@@ -13,7 +13,7 @@ export async function initializeDb() {
       name TEXT,
       githubUsername TEXT,
       email TEXT UNIQUE,
-      status TEXT,
+      status TEXT DEFAULT "unconfirmed" NOT NULL,
       password TEXT,
       resetPasswordToken TEXT,
       resetPasswordExpire INTEGER
