@@ -13,6 +13,7 @@ export async function initializeDb() {
       name TEXT,
       githubUsername TEXT,
       email TEXT UNIQUE,
+      status TEXT,
       password TEXT,
       resetPasswordToken TEXT,
       resetPasswordExpire INTEGER
