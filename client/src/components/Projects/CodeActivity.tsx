@@ -39,6 +39,7 @@ const CodeActivity: React.FC = () => {
   // @ts-ignore: suppress unused variable warning
   const [projectGroups, setProjectGroups] = useState<string[]>([]);
   const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
+  const [commitsPerSprint, setCommitsPerSprint] = useState<any[]>([]);
 
   const handleNavigation = () => {
     navigate("/code-activity");
@@ -158,9 +159,26 @@ const CodeActivity: React.FC = () => {
             selectedProjectGroup
           )}`
         );
-        const sprints = await response.json();
-        setSprints(sprints);
-        console.log("Fetched sprints:", sprints);
+        const fetchedSprints = await response.json();
+
+        // Only have end date, so calculate start date
+        const updatedSprints = fetchedSprints.map(
+          (sprint: any, index: number) => {
+            if (index === 0) {
+              // First sprint: start date is one week before end date
+              const startDate = new Date(sprint.endDate);
+              startDate.setDate(startDate.getDate() - 7);
+              return { ...sprint, startDate };
+            } else {
+              // Other sprints: start date is the previous sprint's end date
+              const startDate = new Date(fetchedSprints[index - 1].endDate);
+              return { ...sprint, startDate };
+            }
+          }
+        );
+
+        setSprints(updatedSprints);
+        console.log("Updated sprints with start dates:", updatedSprints);
       } catch (error) {
         console.error("Error fetching sprints:", error);
       }
@@ -175,10 +193,12 @@ const CodeActivity: React.FC = () => {
 
   const getCommits = async (page: number) => {
     if (!repoDetails || !sprints.length) {
-      console.log("Repo details or sprints data is missing, skipping commit fetch.");
+      console.log(
+        "Repo details or sprints data is missing, skipping commit fetch."
+      );
       return;
     }
-  
+
     console.log(`Fetching commits for page ${page}...`);
 
     setLoading(true);
@@ -201,11 +221,20 @@ const CodeActivity: React.FC = () => {
         const commitDate = commit.commit.author?.date
           ? new Date(commit.commit.author.date)
           : new Date();
-        return sprints.some((sprint) => {
+        console.log("Commit Date:", commitDate);
+
+        const isWithinSprint = sprints.some((sprint) => {
           const sprintStart = new Date(sprint.startDate);
           const sprintEnd = new Date(sprint.endDate);
+          console.log("Sprint Start Date:", sprintStart);
+          console.log("Sprint End Date:", sprintEnd);
+
           return commitDate >= sprintStart && commitDate <= sprintEnd;
         });
+
+        console.log("Is commit within sprint?", isWithinSprint);
+
+        return isWithinSprint;
       });
 
       console.log("Filtered commits:", filteredCommits);
@@ -222,7 +251,7 @@ const CodeActivity: React.FC = () => {
       setHasMore(false);
     } finally {
       console.log("Stopping loading state");
-      setLoading(false); // Stop loading regardless of success or failure
+      setLoading(false);
     }
   };
 
@@ -231,13 +260,37 @@ const CodeActivity: React.FC = () => {
       console.log("Loading more commits...");
       getCommits(page);
     } else {
-      console.log("Not loading more commits:", { hasMore, repoDetails, sprints });
+      console.log("Not loading more commits:", {
+        hasMore,
+        repoDetails,
+        sprints,
+      });
     }
   }, [page, repoDetails, sprints]);
 
   const loadMoreCommits = () => {
     setPage((prevPage) => prevPage + 1);
   };
+
+  useEffect(() => {
+    const calculateCommitsPerSprint = () => {
+      const commitsCount = sprints.map((sprint) => {
+        const sprintStart = new Date(sprint.startDate);
+        const sprintEnd = new Date(sprint.endDate);
+        const commitsInSprint = commits.filter((commit) => {
+          const commitDate = new Date(commit.commit.author.date);
+          return commitDate >= sprintStart && commitDate <= sprintEnd;
+        });
+        return { sprint: sprint.name, count: commitsInSprint.length };
+      });
+
+      setCommitsPerSprint(commitsCount);
+    };
+
+    if (commits.length && sprints.length) {
+      calculateCommitsPerSprint();
+    }
+  }, [commits, sprints]);
 
   return (
     <div onClick={handleNavigation}>
@@ -250,18 +303,16 @@ const CodeActivity: React.FC = () => {
           <h2>Commits on GitHub</h2>
         </div>
         {commits.length > 0 ? (
-          <ul>
-            {commits.map((commit, index) => (
-              <li key={index}>
-                <p>
-                  <strong>Username:</strong> {commit.author.login}
-                </p>
-                <p>
-                  <strong>Date:</strong> {commit.commit.author.date}
-                </p>
-              </li>
-            ))}
-          </ul>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={commitsPerSprint}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="sprint" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="count" stroke="#8884d8" />
+            </LineChart>
+          </ResponsiveContainer>
         ) : loading ? (
           <p>Loading...</p>
         ) : (
@@ -275,5 +326,5 @@ const CodeActivity: React.FC = () => {
     </div>
   );
 };
-  
+
 export default CodeActivity;
