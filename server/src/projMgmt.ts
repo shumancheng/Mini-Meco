@@ -174,3 +174,4 @@ export const getUserProjects = async (req: Request, res: Response, db: Database)
         res.status(500).json({ message: "Failed to retrieve user project groups", error });
     }
 };
+
