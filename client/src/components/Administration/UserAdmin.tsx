@@ -79,7 +79,7 @@ const UserAdmin: React.FC = () => {
           {users.map((user, index) => (
           <React.Fragment key={user.email}>
             <div className="ProjectItem">
-              <div className="ProjectName">{user.name} ({user.email})</div>
+              <div className="ProjectName">{user.name}  ({user.email})</div>
               <img className="Edit" src={Edit} alt="Edit" />
             </div>
             {index < users.length - 1 && <hr className="ProjectDivider" />}
