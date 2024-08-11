@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
+exports.getUserStatus = exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
 const createProjectGroup = async (req, res, db) => {
     const { semester, projectGroupName } = req.body;
     const semesterRegex = /^(SS|WS)\d{2,4}$/; // Format: SS24 or WS2425
@@ -168,3 +168,20 @@ const getUserProjectGroups = async (req, res, db) => {
     }
 };
 exports.getUserProjectGroups = getUserProjectGroups;
+const getUserStatus = async (req, res, db) => {
+    const { status } = req.query;
+    try {
+        const user = await db.all('SELECT * FROM users WHERE status = ?', [status]);
+        if (user) {
+            res.json(user);
+        }
+        else {
+            res.status(404).json({ message: "User not found" });
+        }
+    }
+    catch (error) {
+        console.error("Error during retrieving user status:", error);
+        res.status(500).json({ message: "Failed to retrieve user status", error });
+    }
+};
+exports.getUserStatus = getUserStatus;
