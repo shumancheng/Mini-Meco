@@ -20,7 +20,9 @@ async function initializeDb() {
       status TEXT DEFAULT "unconfirmed" NOT NULL,
       password TEXT,
       resetPasswordToken TEXT,
-      resetPasswordExpire INTEGER
+      resetPasswordExpire INTEGER,
+      confirmEmailToken TEXT,
+      confirmEmailExpire INTEGER
     )
   `);
     await db.exec(`

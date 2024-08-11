@@ -11,29 +11,49 @@ dotenv.config();
 
 export const register = async (req: Request, res: Response, db: any) => {
   const { name, email, password } = req.body;
+
   if (!name || !email || !password) {
     return res.status(400).json({ message: 'Please fill in username, email and password!' });
-  }
-  else if (password.length < 8) {
+  } else if (password.length < 8) {
     return res.status(400).json({ message: 'Password must be at least 8 characters long' });
-  }
-  else if (!email.includes('@')) {
+  } else if (!email.includes('@')) {
     return res.status(400).json({ message: 'Invalid email address' });
-  }
-  else if (name.length < 3) {
+  } else if (name.length < 3) {
     return res.status(400).json({ message: 'Name must be at least 3 characters long' });
   }
 
-
   const hashedPassword = await bcrypt.hash(password, 10);
+
   try {
     await db.run('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, hashedPassword]);
     res.status(201).json({ message: 'User registered successfully' });
+
+    // Generate confirm email TOKEN
+    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
+    if (!user) {
+      console.error('Email not found after registration');
+      return;
+    }
+
+    const token = crypto.randomBytes(20).toString('hex');
+    const expire = Date.now() + 3600000; // 1 hour
+
+    console.log(`Generated token: ${token}, Expiry time: ${expire}`);
+
+    await db.run(
+      'UPDATE users SET confirmEmailToken = ?, confirmEmailExpire = ? WHERE email = ?',
+      [token, expire, email]
+    );
+
+    await sendConfirmEmail(email, token);
+
+    console.log('Confirmation email sent');
+
   } catch (error) {
     console.error('Error during user registration:', error);
-    res.status(500).json({ message: 'User registration failed', error });
   }
 };
+
 
 export const login = async (req: Request, res: Response, db: Database) => {
   const { email, password } = req.body;
@@ -148,34 +168,6 @@ export const resetPassword = async (req: Request, res: Response, db: any) => {
   }
 };
 
-export const ConfirmEmailToken = async (req: Request, res: Response, db: Database) => {
-  const { email } = req.body;
-
-  try {
-    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
-    if (!user) {
-      return res.status(404).json({ message: 'Email not found' });
-    }
-
-    const token = crypto.randomBytes(20).toString('hex');
-    const expire = Date.now() + 3600000; // 1000 (1 sec) --> 1000 * 60  (1 min) --> 1000 * 60 * 60 (1 hour)
-
-    console.log(`Generated token: ${token}, Expiry time: ${expire}`);
-
-    await db.run(
-      'UPDATE users SET confirmEmailToken = ?, confirmEmailExpire = ? WHERE email = ?',
-      [token, expire, email]
-    );
-
-    await sendConfirmEmail(email, token);
-
-    res.status(200).json({ message: 'Confirmation email sent' });
-  } catch (error) {
-    console.error('Error in sendConfirmEmail:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-}
-
 export const sendConfirmEmail = async (email: string, token: string) => {
 
   const transporter = nodemailer.createTransport({
@@ -214,6 +206,8 @@ export const confirmEmail = async (req: Request, res: Response, db: any) => {
     return res.status(400).json({ message: 'Token is required' });
   }
 
+  console.log('Token:', token);
+
   try {
     const currentTime = Date.now();
     const user = await db.get('SELECT * FROM users WHERE confirmEmailToken = ?', [token]);
@@ -224,7 +218,7 @@ export const confirmEmail = async (req: Request, res: Response, db: any) => {
       return res.status(400).json({ message: 'Invalid or expired token' });
     }
 
-    await db.run('UPDATE users SET status = "confirmed", confirmEmailToken = NULL, confirmEmailExpire = NULL WHERE id = ?', [user.id]);
+    await db.run('UPDATE users SET status = "confirmed", confirmEmailToken = NULL, confirmEmailExpire = NULL WHERE email = ?', [user.email]);
 
     res.status(200).json({ message: 'Email has been confirmed' });
   } catch (error) {
