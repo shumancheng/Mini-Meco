@@ -148,3 +148,87 @@ export const resetPassword = async (req: Request, res: Response, db: any) => {
   }
 };
 
+export const ConfirmEmailToken = async (req: Request, res: Response, db: Database) => {
+  const { email } = req.body;
+
+  try {
+    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
+    if (!user) {
+      return res.status(404).json({ message: 'Email not found' });
+    }
+
+    const token = crypto.randomBytes(20).toString('hex');
+    const expire = Date.now() + 3600000; // 1000 (1 sec) --> 1000 * 60  (1 min) --> 1000 * 60 * 60 (1 hour)
+
+    console.log(`Generated token: ${token}, Expiry time: ${expire}`);
+
+    await db.run(
+      'UPDATE users SET confirmEmailToken = ?, confirmEmailExpire = ? WHERE email = ?',
+      [token, expire, email]
+    );
+
+    await sendConfirmEmail(email, token);
+
+    res.status(200).json({ message: 'Confirmation email sent' });
+  } catch (error) {
+    console.error('Error in sendConfirmEmail:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+export const sendConfirmEmail = async (email: string, token: string) => {
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp-auth.fau.de',
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.EMAIL_USER_FAU,
+      pass: process.env.EMAIL_PASS_FAU,
+    },
+  });
+  const confirmedLink = `http://localhost:5173/confirmedEmail?token=${token}`;
+
+  const mailOptions = {
+    from: '"Mini-Meco" <shu-man.cheng@fau.de>',
+    to: email,
+    subject: 'Confirm Email',
+    text: `You registered for Mini-Meco. Click the link to confirm your email: ${confirmedLink}`,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Confirm email sent: %s', info.messageId);
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  } catch (error) {
+    console.error('Error sending confirm email:', error);
+    throw new Error('There was an error sending the email');
+  }
+}
+
+  
+export const confirmEmail = async (req: Request, res: Response, db: any) => {
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ message: 'Token is required' });
+  }
+
+  try {
+    const currentTime = Date.now();
+    const user = await db.get('SELECT * FROM users WHERE confirmEmailToken = ?', [token]);
+    
+    console.log('User retrieved from database:', user);
+
+    if (!user || user.confirmEmailExpire < currentTime) {
+      return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+
+    await db.run('UPDATE users SET status = "confirmed", confirmEmailToken = NULL, confirmEmailExpire = NULL WHERE id = ?', [user.id]);
+
+    res.status(200).json({ message: 'Email has been confirmed' });
+  } catch (error) {
+    console.error('Error in confirmEmail:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
