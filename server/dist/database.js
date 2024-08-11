@@ -17,9 +17,12 @@ async function initializeDb() {
       name TEXT,
       githubUsername TEXT,
       email TEXT UNIQUE,
+      status TEXT DEFAULT "unconfirmed" NOT NULL,
       password TEXT,
       resetPasswordToken TEXT,
-      resetPasswordExpire INTEGER
+      resetPasswordExpire INTEGER,
+      confirmEmailToken TEXT,
+      confirmEmailExpire INTEGER
     )
   `);
     await db.exec(`
