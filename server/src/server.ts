@@ -4,7 +4,7 @@ import cors from 'cors';
 import { register, login, forgotPassword, resetPassword, confirmEmail } from './auth';
 import { initializeDb } from './database';
 import dotenv from 'dotenv';
-import { createProjectGroup, createProject, getProjectGroups, getProjects, getSemesters, joinProject, leaveProject, getUserProjects, getUserProjectGroups, getUserStatus } from './projMgmt';
+import { createProjectGroup, createProject, getProjectGroups, getProjects, getSemesters, joinProject, leaveProject, getUserProjects, getUserProjectGroups, getUserStatus, updateUserStatus } from './projMgmt';
 import { sendStandupsEmail, saveHappiness, createSprints, getHappinessData, getSprints, getCurrentSprint, getProjectGitHubURL } from './projFeat';
 import { ChangeEmail, ChangePassword, addGitHubUsername, getUserGitHubUsername, addURL, getURL, changeURL } from './projConfig';
 
@@ -54,6 +54,7 @@ initializeDb().then((db) => {
   app.post('/projConfig/addURL', (req, res) => addURL(req, res, db));
   app.post('/projConfig/changeURL', (req, res) => changeURL(req, res, db));
   app.post('/confirmEmail', (req, res) => confirmEmail(req, res, db));
+  app.post('/updateUserStatus', (req, res) => updateUserStatus(req, res, db));
 
   app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);

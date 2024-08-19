@@ -191,3 +191,19 @@ export const getUserStatus = async (req: Request, res: Response, db: Database) =
         res.status(500).json({ message: "Failed to retrieve user status", error });
     }
 }
+
+export const updateUserStatus = async (req: Request, res: Response, db: Database) => {
+    const { email, status } = req.body;
+
+    if (!email || !status) {
+        return res.status(400).json({ message: "Please provide email and status" });
+    }
+
+    try {
+        await db.run('UPDATE users SET status = ? WHERE email = ?', [status, email]);
+        res.status(200).json({ message: "User status updated successfully" });
+    } catch (error) {
+        console.error("Error during updating user status:", error);
+        res.status(500).json({ message: "Failed to update user status", error });
+    }
+}

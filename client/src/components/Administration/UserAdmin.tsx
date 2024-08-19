@@ -24,6 +24,7 @@ const UserAdmin: React.FC = () => {
   const navigate = useNavigate();
 
   const [status, setStatus] = useState<string | null>("");
+  const [newStatus, setNewStatus] = useState<string | null>("");
   const [users, setUsers] = useState<{ name: string; email: string }[]>([]);
 
   const [message, setMessage] = useState<string | null>(null);
@@ -70,12 +71,15 @@ const UserAdmin: React.FC = () => {
         },
         body: JSON.stringify({ email, status }),
       });
-
+      const data = await response.json();
       if (!response.ok) {
         throw new Error("Failed to update user status");
       }
 
-      setMessage("User status updated successfully");
+      setMessage(data.message || "Success!");
+      if (data.message.includes("successfully")) {
+        window.location.reload(); 
+      }
     } catch (error) {
       console.error("Error updating user status:", error);
       setMessage("Failed to update user status");
@@ -141,7 +145,7 @@ const UserAdmin: React.FC = () => {
                   <div className="EmailInput">
                     <div className="newStatusUserAdmin">New Status: </div>
                     <div className="SelectWrapperUserAdminInsideDIalog">
-                      <Select onValueChange={(value) => setStatus(value)}>
+                      <Select onValueChange={(value) => setNewStatus(value)}>
                         <SelectTrigger className="SelectTrigger">
                           <SelectValue
                             className="SelectValue"
@@ -164,8 +168,8 @@ const UserAdmin: React.FC = () => {
                       className="create"
                       variant="primary"
                       onClick={() => {
-                        if (status) {
-                          handleUserStatusChange(user.email, status);
+                        if (newStatus) {
+                          handleUserStatusChange(user.email, newStatus);
                         } else {
                           setMessage(
                             "Please select a status before confirming"
