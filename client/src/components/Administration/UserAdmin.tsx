@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ReturnButton from "../Components/return";
 import "./UserAdmin.css";
@@ -10,44 +10,77 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Edit from "./../../assets/Edit.png";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import Button from "react-bootstrap/esm/Button";
 
 const UserAdmin: React.FC = () => {
   const navigate = useNavigate();
 
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>("");
   const [users, setUsers] = useState<{ name: string; email: string }[]>([]);
+
+  const [message, setMessage] = useState<string | null>(null);
 
   const handleNavigation = () => {
     navigate("/user-admin");
   };
 
-
-    const fetchUserStatus = async (status: string) => {
-      try {
-        const response = await fetch(`http://localhost:3000/getUserStatus?status=${status}`, {
+  const fetchUserStatus = async (status: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/getUserStatus?status=${status}`,
+        {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch users");
         }
-  
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
+      );
 
-    useEffect(() => {
-      if (status) {
-        fetchUserStatus(status);
+      if (!response.ok) {
+        throw new Error("Failed to fetch users");
       }
-    }, [status]);
 
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (status) {
+      fetchUserStatus(status);
+    }
+  }, [status]);
+
+  const handleUserStatusChange = async (email: string, status: string) => {
+    try {
+      const response = await fetch("http://localhost:3000/updateUserStatus", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, status }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update user status");
+      }
+
+      setMessage("User status updated successfully");
+    } catch (error) {
+      console.error("Error updating user status:", error);
+      setMessage("Failed to update user status");
+    }
+  };
 
   return (
     <div onClick={handleNavigation}>
@@ -55,38 +88,103 @@ const UserAdmin: React.FC = () => {
       <div className="DashboardContainer">
         <h1>User Admin</h1>
       </div>
-      <div className="BigContainerProjConfig">
-      <div className="SelectWrapperUserAdmin">
-            <Select onValueChange={(value) => setStatus(value)}>
-              <SelectTrigger className="SelectTrigger">
-                <SelectValue
-                  className="SelectValue"
-                  placeholder="Select Status"
-                />
-              </SelectTrigger>
-              <SelectContent className="SelectContent">
-                
-                  <SelectItem value={"unconfirmed"}>
-                    <div className="SelectItem">unconfirmed</div>
-                  </SelectItem>
-                  <SelectItem value={"confirmed"}>
-                    <div className="SelectItem">confirmed</div>
-                  </SelectItem>
-                
-              </SelectContent>
-            </Select>
-          </div>
-          {users.map((user, index) => (
+      <div className="BigContainerUserAdmin">
+        <div className="SelectWrapperUserAdmin">
+          <Select onValueChange={(value) => setStatus(value)}>
+            <SelectTrigger className="SelectTrigger">
+              <SelectValue
+                className="SelectValue"
+                placeholder="Select Status"
+              />
+            </SelectTrigger>
+            <SelectContent className="SelectContent">
+              <SelectItem value={"unconfirmed"}>
+                <div className="SelectItem">unconfirmed</div>
+              </SelectItem>
+              <SelectItem value={"confirmed"}>
+                <div className="SelectItem">confirmed</div>
+              </SelectItem>
+              <SelectItem value={"suspended"}>
+                <div className="SelectItem">suspended</div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        {users.map((user, index) => (
           <React.Fragment key={user.email}>
             <div className="ProjectItem">
-              <div className="ProjectName">{user.name}  ({user.email})</div>
-              <img className="Edit" src={Edit} alt="Edit" />
+              <div className="ProjectName">
+                {user.name} ({user.email})
+              </div>
+              <Dialog>
+                <DialogTrigger className="DialogTrigger">
+                  <img className="Edit" src={Edit} />
+                </DialogTrigger>
+                <DialogContent className="DialogContentUserAdmin">
+                  <DialogHeader>
+                    <DialogTitle className="DialogTitle">
+                      Change User Status
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="EmailInput">
+                    <div className="userUserAdmin">User:</div>
+                    <div className="userContent">
+                      {user.name} ({user.email})
+                    </div>
+                  </div>
+                  <div className="currentStatusMargin">
+                    <div className="currentStatusUserAdmin">
+                      Current Status:{" "}
+                    </div>
+                    <div className="userContent">{status}</div>
+                  </div>
+                  <div className="EmailInput">
+                    <div className="newStatusUserAdmin">New Status: </div>
+                    <div className="SelectWrapperUserAdminInsideDIalog">
+                      <Select onValueChange={(value) => setStatus(value)}>
+                        <SelectTrigger className="SelectTrigger">
+                          <SelectValue
+                            className="SelectValue"
+                            placeholder="Select Status"
+                          />
+                        </SelectTrigger>
+                        <SelectContent className="SelectContent">
+                          <SelectItem value={"suspended"}>
+                            <div className="SelectItem">suspended</div>
+                          </SelectItem>
+                          <SelectItem value={"removed"}>
+                            <div className="SelectItem">removed</div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      className="create"
+                      variant="primary"
+                      onClick={() => {
+                        if (status) {
+                          handleUserStatusChange(user.email, status);
+                        } else {
+                          setMessage(
+                            "Please select a status before confirming"
+                          );
+                        }
+                      }}
+                    >
+                      Confirm
+                    </Button>
+                  </DialogFooter>
+                  {message && <div className="Message">{message}</div>}
+                </DialogContent>
+              </Dialog>
             </div>
             {index < users.length - 1 && <hr className="ProjectDivider" />}
           </React.Fragment>
         ))}
-        </div>
       </div>
+    </div>
   );
 };
 
