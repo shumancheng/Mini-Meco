@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserStatus = exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
+exports.updateUserStatus = exports.getUserStatus = exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
 const createProjectGroup = async (req, res, db) => {
     const { semester, projectGroupName } = req.body;
     const semesterRegex = /^(SS|WS)\d{2,4}$/; // Format: SS24 or WS2425
@@ -185,3 +185,18 @@ const getUserStatus = async (req, res, db) => {
     }
 };
 exports.getUserStatus = getUserStatus;
+const updateUserStatus = async (req, res, db) => {
+    const { email, status } = req.body;
+    if (!email || !status) {
+        return res.status(400).json({ message: "Please provide email and status" });
+    }
+    try {
+        await db.run('UPDATE users SET status = ? WHERE email = ?', [status, email]);
+        res.status(200).json({ message: "User status updated successfully" });
+    }
+    catch (error) {
+        console.error("Error during updating user status:", error);
+        res.status(500).json({ message: "Failed to update user status", error });
+    }
+};
+exports.updateUserStatus = updateUserStatus;
