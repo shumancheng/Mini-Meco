@@ -53,6 +53,7 @@ app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
     app.post('/confirmEmail', (req, res) => (0, auth_1.confirmEmail)(req, res, db));
     app.post('/updateUserStatus', (req, res) => (0, projMgmt_1.updateUserStatus)(req, res, db));
     app.post('/sendConfirmationEmail', (req, res) => (0, auth_1.sendConfirmationEmail)(req, res, db));
+    app.post('/updateAllConfirmedUsers', (req, res) => (0, projMgmt_1.updateAllConfirmedUsers)(req, res, db));
     app.listen(port, () => {
         console.log(`Server running on http://localhost:${port}`);
     });
