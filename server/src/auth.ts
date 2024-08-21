@@ -226,3 +226,24 @@ export const confirmEmail = async (req: Request, res: Response, db: any) => {
     res.status(500).json({ message: 'Server error' });
   }
 }
+
+export const sendConfirmationEmail = async (req: Request, res: Response, db: any) => {
+  const { email } = req.body;
+  try {
+    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
+    if (!user || user.status !== 'unconfirmed') {
+      return res.status(400).json({ message: 'User not found or not unconfirmed' });
+    }
+
+    const token = crypto.randomBytes(20).toString('hex');
+    const expire = Date.now() + 3600000;
+
+    await db.run('UPDATE users SET confirmEmailToken = ?, confirmEmailExpire = ? WHERE email = ?', [token, expire, email]);
+    await sendConfirmEmail(email, token);
+
+    res.status(200).json({ message: 'Confirmation email sent' });
+  } catch (error) {
+    console.error('Error sending confirmation email:', error);
+    res.status(500).json({ message: 'Failed to send confirmation email' });
+  }
+};

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.confirmEmail = exports.sendConfirmEmail = exports.resetPassword = exports.forgotPassword = exports.login = exports.register = void 0;
+exports.sendConfirmationEmail = exports.confirmEmail = exports.sendConfirmEmail = exports.resetPassword = exports.forgotPassword = exports.login = exports.register = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const crypto_1 = __importDefault(require("crypto"));
@@ -188,3 +188,22 @@ const confirmEmail = async (req, res, db) => {
     }
 };
 exports.confirmEmail = confirmEmail;
+const sendConfirmationEmail = async (req, res, db) => {
+    const { email } = req.body;
+    try {
+        const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
+        if (!user || user.status !== 'unconfirmed') {
+            return res.status(400).json({ message: 'User not found or not unconfirmed' });
+        }
+        const token = crypto_1.default.randomBytes(20).toString('hex');
+        const expire = Date.now() + 3600000;
+        await db.run('UPDATE users SET confirmEmailToken = ?, confirmEmailExpire = ? WHERE email = ?', [token, expire, email]);
+        await (0, exports.sendConfirmEmail)(email, token);
+        res.status(200).json({ message: 'Confirmation email sent' });
+    }
+    catch (error) {
+        console.error('Error sending confirmation email:', error);
+        res.status(500).json({ message: 'Failed to send confirmation email' });
+    }
+};
+exports.sendConfirmationEmail = sendConfirmationEmail;
