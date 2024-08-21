@@ -88,24 +88,57 @@ const UserAdmin: React.FC = () => {
 
   const sendConfirmationEmail = async (email: string) => {
     try {
-      const response = await fetch("http://localhost:3000/sendConfirmationEmail", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        "http://localhost:3000/sendConfirmationEmail",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message || "Confirmation email sent successfully!");
         if (data.message.includes("successfully")) {
-          window.location.reload();}
+          window.location.reload();
+        }
       } else {
         throw new Error(data.message || "Failed to send confirmation email");
       }
     } catch (error) {
       console.error("Error sending confirmation email:", error);
       setMessage("Failed to send confirmation email");
+    }
+  };
+
+  const changeAllConfirmedUsersStatus = async (status: string) => {
+    
+    try {
+      const response = await fetch(
+        "http://localhost:3000/updateAllConfirmedUsers",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status }),
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        setMessage(
+          data.message ||
+            `All confirmed users have been changed to ${newStatus}`
+        );
+        window.location.reload();
+      } else {
+        throw new Error(data.message || "Failed to update all confirmed users");
+      }
+    } catch (error) {
+      console.error("Error updating all confirmed users:", error);
+      setMessage("Failed to update all confirmed users");
     }
   };
 
@@ -139,6 +172,15 @@ const UserAdmin: React.FC = () => {
               </SelectItem>
             </SelectContent>
           </Select>
+          {status === "confirmed" && (
+            <Button
+              className="removeAll"
+              variant="primary"
+              onClick={() => changeAllConfirmedUsersStatus("removed")}
+            >
+              Remove All
+            </Button>
+          )}
         </div>
         {users.map((user, index) => (
           <React.Fragment key={user.email}>

@@ -108,3 +108,21 @@ position: absolute;
 right: 350px;
 top: 242px;
   }
+
+  .removeAll {
+    width: 125px;
+    height: 35px;
+    border: 1px solid #000;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    color: #000;
+    font-family: "Kaisei Decol";
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto; 
+    margin-right: 30px;
+  }
+  

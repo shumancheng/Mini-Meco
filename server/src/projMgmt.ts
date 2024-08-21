@@ -207,3 +207,36 @@ export const updateUserStatus = async (req: Request, res: Response, db: Database
         res.status(500).json({ message: "Failed to update user status", error });
     }
 }
+
+export const updateAllConfirmedUsers = async (req: Request, res: Response, db: Database) => {
+    const { status } = req.body;
+    
+    if (!status) {
+        return res.status(400).json({ message: 'Status is required' });
+    }
+
+    
+    
+    try {
+        
+        const confirmedUsers = await db.all('SELECT * FROM users WHERE status = "confirmed"');
+        
+
+        const result = await db.run(
+            'UPDATE users SET status = ? WHERE status = "confirmed"', 
+            [status]
+        );
+
+        
+
+        if (result.changes === 0) {
+            return res.status(404).json({ message: 'No confirmed users found to update' });
+        }
+
+        res.status(200).json({ message: `All confirmed users have been updated to ${status}` });
+    } catch (error) {
+        console.error('Error updating confirmed users:', error);
+        res.status(500).json({ message: 'Failed to update confirmed users' });
+    }
+};
+
