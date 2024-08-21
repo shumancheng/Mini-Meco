@@ -111,6 +111,9 @@ const UserAdmin: React.FC = () => {
               <SelectItem value={"suspended"}>
                 <div className="SelectItem">suspended</div>
               </SelectItem>
+              <SelectItem value={"removed"}>
+                <div className="SelectItem">removed</div>
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
