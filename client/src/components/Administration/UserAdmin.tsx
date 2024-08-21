@@ -78,7 +78,7 @@ const UserAdmin: React.FC = () => {
 
       setMessage(data.message || "Success!");
       if (data.message.includes("successfully")) {
-        window.location.reload(); 
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error updating user status:", error);
@@ -156,6 +156,12 @@ const UserAdmin: React.FC = () => {
                           />
                         </SelectTrigger>
                         <SelectContent className="SelectContent">
+                          <SelectItem value={"unconfirmed"}>
+                            <div className="SelectItem">unconfirmed</div>
+                          </SelectItem>
+                          <SelectItem value={"confirmed"}>
+                            <div className="SelectItem">confirmed</div>
+                          </SelectItem>
                           <SelectItem value={"suspended"}>
                             <div className="SelectItem">suspended</div>
                           </SelectItem>
