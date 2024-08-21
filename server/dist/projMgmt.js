@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserStatus = exports.getUserStatus = exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
+exports.updateAllConfirmedUsers = exports.updateUserStatus = exports.getUserStatus = exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
 const createProjectGroup = async (req, res, db) => {
     const { semester, projectGroupName } = req.body;
     const semesterRegex = /^(SS|WS)\d{2,4}$/; // Format: SS24 or WS2425
@@ -200,3 +200,26 @@ const updateUserStatus = async (req, res, db) => {
     }
 };
 exports.updateUserStatus = updateUserStatus;
+const updateAllConfirmedUsers = async (req, res, db) => {
+    const { status } = req.body;
+    if (!status) {
+        return res.status(400).json({ message: 'Status is required' });
+    }
+    console.log('Received status:', status);
+    try {
+        // Log confirmed users before the update
+        const confirmedUsers = await db.all('SELECT * FROM users WHERE status = "confirmed"');
+        console.log('Confirmed Users before update:', confirmedUsers);
+        const result = await db.run('UPDATE users SET status = ? WHERE status = "confirmed"', [status]);
+        console.log('SQL Update Result:', result);
+        if (result.changes === 0) {
+            return res.status(404).json({ message: 'No confirmed users found to update' });
+        }
+        res.status(200).json({ message: `All confirmed users have been updated to ${status}` });
+    }
+    catch (error) {
+        console.error('Error updating confirmed users:', error);
+        res.status(500).json({ message: 'Failed to update confirmed users' });
+    }
+};
+exports.updateAllConfirmedUsers = updateAllConfirmedUsers;
