@@ -86,6 +86,29 @@ const UserAdmin: React.FC = () => {
     }
   };
 
+  const sendConfirmationEmail = async (email: string) => {
+    try {
+      const response = await fetch("http://localhost:3000/sendConfirmationEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setMessage(data.message || "Confirmation email sent successfully!");
+        if (data.message.includes("successfully")) {
+          window.location.reload();}
+      } else {
+        throw new Error(data.message || "Failed to send confirmation email");
+      }
+    } catch (error) {
+      console.error("Error sending confirmation email:", error);
+      setMessage("Failed to send confirmation email");
+    }
+  };
+
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -188,6 +211,15 @@ const UserAdmin: React.FC = () => {
                     >
                       Confirm
                     </Button>
+                    {status === "unconfirmed" && (
+                      <Button
+                        className="sendConfirmationEmail"
+                        variant="primary"
+                        onClick={() => sendConfirmationEmail(user.email)}
+                      >
+                        Send Confirmation Email
+                      </Button>
+                    )}
                   </DialogFooter>
                   {message && <div className="Message">{message}</div>}
                 </DialogContent>
