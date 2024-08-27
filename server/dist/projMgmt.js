@@ -205,13 +205,9 @@ const updateAllConfirmedUsers = async (req, res, db) => {
     if (!status) {
         return res.status(400).json({ message: 'Status is required' });
     }
-    console.log('Received status:', status);
     try {
-        // Log confirmed users before the update
         const confirmedUsers = await db.all('SELECT * FROM users WHERE status = "confirmed"');
-        console.log('Confirmed Users before update:', confirmedUsers);
         const result = await db.run('UPDATE users SET status = ? WHERE status = "confirmed"', [status]);
-        console.log('SQL Update Result:', result);
         if (result.changes === 0) {
             return res.status(404).json({ message: 'No confirmed users found to update' });
         }
