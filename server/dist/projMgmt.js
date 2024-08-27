@@ -250,7 +250,6 @@ const sendSuspendedEmail = async (email) => {
     try {
         const info = await transporter.sendMail(mailOptions);
         console.log('Account suspended email sent: %s', info.messageId);
-        console.log('Preview URL: %s', nodemailer_1.default.getTestMessageUrl(info));
     }
     catch (error) {
         console.error('error sending suspended email:', error);
@@ -277,7 +276,6 @@ const sendRemovedEmail = async (email) => {
     try {
         const info = await transporter.sendMail(mailOptions);
         console.log('Account removed email sent: %s', info.messageId);
-        console.log('Preview URL: %s', nodemailer_1.default.getTestMessageUrl(info));
     }
     catch (error) {
         console.error('error sending removed email:', error);

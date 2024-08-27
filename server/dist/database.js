@@ -25,6 +25,11 @@ async function initializeDb() {
       confirmEmailExpire INTEGER
     )
   `);
+    const userCount = await db.get('SELECT COUNT(*) AS count FROM users');
+    if (userCount.count === 0) {
+        await db.run(`INSERT INTO users (name, email, password, status) VALUES (?, ?, ?, ?)`, ['admin', 'sys@admin.org', 'helloworld', 'confirmed']);
+        console.log('Default admin user created');
+    }
     await db.exec(`
     CREATE TABLE IF NOT EXISTS project (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
