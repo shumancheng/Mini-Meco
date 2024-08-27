@@ -72,6 +72,18 @@ export const login = async (req: Request, res: Response, db: Database) => {
       return res.status(400).json({ message: 'Invalid password' });
     }
 
+    const userStatus = user.status;
+    if (userStatus == 'unconfirmed') {
+      return res.status(400).json({ message: 'Email not confirmed. Please contact system admin.' });
+    } else if (userStatus == 'suspended') {
+      return res.status(400).json({ message: 'User account is suspended. Please contact system admin.' }); 
+    } else if (userStatus == 'removed') {
+      return res.status(400).json({ message: 'User account is removed. Please contact system admin.' });
+    }
+
+    
+
+
     const token = jwt.sign({ id: user.id }, 'your_jwt_secret', { expiresIn: '1h' });
     res.status(200).json({ token, name: user.name, email: user.email, githubUsername: user.githubUsername });
   } catch (error) {
