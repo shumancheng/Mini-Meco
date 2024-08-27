@@ -1,5 +1,10 @@
 import { Database } from "sqlite";
 import { Request, Response } from "express";
+import { send } from "process";
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const createProjectGroup = async (req: Request, res: Response, db: Database) => {
     const { semester, projectGroupName } = req.body;
@@ -199,6 +204,12 @@ export const updateUserStatus = async (req: Request, res: Response, db: Database
         return res.status(400).json({ message: "Please provide email and status" });
     }
 
+    if (status == "suspended"){
+        sendSuspendedEmail(email);
+    } else if (status == "removed"){
+        sendRemovedEmail(email);
+    }
+
     try {
         await db.run('UPDATE users SET status = ? WHERE email = ?', [status, email]);
         res.status(200).json({ message: "User status updated successfully" });
@@ -240,3 +251,58 @@ export const updateAllConfirmedUsers = async (req: Request, res: Response, db: D
     }
 };
 
+export const sendSuspendedEmail = async (email: string) => {
+    const transporter = nodemailer.createTransport({
+        host: 'smtp-auth.fau.de',
+        port: 465,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_USER_FAU,
+          pass: process.env.EMAIL_PASS_FAU,
+        },
+      });
+
+      const mailOptions = {
+        from: '"Mini-Meco" <shu-man.cheng@fau.de>',
+        to: email,
+        subject: 'Account Suspended',
+        text: `Your account has been suspended. Please contact the administrator for more information.`,
+      };
+    
+      try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Account suspended email sent: %s', info.messageId);
+        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      } catch (error) {
+        console.error('error sending suspended email:', error);
+        throw new Error('There was an error sending the email');
+      }
+}
+
+export const sendRemovedEmail = async (email: string) => {
+    const transporter = nodemailer.createTransport({
+        host: 'smtp-auth.fau.de',
+        port: 465,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_USER_FAU,
+          pass: process.env.EMAIL_PASS_FAU,
+        },
+      });
+
+      const mailOptions = {
+        from: '"Mini-Meco" <shu-man.cheng@fau.de>',
+        to: email,
+        subject: 'Account Removed',
+        text: `Your account has been removed. Please contact the administrator for more information.`,
+      };
+    
+      try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Account removed email sent: %s', info.messageId);
+        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      } catch (error) {
+        console.error('error sending removed email:', error);
+        throw new Error('There was an error sending the email');
+      }
+}
