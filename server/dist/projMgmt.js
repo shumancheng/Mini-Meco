@@ -1,6 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAllConfirmedUsers = exports.updateUserStatus = exports.getUserStatus = exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
+exports.sendRemovedEmail = exports.sendSuspendedEmail = exports.updateAllConfirmedUsers = exports.updateUserStatus = exports.getUserStatus = exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
+const nodemailer_1 = __importDefault(require("nodemailer"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const createProjectGroup = async (req, res, db) => {
     const { semester, projectGroupName } = req.body;
     const semesterRegex = /^(SS|WS)\d{2,4}$/; // Format: SS24 or WS2425
@@ -190,6 +196,12 @@ const updateUserStatus = async (req, res, db) => {
     if (!email || !status) {
         return res.status(400).json({ message: "Please provide email and status" });
     }
+    if (status == "suspended") {
+        (0, exports.sendSuspendedEmail)(email);
+    }
+    else if (status == "removed") {
+        (0, exports.sendRemovedEmail)(email);
+    }
     try {
         await db.run('UPDATE users SET status = ? WHERE email = ?', [status, email]);
         res.status(200).json({ message: "User status updated successfully" });
@@ -219,3 +231,57 @@ const updateAllConfirmedUsers = async (req, res, db) => {
     }
 };
 exports.updateAllConfirmedUsers = updateAllConfirmedUsers;
+const sendSuspendedEmail = async (email) => {
+    const transporter = nodemailer_1.default.createTransport({
+        host: 'smtp-auth.fau.de',
+        port: 465,
+        secure: true,
+        auth: {
+            user: process.env.EMAIL_USER_FAU,
+            pass: process.env.EMAIL_PASS_FAU,
+        },
+    });
+    const mailOptions = {
+        from: '"Mini-Meco" <shu-man.cheng@fau.de>',
+        to: email,
+        subject: 'Account Suspended',
+        text: `Your account has been suspended. Please contact the administrator for more information.`,
+    };
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Account suspended email sent: %s', info.messageId);
+        console.log('Preview URL: %s', nodemailer_1.default.getTestMessageUrl(info));
+    }
+    catch (error) {
+        console.error('error sending suspended email:', error);
+        throw new Error('There was an error sending the email');
+    }
+};
+exports.sendSuspendedEmail = sendSuspendedEmail;
+const sendRemovedEmail = async (email) => {
+    const transporter = nodemailer_1.default.createTransport({
+        host: 'smtp-auth.fau.de',
+        port: 465,
+        secure: true,
+        auth: {
+            user: process.env.EMAIL_USER_FAU,
+            pass: process.env.EMAIL_PASS_FAU,
+        },
+    });
+    const mailOptions = {
+        from: '"Mini-Meco" <shu-man.cheng@fau.de>',
+        to: email,
+        subject: 'Account Removed',
+        text: `Your account has been removed. Please contact the administrator for more information.`,
+    };
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Account removed email sent: %s', info.messageId);
+        console.log('Preview URL: %s', nodemailer_1.default.getTestMessageUrl(info));
+    }
+    catch (error) {
+        console.error('error sending removed email:', error);
+        throw new Error('There was an error sending the email');
+    }
+};
+exports.sendRemovedEmail = sendRemovedEmail;
