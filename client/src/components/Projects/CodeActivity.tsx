@@ -152,7 +152,7 @@ const CodeActivity: React.FC = () => {
   useEffect(() => {
     const fetchAllSprints = async () => {
       if (!selectedProjectGroup) return;
-
+  
       try {
         const response = await fetch(
           `http://localhost:3000/sprints?projectGroupName=${encodeURIComponent(
@@ -160,36 +160,33 @@ const CodeActivity: React.FC = () => {
           )}`
         );
         const fetchedSprints = await response.json();
-
+  
         // Only have end date, so calculate start date
         const updatedSprints = fetchedSprints.map(
           (sprint: any, index: number) => {
+            const sprintName = `sprint${index + 1}`; // Generate sprint name like sprint1, sprint2, etc.
             if (index === 0) {
               // First sprint: start date is one week before end date
               const startDate = new Date(sprint.endDate);
               startDate.setDate(startDate.getDate() - 7);
-              return { ...sprint, startDate };
+              return { ...sprint, startDate, name: sprintName }; // Set the name
             } else {
               // Other sprints: start date is the previous sprint's end date
               const startDate = new Date(fetchedSprints[index - 1].endDate);
-              return { ...sprint, startDate };
+              return { ...sprint, startDate, name: sprintName }; // Set the name
             }
           }
         );
-
+  
         setSprints(updatedSprints);
-        console.log("Updated sprints with start dates:", updatedSprints);
       } catch (error) {
         console.error("Error fetching sprints:", error);
       }
     };
-
+  
     fetchAllSprints();
   }, [selectedProjectGroup]);
-
-  console.log("Project Name:", projectName);
-  console.log("User:", user);
-  console.log("Project Groups:", projectGroups);
+  
 
   const getCommits = async (page: number) => {
     if (!repoDetails || !sprints.length) {
@@ -221,19 +218,13 @@ const CodeActivity: React.FC = () => {
         const commitDate = commit.commit.author?.date
           ? new Date(commit.commit.author.date)
           : new Date();
-        console.log("Commit Date:", commitDate);
 
         const isWithinSprint = sprints.some((sprint) => {
           const sprintStart = new Date(sprint.startDate);
           const sprintEnd = new Date(sprint.endDate);
-          console.log("Sprint Start Date:", sprintStart);
-          console.log("Sprint End Date:", sprintEnd);
 
           return commitDate >= sprintStart && commitDate <= sprintEnd;
         });
-
-        console.log("Is commit within sprint?", isWithinSprint);
-
         return isWithinSprint;
       });
 
@@ -281,16 +272,17 @@ const CodeActivity: React.FC = () => {
           const commitDate = new Date(commit.commit.author.date);
           return commitDate >= sprintStart && commitDate <= sprintEnd;
         });
-        return { sprint: sprint.name, count: commitsInSprint.length };
+        return { sprint: sprint.name, count: commitsInSprint.length }; // Ensure `sprint` is the name
       });
-
+  
       setCommitsPerSprint(commitsCount);
     };
-
+  
     if (commits.length && sprints.length) {
       calculateCommitsPerSprint();
     }
   }, [commits, sprints]);
+  
 
   return (
     <div onClick={handleNavigation}>

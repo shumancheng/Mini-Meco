@@ -42,14 +42,17 @@ const createSprints = async (req, res, db) => {
     const { projectGroupName, dates } = req.body;
     try {
         const existingSprints = await db.all(`SELECT endDate FROM sprints WHERE projectGroupName = ?`, [projectGroupName]);
-        for (let i = 0; i < dates.length; i++) {
-            const endDate = dates[i];
-            // Check if endDate already exists in existingSprints
-            const isDuplicate = existingSprints.some(sprint => sprint.endDate === endDate);
-            if (isDuplicate) {
+        /*
+            for (let i = 0; i < dates.length; i++) {
+              const endDate = dates[i];
+        
+              // Check if endDate already exists in existingSprints
+              const isDuplicate = existingSprints.some(sprint => sprint.endDate === endDate);
+              if (isDuplicate) {
                 return res.status(400).json({ message: "Duplicate sprint date found" });
+              }
             }
-        }
+              */
         const latestSprint = await db.get(`SELECT sprintName FROM sprints WHERE projectGroupName = ? ORDER BY sprintName DESC LIMIT 1`, [projectGroupName]);
         let newSprintNumber = 0;
         if (latestSprint && latestSprint.sprintName) {
@@ -58,7 +61,12 @@ const createSprints = async (req, res, db) => {
         for (let i = 0; i < dates.length; i++) {
             const endDate = dates[i];
             const sprintName = `sprint${newSprintNumber + i}`;
-            await db.run(`INSERT INTO sprints (projectGroupName, sprintName, endDate) VALUES (?, ?, ?)`, [projectGroupName, sprintName, endDate]);
+            await db.run(`INSERT INTO sprints (projectGroupName, sprintName, endDate) VALUES (?, ?, ?)`, [projectGroupName, sprintName, endDate], (err) => {
+                if (err) {
+                    console.error("Error inserting sprint:", err);
+                    throw err;
+                }
+            });
         }
         res.status(201).json({ message: "Sprints created successfully" });
     }
