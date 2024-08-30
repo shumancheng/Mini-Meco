@@ -164,16 +164,16 @@ const CodeActivity: React.FC = () => {
         // Only have end date, so calculate start date
         const updatedSprints = fetchedSprints.map(
           (sprint: any, index: number) => {
-            const sprintName = `sprint${index + 1}`; // Generate sprint name like sprint1, sprint2, etc.
+            const sprintName = `sprint${index}`; 
             if (index === 0) {
               // First sprint: start date is one week before end date
               const startDate = new Date(sprint.endDate);
               startDate.setDate(startDate.getDate() - 7);
-              return { ...sprint, startDate, name: sprintName }; // Set the name
+              return { ...sprint, startDate, name: sprintName }; 
             } else {
               // Other sprints: start date is the previous sprint's end date
               const startDate = new Date(fetchedSprints[index - 1].endDate);
-              return { ...sprint, startDate, name: sprintName }; // Set the name
+              return { ...sprint, startDate, name: sprintName }; 
             }
           }
         );
@@ -259,9 +259,12 @@ const CodeActivity: React.FC = () => {
     }
   }, [page, repoDetails, sprints]);
 
-  const loadMoreCommits = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
+  useEffect(() => {
+    if (hasMore && !loading) {
+      // Automatically increment page number to fetch next set of commits
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [commits]); // Trigger whenever commits are updated
 
   useEffect(() => {
     const calculateCommitsPerSprint = () => {
@@ -311,9 +314,6 @@ const CodeActivity: React.FC = () => {
           <p>No commits found.</p>
         )}
         {loading && <p>Loading more commits...</p>}
-        {hasMore && !loading && (
-          <button onClick={loadMoreCommits}>Load More</button>
-        )}
       </div>
     </div>
   );
