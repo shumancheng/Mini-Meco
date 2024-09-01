@@ -6,7 +6,10 @@
     "install-all": "npm install && npm install --prefix client && npm install --prefix server",
     "build-all": "npm run build --prefix client && npm run build --prefix server",
     "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
-    "start": "concurrently \"npm start --prefix client\" \"npm start --prefix server\""
+    "start": "concurrently \"npm start --prefix client\" \"npm start --prefix server\"",
+    "test:client": "jest --config client/jest.config.js",
+    "test:server": "jest --config server/jest.config.js",
+    "test": "npm run test:client && npm run test:server"
   },
   "dependencies": {
     "@octokit/rest": "^21.0.1",
@@ -16,6 +19,12 @@
     "recharts": "^2.12.7"
   },
   "devDependencies": {
-    "@types/recharts": "^1.8.29"
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@types/jest": "^29.5.12",
+    "@types/recharts": "^1.8.29",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5"
   }
 }
