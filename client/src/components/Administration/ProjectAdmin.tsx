@@ -41,6 +41,9 @@ const ProjectAdmin: React.FC = () => {
   >([]);
   const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
 
+  const [newSemester, setNewSemester] = useState("");
+  const [newProjectGroupName, setNewProjectGroupName] = useState("");
+
   useEffect(() => {
     const fetchSemesters = async () => {
       try {
@@ -238,7 +241,54 @@ const ProjectAdmin: React.FC = () => {
               <React.Fragment key={group}>
                 <div className="ProjectItem">
                   <div className="ProjectName">{group}</div>
-                  <img className="Edit" src={Edit} alt="Edit" />
+
+                  <Dialog>
+                    <DialogTrigger className="DialogTrigger">
+                      <img className="Edit" src={Edit} alt="Edit" />
+                    </DialogTrigger>
+                    <DialogContent className="DialogContent">
+                      <DialogHeader>
+                        <DialogTitle className="DialogTitle">
+                          Edit Project Group
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="newProjAdmin-input">
+                        <div className="newSem">New Semester: </div>
+                        <input
+                          className="newProjAdmin-inputBox"
+                          type="text"
+                          placeholder="Please follow this format: SS24 / WS2425"
+                          value={newSemester}
+                          onChange={(e) => setSemester(e.target.value)}
+                        />
+                      </div>
+                      <div className="newProjAdmin-input">
+                        <div className="newProjGroupName">
+                          New Name:{" "}
+                        </div>
+                        <input
+                          className="newProjAdmin-inputBox2"
+                          type="text"
+                          placeholder="Please Enter New Project Group Name"
+                          value={newProjectGroupName}
+                          onChange={(e) => setProjectGroupName(e.target.value)}
+                        />
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          className="create"
+                          type="submit"
+                          onClick={() => {
+                            setAction("EditProjectGroup");
+                            handleCreate();
+                          }}
+                        >
+                          Confirm
+                        </Button>
+                      </DialogFooter>
+                      {message && <div className="message">{message}</div>}
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 {index < projectGroups.length - 1 && (
                   <hr className="ProjectDivider" />
@@ -300,7 +350,6 @@ const ProjectAdmin: React.FC = () => {
           <div className="SelectWrapper">
             <Select
               onValueChange={(value) => {
-              
                 setSelectedProjectGroup(value);
               }}
             >
