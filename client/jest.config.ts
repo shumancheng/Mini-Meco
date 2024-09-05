@@ -14,6 +14,7 @@ const config: Config = {
     '^.+\\.(jpg|jpeg|png|gif|svg|webp|avif)$': 'jest-transform-stub',
   },
   moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '\\.(gif|ttf|eot|svg|png)$': 'jest-transform-stub',
   },

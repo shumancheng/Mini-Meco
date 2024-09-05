@@ -4,10 +4,10 @@ import ProjectAdmin from "../components/Administration/ProjectAdmin";
 
 describe("ProjectAdmin Component", () => {
   beforeEach(() => {
-    global.fetch = jest.fn((url) => {
+    global.fetch = jest.fn((url) => { 
       if (url === "http://localhost:3000/semesters") {
-        return Promise.resolve({
-          json: () => Promise.resolve([{ semester: "SS24" }, { semester: "WS2425" }]),
+        return Promise.resolve({ 
+          json: () => Promise.resolve([{ semester: "SS24" }, { semester: "WS2425" }]), 
         });
       }
       if (url === "http://localhost:3000/project-groups") {
@@ -21,7 +21,8 @@ describe("ProjectAdmin Component", () => {
     }) as jest.Mock;
   });
 
-  it("fetches and displays semesters and project groups", async () => {
+  
+  it("fetches and displays semesters and project groups", async () => { 
     render(<ProjectAdmin />, { wrapper: MemoryRouter });
     
     await waitFor(() => {
@@ -42,4 +43,5 @@ describe("ProjectAdmin Component", () => {
       expect(screen.getByText("Group A")).toBeInTheDocument();
     });
   });
+  
 });
