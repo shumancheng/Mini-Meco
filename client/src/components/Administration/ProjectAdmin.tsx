@@ -47,7 +47,6 @@ const ProjectAdmin: React.FC = () => {
         const response = await fetch("http://localhost:3000/semesters");
         const data = await response.json();
         setSemesters(data.map((item: any) => item.semester));
-        console.log("Fetched semesters:", data);
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error(error.message);
@@ -56,21 +55,26 @@ const ProjectAdmin: React.FC = () => {
     };
 
     const fetchProjectGroups = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/project-groups");
-        const data = await response.json();
-        setProjectGroups(data.map((item: any) => item.projectGroupName));
-        console.log("Fetched project groups:", data);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error(error.message);
+      if (semester) {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/project-groups?semester=${semester}`
+          );
+          const data = await response.json();
+          setProjectGroups(data.map((item: any) => item.projectGroupName));
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.error(error.message);
+          }
         }
+      } else {
+        setProjectGroups([]);
       }
     };
 
     fetchSemesters();
     fetchProjectGroups();
-  }, []);
+  }, [semester]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -86,7 +90,6 @@ const ProjectAdmin: React.FC = () => {
             projectGroupName: item.projectGroupName || selectedProjectGroup, // Fallback to selectedProjectGroup if undefined
           }));
           setProjects(mappedProjects);
-          console.log("Fetched projects:", mappedProjects);
         } catch (error: unknown) {
           if (error instanceof Error) {
             console.error(error.message);
@@ -207,7 +210,11 @@ const ProjectAdmin: React.FC = () => {
             </div>
           </div>
           <div className="SelectWrapper">
-            <Select>
+            <Select
+              onValueChange={(value) => {
+                setSemester(value);
+              }}
+            >
               <SelectTrigger className="SelectTrigger">
                 <SelectValue
                   className="SelectValue"
@@ -215,25 +222,29 @@ const ProjectAdmin: React.FC = () => {
                 />
               </SelectTrigger>
               <SelectContent className="SelectContent">
-                {semesters.map((semester) => (
-                  <SelectItem key={semester} value={semester}>
-                    {semester}
+                {semesters.map((sem) => (
+                  <SelectItem key={sem} value={sem}>
+                    {sem}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          {projectGroups.map((group, index) => (
-            <React.Fragment key={group}>
-              <div className="ProjectItem">
-                <div className="ProjectName">{group}</div>
-                <img className="Edit" src={Edit} alt="Edit" />
-              </div>
-              {index < projectGroups.length - 1 && (
-                <hr className="ProjectDivider" />
-              )}
-            </React.Fragment>
-          ))}
+
+          {/* Only show project groups when a semester is selected */}
+          {semester &&
+            projectGroups.length > 0 &&
+            projectGroups.map((group, index) => (
+              <React.Fragment key={group}>
+                <div className="ProjectItem">
+                  <div className="ProjectName">{group}</div>
+                  <img className="Edit" src={Edit} alt="Edit" />
+                </div>
+                {index < projectGroups.length - 1 && (
+                  <hr className="ProjectDivider" />
+                )}
+              </React.Fragment>
+            ))}
         </div>
         <div className="ProjectContainer">
           <div className="ProjectTitle">
@@ -289,7 +300,7 @@ const ProjectAdmin: React.FC = () => {
           <div className="SelectWrapper">
             <Select
               onValueChange={(value) => {
-                console.log("Selected Project Group:", value);
+              
                 setSelectedProjectGroup(value);
               }}
             >
