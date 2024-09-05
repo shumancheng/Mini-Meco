@@ -8,15 +8,18 @@ const config: Config = {
   testMatch: ['**/__tests__/**/*.(spec|test).ts?(x)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-    '^.+\\.css$': 'jest-transform-stub',  // Handle CSS imports
-    '^.+\\.(jpg|jpeg|png|gif|svg|webp|avif)$': 'jest-transform-stub',  // Handle image imports
+    '^.+\\.tsx?$': 'ts-jest', // Handle both .ts and .tsx files with ts-jest
+    '^.+\\.jsx?$': 'babel-jest', // Use babel-jest for JavaScript files (if needed)
+    '^.+\\.css$': 'jest-transform-stub',
+    '^.+\\.(jpg|jpeg|png|gif|svg|webp|avif)$': 'jest-transform-stub',
   },
   moduleNameMapper: {
-    '\\.(css|less|sass|scss)$': 'identity-obj-proxy',  
+    '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '\\.(gif|ttf|eot|svg|png)$': 'jest-transform-stub',
   },
-  
+  transformIgnorePatterns: [
+    '/node_modules/(?!react-bootstrap|classnames)', // Transpile specific node_modules
+  ],
 };
 
 export default config;
