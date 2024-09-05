@@ -4,7 +4,7 @@ import cors from 'cors';
 import { register, login, forgotPassword, resetPassword, confirmEmail, sendConfirmationEmail } from './auth';
 import { initializeDb } from './database';
 import dotenv from 'dotenv';
-import { createProjectGroup, createProject, getProjectGroups, getProjects, getSemesters, joinProject, leaveProject, getUserProjects, getUserProjectGroups, getUserStatus, updateUserStatus, updateAllConfirmedUsers } from './projMgmt';
+import { createProjectGroup, createProject, editProjectGroup, editProject,getProjectGroups, getProjects, getSemesters, joinProject, leaveProject, getUserProjects, getUserProjectGroups, getUserStatus, updateUserStatus, updateAllConfirmedUsers } from './projMgmt';
 import { sendStandupsEmail, saveHappiness, createSprints, getHappinessData, getSprints, getCurrentSprint, getProjectGitHubURL } from './projFeat';
 import { ChangeEmail, ChangePassword, addGitHubUsername, getUserGitHubUsername, addURL, getURL, changeURL } from './projConfig';
 
@@ -43,6 +43,8 @@ initializeDb().then((db) => {
   app.post('/resetPassword', (req, res) => resetPassword(req, res, db));
   app.post('/project-admin/createProjectGroup', (req, res) => createProjectGroup(req, res, db));
   app.post('/project-admin/createProject', (req, res) => createProject(req, res, db));
+  app.post('/project-admin/editProjectGroup', (req, res) => editProjectGroup(req, res, db));
+  app.post('/project-admin/editProject', (req, res) => editProject(req, res, db));
   app.post('/settings/joinProject', (req, res) => joinProject(req, res, db));
   app.post('/settings/leaveProject', (req, res) => leaveProject(req, res, db));
   app.post('/settings/addGitHubUsername', (req, res) => addGitHubUsername(req, res, db));

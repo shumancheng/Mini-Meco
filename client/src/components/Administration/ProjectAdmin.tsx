@@ -43,6 +43,7 @@ const ProjectAdmin: React.FC = () => {
 
   const [newSemester, setNewSemester] = useState("");
   const [newProjectGroupName, setNewProjectGroupName] = useState("");
+  const [newProjectName, setNewProjectName] = useState("");
 
   useEffect(() => {
     const fetchSemesters = async () => {
@@ -154,6 +155,49 @@ const ProjectAdmin: React.FC = () => {
     (project) => project.projectGroupName === selectedProjectGroup
   );
 
+  const HandleEdit = async() => {
+    const endpoint =
+    action === "EditProjectGroup"
+      ? "/editProjectGroup"
+      : "/editProject";
+  const body: { [key: string]: string } = { projectGroupName: selectedProjectGroup || projectGroupName, newSemester, newProjectGroupName };
+  if (action === "EditProject") {
+    body.projectName = projectName;
+    body.newProjectName = newProjectName;
+  }
+  try {
+    const response = await fetch(
+      `http://localhost:3000/project-admin${endpoint}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Something went wrong");
+    }
+
+    setMessage(data.message || "Success!");
+    if (data.message.includes("successfully")) {
+      window.location.reload(); // Refresh the page
+    }
+
+    console.log(data);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      setMessage(error.message);
+    } else {
+      setMessage("An unexpected error occurred");
+    }
+  }
+  }
+
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -259,7 +303,7 @@ const ProjectAdmin: React.FC = () => {
                           type="text"
                           placeholder="Please follow this format: SS24 / WS2425"
                           value={newSemester}
-                          onChange={(e) => setSemester(e.target.value)}
+                          onChange={(e) => setNewSemester(e.target.value)}
                         />
                       </div>
                       <div className="newProjAdmin-input">
@@ -271,7 +315,7 @@ const ProjectAdmin: React.FC = () => {
                           type="text"
                           placeholder="Please Enter New Project Group Name"
                           value={newProjectGroupName}
-                          onChange={(e) => setProjectGroupName(e.target.value)}
+                          onChange={(e) => setNewProjectGroupName(e.target.value)}
                         />
                       </div>
                       <DialogFooter>
@@ -280,7 +324,7 @@ const ProjectAdmin: React.FC = () => {
                           type="submit"
                           onClick={() => {
                             setAction("EditProjectGroup");
-                            handleCreate();
+                            HandleEdit();
                           }}
                         >
                           Confirm
