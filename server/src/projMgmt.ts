@@ -90,20 +90,35 @@ export const editProjectGroup = async (req: Request, res: Response, db: Database
 
 export const editProject = async (req: Request, res: Response, db: Database) => {
     const { newProjectGroupName, projectName, newProjectName } = req.body;
-
+  
     if (!newProjectGroupName || !newProjectName) {
-        return res.status(400).json({ message: "Please fill in project group name and project name" });
+      return res.status(400).json({ message: "Please fill in project group name and project name" });
     }
-
+  
     try {
-        await db.run(`ALTER TABLE ${projectName} RENAME TO ${newProjectName}`);
-        await db.run(`UPDATE project SET projectName = ?, projectGroupName = ? WHERE projectName = ?`, [newProjectName, newProjectGroupName, projectName]);
-        res.status(201).json({ message: "Project edited successfully" });
+      // Check if table names need to be quoted
+      const quotedProjectName = `"${projectName}"`;
+      const quotedNewProjectName = `"${newProjectName}"`;
+  
+      //get the old project group name
+        const oldProjectGroupName = await db.get('SELECT projectGroupName FROM project WHERE projectName = ?', [projectName]);
+      await db.run(`ALTER TABLE ${quotedProjectName} RENAME TO ${quotedNewProjectName}`);
+        
+      await db.run(
+        `UPDATE project SET projectName = ?, projectGroupName = ? WHERE projectName = ?`,
+        [newProjectName, newProjectGroupName, projectName]
+      );
+
+      // update the table $projectGroupName to $newProjectGroupName
+      await db.run(`UPDATE ${oldProjectGroupName.projectGroupName} SET projectName = ? WHERE projectName = ?`, [newProjectName, projectName]);
+      
+      res.status(201).json({ message: "Project edited successfully" });
     } catch (error) {
-        console.error("Error during project edition:", error);
-        res.status(500).json({ message: "Project eidtion failed", error });
+      console.error("Error during project edition:", error);
+      res.status(500).json({ message: "Project edition failed", error });
     }
-};
+  };
+  
 
 
 export const getSemesters = async (req: Request, res: Response, db: Database) => {
