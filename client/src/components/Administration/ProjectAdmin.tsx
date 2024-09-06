@@ -44,6 +44,7 @@ const ProjectAdmin: React.FC = () => {
   const [newSemester, setNewSemester] = useState("");
   const [newProjectGroupName, setNewProjectGroupName] = useState("");
   const [newProjectName, setNewProjectName] = useState("");
+  const [selectToEditProjectGroup, setSelectToEditProjectGroup] = useState("");
 
   useEffect(() => {
     const fetchSemesters = async () => {
@@ -160,7 +161,7 @@ const ProjectAdmin: React.FC = () => {
     action === "EditProjectGroup"
       ? "/editProjectGroup"
       : "/editProject";
-  const body: { [key: string]: string } = { projectGroupName: selectedProjectGroup || projectGroupName, newSemester, newProjectGroupName };
+  const body: { [key: string]: string } = { projectGroupName: selectToEditProjectGroup, newSemester, newProjectGroupName };
   if (action === "EditProject") {
     body.projectName = projectName;
     body.newProjectName = newProjectName;
@@ -287,7 +288,7 @@ const ProjectAdmin: React.FC = () => {
                   <div className="ProjectName">{group}</div>
 
                   <Dialog>
-                    <DialogTrigger className="DialogTrigger">
+                    <DialogTrigger className="DialogTrigger" onClick={() => setSelectToEditProjectGroup(group)}>
                       <img className="Edit" src={Edit} alt="Edit" />
                     </DialogTrigger>
                     <DialogContent className="DialogContent">
