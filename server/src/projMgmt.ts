@@ -89,32 +89,19 @@ export const editProjectGroup = async (req: Request, res: Response, db: Database
 }
 
 export const editProject = async (req: Request, res: Response, db: Database) => {
-    const { projectGroupName, projectName } = req.body;
+    const { newProjectGroupName, projectName, newProjectName } = req.body;
 
-    if (!projectGroupName || !projectName) {
+    if (!newProjectGroupName || !newProjectName) {
         return res.status(400).json({ message: "Please fill in project group name and project name" });
     }
 
     try {
-        const user = await db.get('SELECT * FROM projectGroup WHERE projectGroupName = ?', [projectGroupName]);
-        if (!user) {
-            return res.status(400).json({ message: 'Project Group Not Found' });
-        }
-
-        await db.run(`INSERT INTO ${projectGroupName} (projectName) VALUES (?)`, [projectName]);
-        await db.run(`INSERT INTO project (projectName, projectGroupName) VALUES (?, ?)`, [projectName, projectGroupName]);
-        await db.exec(`
-            CREATE TABLE IF NOT EXISTS "${projectName}" (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                memberName TEXT,
-                memberRole TEXT,
-                memberEmail TEXT UNIQUE
-            )
-        `);
-        res.status(201).json({ message: "Project created successfully" });
+        await db.run(`ALTER TABLE ${projectName} RENAME TO ${newProjectName}`);
+        await db.run(`UPDATE project SET projectName = ?, projectGroupName = ? WHERE projectName = ?`, [newProjectName, newProjectGroupName, projectName]);
+        res.status(201).json({ message: "Project edited successfully" });
     } catch (error) {
-        console.error("Error during project creation:", error);
-        res.status(500).json({ message: "Project creation failed", error });
+        console.error("Error during project edition:", error);
+        res.status(500).json({ message: "Project eidtion failed", error });
     }
 };
 
