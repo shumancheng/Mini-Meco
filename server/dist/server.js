@@ -40,6 +40,8 @@ app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
     app.post('/resetPassword', (req, res) => (0, auth_1.resetPassword)(req, res, db));
     app.post('/project-admin/createProjectGroup', (req, res) => (0, projMgmt_1.createProjectGroup)(req, res, db));
     app.post('/project-admin/createProject', (req, res) => (0, projMgmt_1.createProject)(req, res, db));
+    app.post('/project-admin/editProjectGroup', (req, res) => (0, projMgmt_1.editProjectGroup)(req, res, db));
+    app.post('/project-admin/editProject', (req, res) => (0, projMgmt_1.editProject)(req, res, db));
     app.post('/settings/joinProject', (req, res) => (0, projMgmt_1.joinProject)(req, res, db));
     app.post('/settings/leaveProject', (req, res) => (0, projMgmt_1.leaveProject)(req, res, db));
     app.post('/settings/addGitHubUsername', (req, res) => (0, projConfig_1.addGitHubUsername)(req, res, db));
