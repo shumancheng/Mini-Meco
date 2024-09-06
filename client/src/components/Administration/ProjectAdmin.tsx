@@ -45,6 +45,7 @@ const ProjectAdmin: React.FC = () => {
   const [newProjectGroupName, setNewProjectGroupName] = useState("");
   const [newProjectName, setNewProjectName] = useState("");
   const [selectToEditProjectGroup, setSelectToEditProjectGroup] = useState("");
+  const [selectToEditProject, setSelectToEditProject] = useState<{ id: number; projectName: string; projectGroupName: string } | string>("");
 
   useEffect(() => {
     const fetchSemesters = async () => {
@@ -163,7 +164,11 @@ const ProjectAdmin: React.FC = () => {
       : "/editProject";
   const body: { [key: string]: string } = { projectGroupName: selectToEditProjectGroup, newSemester, newProjectGroupName };
   if (action === "EditProject") {
-    body.projectName = projectName;
+    if (typeof selectToEditProject === "string") {
+      body.projectName = selectToEditProject;
+    } else {
+      body.projectName = selectToEditProject.projectName;
+    }
     body.newProjectName = newProjectName;
   }
   try {
@@ -417,7 +422,54 @@ const ProjectAdmin: React.FC = () => {
             <>
               <div key={project.id} className="ProjectItem">
                 <div className="ProjectName">{project.projectName}</div>
-                <img className="Edit" src={Edit} alt="Edit" />
+                
+                <Dialog>
+                    <DialogTrigger className="DialogTrigger" onClick={() => setSelectToEditProject(project)}>
+                      <img className="Edit" src={Edit} alt="Edit" />
+                    </DialogTrigger>
+                    <DialogContent className="DialogContent">
+                      <DialogHeader>
+                        <DialogTitle className="DialogTitle">
+                          Edit Project
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="newProjAdmin-input">
+                        <div className="newSem">New Project Group: </div>
+                        <input
+                          className="newProjAdmin-inputBox3"
+                          type="text"
+                          placeholder="Please Enter New Project Group Name"
+                          value={newSemester}
+                          onChange={(e) => setNewProjectName(e.target.value)}
+                        />
+                      </div>
+                      <div className="newProjAdmin-input">
+                        <div className="newProjGroupName">
+                          New Name:{" "}
+                        </div>
+                        <input
+                          className="newProjAdmin-inputBox4"
+                          type="text"
+                          placeholder="Please Enter New Project Name"
+                          value={newProjectGroupName}
+                          onChange={(e) => setNewProjectGroupName(e.target.value)}
+                        />
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          className="create"
+                          type="submit"
+                          onClick={() => {
+                            setAction("EditProjectGroup");
+                            HandleEdit();
+                          }}
+                        >
+                          Confirm
+                        </Button>
+                      </DialogFooter>
+                      {message && <div className="message">{message}</div>}
+                    </DialogContent>
+                  </Dialog>
               </div>
               <hr className="ProjectDivider" />
             </>

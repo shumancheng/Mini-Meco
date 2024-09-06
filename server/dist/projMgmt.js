@@ -63,18 +63,12 @@ exports.createProject = createProject;
 const editProjectGroup = async (req, res, db) => {
     const { projectGroupName, newSemester, newProjectGroupName } = req.body;
     const semesterRegex = /^(SS|WS)\d{2,4}$/; // Format: SS24 or WS2425
-    console.log("Request Body:", req.body);
     if (!newSemester || !newProjectGroupName) {
         return res.status(400).json({ message: "Please fill in semester and project group name" });
     }
     else if (!semesterRegex.test(newSemester)) {
         return res.status(400).json({ message: "Invalid semester format. Please use SSYY or WSYYYY format" });
     }
-    console.log("Editing Project Group:", {
-        projectGroupName,
-        newSemester,
-        newProjectGroupName
-    });
     try {
         console.log(`Executing SQL: UPDATE projectGroup SET semester = '${newSemester}', projectGroupName = '${newProjectGroupName}' WHERE projectGroupName = '${projectGroupName}'`);
         await db.run(`UPDATE projectGroup SET semester = ?, projectGroupName = ? WHERE projectGroupName = ?`, [newSemester, newProjectGroupName, projectGroupName]);
