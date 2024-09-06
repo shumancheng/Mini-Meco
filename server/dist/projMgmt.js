@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendRemovedEmail = exports.sendSuspendedEmail = exports.updateAllConfirmedUsers = exports.updateUserStatus = exports.getUserStatus = exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.createProject = exports.createProjectGroup = void 0;
+exports.sendRemovedEmail = exports.sendSuspendedEmail = exports.updateAllConfirmedUsers = exports.updateUserStatus = exports.getUserStatus = exports.getUserProjectGroups = exports.getUserProjects = exports.leaveProject = exports.joinProject = exports.getProjects = exports.getProjectGroups = exports.getSemesters = exports.editProject = exports.editProjectGroup = exports.createProject = exports.createProjectGroup = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -60,6 +60,60 @@ const createProject = async (req, res, db) => {
     }
 };
 exports.createProject = createProject;
+const editProjectGroup = async (req, res, db) => {
+    const { projectGroupName, newSemester, newProjectGroupName } = req.body;
+    const semesterRegex = /^(SS|WS)\d{2,4}$/; // Format: SS24 or WS2425
+    console.log("Request Body:", req.body);
+    if (!newSemester || !newProjectGroupName) {
+        return res.status(400).json({ message: "Please fill in semester and project group name" });
+    }
+    else if (!semesterRegex.test(newSemester)) {
+        return res.status(400).json({ message: "Invalid semester format. Please use SSYY or WSYYYY format" });
+    }
+    console.log("Editing Project Group:", {
+        projectGroupName,
+        newSemester,
+        newProjectGroupName
+    });
+    try {
+        console.log(`Executing SQL: UPDATE projectGroup SET semester = '${newSemester}', projectGroupName = '${newProjectGroupName}' WHERE projectGroupName = '${projectGroupName}'`);
+        await db.run(`UPDATE projectGroup SET semester = ?, projectGroupName = ? WHERE projectGroupName = ?`, [newSemester, newProjectGroupName, projectGroupName]);
+        res.status(201).json({ message: "Project group edited successfully" });
+    }
+    catch (error) {
+        console.error("Error during project group edition:", error);
+        res.status(500).json({ message: "Project group edited failed", error });
+    }
+};
+exports.editProjectGroup = editProjectGroup;
+const editProject = async (req, res, db) => {
+    const { projectGroupName, projectName } = req.body;
+    if (!projectGroupName || !projectName) {
+        return res.status(400).json({ message: "Please fill in project group name and project name" });
+    }
+    try {
+        const user = await db.get('SELECT * FROM projectGroup WHERE projectGroupName = ?', [projectGroupName]);
+        if (!user) {
+            return res.status(400).json({ message: 'Project Group Not Found' });
+        }
+        await db.run(`INSERT INTO ${projectGroupName} (projectName) VALUES (?)`, [projectName]);
+        await db.run(`INSERT INTO project (projectName, projectGroupName) VALUES (?, ?)`, [projectName, projectGroupName]);
+        await db.exec(`
+            CREATE TABLE IF NOT EXISTS "${projectName}" (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                memberName TEXT,
+                memberRole TEXT,
+                memberEmail TEXT UNIQUE
+            )
+        `);
+        res.status(201).json({ message: "Project created successfully" });
+    }
+    catch (error) {
+        console.error("Error during project creation:", error);
+        res.status(500).json({ message: "Project creation failed", error });
+    }
+};
+exports.editProject = editProject;
 const getSemesters = async (req, res, db) => {
     try {
         const semesters = await db.all("SELECT DISTINCT semester FROM projectGroup");

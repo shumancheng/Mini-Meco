@@ -41,6 +41,11 @@ const ProjectAdmin: React.FC = () => {
   >([]);
   const [selectedProjectGroup, setSelectedProjectGroup] = useState<string>("");
 
+  const [newSemester, setNewSemester] = useState("");
+  const [newProjectGroupName, setNewProjectGroupName] = useState("");
+  const [newProjectName, setNewProjectName] = useState("");
+  const [selectToEditProjectGroup, setSelectToEditProjectGroup] = useState("");
+
   useEffect(() => {
     const fetchSemesters = async () => {
       try {
@@ -151,6 +156,49 @@ const ProjectAdmin: React.FC = () => {
     (project) => project.projectGroupName === selectedProjectGroup
   );
 
+  const HandleEdit = async() => {
+    const endpoint =
+    action === "EditProjectGroup"
+      ? "/editProjectGroup"
+      : "/editProject";
+  const body: { [key: string]: string } = { projectGroupName: selectToEditProjectGroup, newSemester, newProjectGroupName };
+  if (action === "EditProject") {
+    body.projectName = projectName;
+    body.newProjectName = newProjectName;
+  }
+  try {
+    const response = await fetch(
+      `http://localhost:3000/project-admin${endpoint}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Something went wrong");
+    }
+
+    setMessage(data.message || "Success!");
+    if (data.message.includes("successfully")) {
+      window.location.reload(); // Refresh the page
+    }
+
+    console.log(data);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      setMessage(error.message);
+    } else {
+      setMessage("An unexpected error occurred");
+    }
+  }
+  }
+
   return (
     <div onClick={handleNavigation}>
       <ReturnButton />
@@ -238,7 +286,54 @@ const ProjectAdmin: React.FC = () => {
               <React.Fragment key={group}>
                 <div className="ProjectItem">
                   <div className="ProjectName">{group}</div>
-                  <img className="Edit" src={Edit} alt="Edit" />
+
+                  <Dialog>
+                    <DialogTrigger className="DialogTrigger" onClick={() => setSelectToEditProjectGroup(group)}>
+                      <img className="Edit" src={Edit} alt="Edit" />
+                    </DialogTrigger>
+                    <DialogContent className="DialogContent">
+                      <DialogHeader>
+                        <DialogTitle className="DialogTitle">
+                          Edit Project Group
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="newProjAdmin-input">
+                        <div className="newSem">New Semester: </div>
+                        <input
+                          className="newProjAdmin-inputBox"
+                          type="text"
+                          placeholder="Please follow this format: SS24 / WS2425"
+                          value={newSemester}
+                          onChange={(e) => setNewSemester(e.target.value)}
+                        />
+                      </div>
+                      <div className="newProjAdmin-input">
+                        <div className="newProjGroupName">
+                          New Name:{" "}
+                        </div>
+                        <input
+                          className="newProjAdmin-inputBox2"
+                          type="text"
+                          placeholder="Please Enter New Project Group Name"
+                          value={newProjectGroupName}
+                          onChange={(e) => setNewProjectGroupName(e.target.value)}
+                        />
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          className="create"
+                          type="submit"
+                          onClick={() => {
+                            setAction("EditProjectGroup");
+                            HandleEdit();
+                          }}
+                        >
+                          Confirm
+                        </Button>
+                      </DialogFooter>
+                      {message && <div className="message">{message}</div>}
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 {index < projectGroups.length - 1 && (
                   <hr className="ProjectDivider" />
@@ -300,7 +395,6 @@ const ProjectAdmin: React.FC = () => {
           <div className="SelectWrapper">
             <Select
               onValueChange={(value) => {
-              
                 setSelectedProjectGroup(value);
               }}
             >
