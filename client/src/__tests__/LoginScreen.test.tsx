@@ -19,6 +19,9 @@ describe("LoginScreen Component", () => {
   
   it("renders login form correctly", () => {
     render(<LoginScreen />, { wrapper: MemoryRouter }); 
+
+    screen.logTestingPlaygroundURL();
+    
     expect(
       screen.getByPlaceholderText("Please enter your email address")  
     ).toBeInTheDocument();
