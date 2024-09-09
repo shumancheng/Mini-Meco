@@ -13,7 +13,6 @@ describe("ProjectAdmin Component", () => {
   test("allows the user to create a new project group", async () => {
 
     fetchMock.mockResponseOnce(JSON.stringify({ success: true }));
-    // Wrap the component with MemoryRouter
     render(
       <MemoryRouter>
         <ProjectAdmin />
