@@ -4,7 +4,7 @@ describe('User Authentication Test', () => {
     const password = 'TestPassword123';
     const name = 'Test_User';
   
-    // Test 1: Register a new account
+
     it('should register a new account', () => {
       cy.visit('/login'); 
   
@@ -19,28 +19,25 @@ describe('User Authentication Test', () => {
 
       cy.contains('Sign Up').click();
   
-      // Assert that the registration was successful
+
       cy.get('.message').should('contain', 'Success!'); 
   
       // Verify that the user is redirected to the dashboard or the login page
-      cy.url().should('include', '/dashboard'); // Assuming redirect to dashboard on success
+      cy.url().should('include', '/dashboard'); 
     });
   
-    // Test 2: Log in with the registered account
+
     it('should log in with the newly registered account', () => {
-      cy.visit('/login'); // Go to the login page
+      cy.visit('/login'); 
   
 
       cy.get('input[placeholder="Please enter your email address"]').type(email);
       cy.get('input[placeholder="Please enter your password"]').type(password);
   
 
-      cy.contains('Login').click();
+      cy.get('.submit').contains('Login').click();
+
   
-      // Assert that login was successful
-      cy.get('.message').should('contain', 'Success!'); 
-  
-      // Verify that the user is redirected to the dashboard
       cy.url().should('include', '/dashboard');
     });
   });
