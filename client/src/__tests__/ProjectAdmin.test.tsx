@@ -20,33 +20,27 @@ describe("ProjectAdmin Component", () => {
     );
 
     
-    // Step 1: Click the Add button for Project Group
     const addButton = screen.getAllByAltText(/Add/i)[0]; // Assuming first Add button is for Project Group
     fireEvent.click(addButton);
     
-    // Log the current DOM state to Testing Playground
     screen.logTestingPlaygroundURL();
     
-    // Step 2: Fill out form
     const semesterInput = screen.getByPlaceholderText(/Please follow this format/i);
     fireEvent.change(semesterInput, { target: { value: "SS24" } });
     
     const projectGroupInput = screen.getByPlaceholderText(/Please Enter Project Group Name/i);
     fireEvent.change(projectGroupInput, { target: { value: "Group A" } });
     
-    // Step 3: Click the Create button
     const createButton = await screen.findByRole("button", { name: /Create/i });
     
     fireEvent.click(createButton);
     
-    // Verify that the project group was created successfully
     expect(await screen.findByText(/Success!/i)).toBeInTheDocument();
     
-    // Log again to inspect the result
     screen.logTestingPlaygroundURL();
   });
   
-  /*
+  
   test("allows the user to select a semester and view the project groups", async () => {
     // Wrap the component with MemoryRouter
     render(
@@ -134,5 +128,6 @@ describe("ProjectAdmin Component", () => {
 
     // Log the current state to inspect the projects
     screen.logTestingPlaygroundURL();
-  }); */
-});
+  });
+  
+  }); 

@@ -202,7 +202,8 @@ const ProjectAdmin: React.FC = () => {
       console.log(data);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setMessage(error.message);
+        console.error("Error occurred:", error);
+        setMessage("An error occurred: " + error.message);
       } else {
         setMessage("An unexpected error occurred");
       }
@@ -221,7 +222,7 @@ const ProjectAdmin: React.FC = () => {
             <h3>Project Group Lists</h3>
             <div className="Add">
               <Dialog>
-                <DialogTrigger className="DialogTrigger">
+                <DialogTrigger className="DialogTrigger" data-cy="add-project-group-button">
                   <img src={Add} alt="Add" />
                 </DialogTrigger>
                 <DialogContent className="DialogContent">
@@ -359,7 +360,7 @@ const ProjectAdmin: React.FC = () => {
             <h3>Project Lists</h3>
             <div className="Add">
               <Dialog>
-                <DialogTrigger className="DialogTrigger">
+                <DialogTrigger className="DialogTrigger" data-cy="add-project-button">
                   <img src={Add} alt="Add" />
                 </DialogTrigger>
                 <DialogContent className="DialogContent">

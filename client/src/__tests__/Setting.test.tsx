@@ -24,3 +24,4 @@ describe('Settings Component', () => {
     expect(emailLabel).toBeInTheDocument();
   });
 });
+
