@@ -1,10 +1,9 @@
 describe('Settings Page End-to-End Test', () => {
 
     beforeEach(() => {
-      // Log in before each test
       cy.request({
         method: 'POST',
-        url: 'http://localhost:3000/login', // Backend URL instead of frontend
+        url: 'http://localhost:3000/login', 
         body: {
           email: 'test@fau.edu',
           password: 'TestPassword123',
@@ -48,7 +47,7 @@ describe('Settings Page End-to-End Test', () => {
     it('should select a project group, choose a project, and join it', () => {
         cy.visit('/settings');
         cy.get('.SelectTrigger').should('exist').click();
-        cy.get('.SelectItem', { timeout: 10000 }).should('exist'); 
+        cy.get('.SelectItem', { timeout: 1000 }).should('exist'); 
         cy.get('.SelectItem').contains('AMOS24').click();      
         cy.get('.ProjectItem3').should('exist');      
         cy.get('.ProjectItem3 .Add').first().click();

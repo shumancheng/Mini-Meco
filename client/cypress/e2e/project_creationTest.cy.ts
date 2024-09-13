@@ -26,12 +26,10 @@ beforeEach(() => {
       cy.get('input[placeholder="Please Enter Project Group Name"]').type('New Project Group');
       cy.contains('Create').click();
   
-      // Wait for the request to create a project group
-      cy.wait('@createProjectGroup', { timeout: 20000 }).then((interception) => {
-        expect(interception.response?.statusCode).to.eq(201); // Verify success response
+      cy.wait('@createProjectGroup', { timeout: 2000 }).then((interception) => {
+        expect(interception.response?.statusCode).to.eq(201); 
       });
   
-      // Verify success message
       cy.get('.message').should('contain.text', 'Success');
     });
   
@@ -42,12 +40,10 @@ beforeEach(() => {
       cy.get('input[placeholder="Please Enter Project Name"]').type('New Project');
       cy.contains('Create').click();
   
-      // Wait for the request to create a project
-      cy.wait('@createProject', { timeout: 20000 }).then((interception) => {
-        expect(interception.response?.statusCode).to.eq(201); // Verify success response
+      cy.wait('@createProject', { timeout: 2000 }).then((interception) => {
+        expect(interception.response?.statusCode).to.eq(201); 
       });
   
-      // Verify success message
       cy.get('.message').should('contain.text', 'Success');
     });
   });
