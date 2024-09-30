@@ -143,15 +143,17 @@ EMAIL_PASS_FAU=your_FAU_Password
 ```
 VITE_GITHUB_TOKEN=your_secret_token
 ```
-Check GitHub documentation onAuthenticationfor more information on generating a personal access token. You can find this in the section Account securityunderManage personal access tokens[https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic].
+Check GitHub documentation on Authentication for more information on generating a personal access token. <br>
+You can find this in the section Account security under Manage personal access tokens <br>
+[https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic].
 
 #### 2.3.1 Default User Credentials
 
 Upon initializing the database, a default administrative user is created with the following credentials:
 
 - Username: admin
-- Email:sys@admin.org
-- Password:helloworld<br>
+- Email: sys@admin.org
+- Password: helloworld<br>
 Note:Upon first login, it is highly recommended to navigate to the settings page and change the password for security reasons.
 
 ### 2.4 Running the Application Locally
@@ -191,7 +193,6 @@ This command will start both the frontend and backend development servers concur
 
 The database for this application is powered by SQLite and follows a relational data model. The following tables represent the entities and relationships in the system.
 
-Tables and Schema
 
 #### 3.4.1 Users Table
 
