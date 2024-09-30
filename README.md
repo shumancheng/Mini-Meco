@@ -154,7 +154,7 @@ Upon initializing the database, a default administrative user is created with th
 - Username: admin
 - Email: sys@admin.org
 - Password: helloworld<br>
-Note:Upon first login, it is highly recommended to navigate to the settings page and change the password for security reasons.
+Note: Upon first login, it is highly recommended to navigate to the settings page and change the password for security reasons.
 
 ### 2.4 Running the Application Locally
 
@@ -196,7 +196,7 @@ The database for this application is powered by SQLite and follows a relational 
 
 #### 3.4.1 Users Table
 
-Table Name:users
+Table Name:users <br>
 Description: This table stores user account information, including credentials, statuses, and profile details.
 
 | Column               | Type     | Constraints                    | Description                         |
@@ -215,7 +215,7 @@ Description: This table stores user account information, including credentials, 
 
 #### 3.4.2 Project Table
 
-Table Name:project
+Table Name:project<br>
 Description: This table stores information about the projects.
 
 | Column              | Type     | Constraints               | Description               |
@@ -227,9 +227,8 @@ Description: This table stores information about the projects.
 
 #### 3.4.3 Project Group Table
 
-Table Name:projectGroup
-Description: This table stores information about project groups for different
-semesters.
+Table Name:projectGroup<br>
+Description: This table stores information about project groups for different semesters.
 
 | Column              | Type     | Constraints               | Description               |
 |---------------------|----------|---------------------------|---------------------------|
@@ -240,7 +239,7 @@ semesters.
 
 #### 3.4.4 User Projects Table
 
-Table Name:user_projects
+Table Name:user_projects<br>
 Description: This table maps users to projects, allowing a user to participate in multiple projects.
 
 | Column              | Type     | Constraints                           | Description               |
@@ -252,7 +251,7 @@ Description: This table maps users to projects, allowing a user to participate i
 
 #### 3.4.5 Sprints Table
 
-Table Name:sprints
+Table Name:sprints<br>
 Description:This table stores information about the sprints for project groups.
 
 | Column              | Type     | Constraints               | Description               |
@@ -265,7 +264,7 @@ Description:This table stores information about the sprints for project groups.
 
 #### 3.4.6 Happiness Table
 
-Table Name:happiness
+Table Name:happiness<br>
 Description:This table records the happiness levels of users during sprints.
 
 
