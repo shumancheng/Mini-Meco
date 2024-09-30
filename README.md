@@ -839,10 +839,6 @@ npm start
 ## Appendices
 
 
-
-```
-Appendix A: Resources and Further Reading
-```
 ### A Resources and Further Reading
 
 - [React Documentation](https://react.dev/)
