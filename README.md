@@ -120,14 +120,14 @@ tionally, it is targeted at students and educators in courses such as AMOS and A
 
 1. Clone the Repository
 ```
-git clone https :// github.com/shumancheng/Mini -Meco.git
+git clone https://github.com/shumancheng/Mini-Meco.git
 ```
 ```
- cd Mini -Meco
+ cd Mini-Meco
 ```
 2. Install Dependencies
 ```
- npm run install -all
+ npm run install-all
 ```
 
 ### 2.3 Setup and Configuration
@@ -845,13 +845,14 @@ Appendix A: Resources and Further Reading
 ```
 ### A Resources and Further Reading
 
-- React Documentation
-- TypeScript Documentation
-- npm Documentation
-- Node.js Documentation
-- SQLite Documentation
-- GitHub Documentation
-- Cypress Documentation
+- [React Documentation](https://react.dev/)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
+- [npm Documentation](https://docs.npmjs.com/)
+- [Node.js Documentation](https://nodejs.org/docs/latest/api/)
+- [SQLite Documentation](https://www.sqlite.org/docs.html)
+- [GitHub Documentation](https://docs.github.com/en)
+- [Cypress Documentation](https://docs.cypress.io/guides/overview/why-cypress)
+
 
 
 ### B Changelog
