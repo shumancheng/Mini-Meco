@@ -21,59 +21,59 @@ enhancing their understanding of both agile methodologies and software design.
 
 ## Contents
 
+- [1 Introduction](#1-introduction)
+   - [1.1 Overview of the Application](#11-overview-of-the-application)
+   - [1.2 Purpose and Goals](#12-purpose-and-goals)
+   - [1.3 Features and Functionalities](#13-features-and-functionalities)
+   - [1.4 Target Audience](#14-target-audience)
+- [2 Getting Started](#2-getting-started)
+   - [2.1 Prerequisites](#21-prerequisites)
+   - [2.2 Installation Instructions](#22-installation-instructions)
+   - [2.3 Setup and Configuration](#23-setup-and-configuration)
+      - [2.3.1 Default User Credentials](#231-default-user-credentials)
+   - [2.4 Running the Application Locally](#24-running-the-application-locally)
+- [3 Architecture and Design](#3-architecture-and-design)
+   - [3.1 Architecture Overview](#31-architecture-overview)
+   - [3.2 Key Components](#32-key-components)
+   - [3.3 Technology Stack](#33-technology-stack)
+   - [3.4 Database Design](#34-database-design)
+      - [3.4.1 Users Table](#341-users-table)
+      - [3.4.2 Project Table](#342-project-table)
+      - [3.4.3 Project Group Table](#343-project-group-table)
+      - [3.4.4 User Projects Table](#344-user-projects-table)
+      - [3.4.5 Sprints Table](#345-sprints-table)
+      - [3.4.6 Happiness Table](#346-happiness-table)
+      - [3.4.7 Entity-Relationship Diagram](#347-entity-relationship-diagram)
+- [4 Codebase Overview](#4-codebase-overview)
+   - [4.1 Repository Structure and Layout](#41-repository-structure-and-layout)
+   - [4.2 Naming Conventions](#42-naming-conventions)
+   - [4.3 Key Files and Directories](#43-key-files-and-directories)
+- [5 API Documentation](#5-api-documentation)
+   - [5.1 Overview of the API](#51-overview-of-the-api)
+   - [5.2 Endpoints](#52-endpoints)
+      - [5.2.1 Authentication Routes](#521-authentication-routes)
+      - [5.2.2 Project Management Routes](#522-project-management-routes)
+      - [5.2.3 Project Features Routes](#523-project-features-routes)
+      - [5.2.4 Project Configuration Routes](#524-project-configuration-routes)
+      - [5.2.5 Additional Routes](#525-additional-routes)
+   - [5.3 Error Handling](#53-error-handling)
+- [6 User Guides](#6-user-guides)
+   - [6.1 Instructions for Using the Application](#61-instructions-for-using-the-application)
+      - [6.1.1 Authentication](#611-authentication)
+      - [6.1.2 Project Management](#612-project-management)
+      - [6.1.3 Project Features](#613-project-features)
+      - [6.1.4 Project Configuration](#614-project-configuration)
+   - [6.2 Troubleshooting Tips](#62-troubleshooting-tips)
+- [7 Development Guide](#7-development-guide)
+   - [7.1 Setting Up the Development Environment](#71-setting-up-the-development-environment)
+   - [7.2 Coding Standards and Best Practices](#72-coding-standards-and-best-practices)
+   - [7.3 Testing](#73-testing)
+   - [7.4 Debugging and Logging](#74-debugging-and-logging)
+   - [7.5 Deployment Process](#75-deployment-process)
+- [Appendices](#appendices)
+   - [A Resources and Further Reading](#a-resources-and-further-reading)
+   - [B Changelog](#b-changelog)
 
-- 1 Introduction
-   - 1.1 Overview of the Application
-   - 1.2 Purpose and Goals
-   - 1.3 Features and Functionalities
-   - 1.4 Target Audience
-- 2 Getting Started
-   - 2.1 Prerequisites
-   - 2.2 Installation Instructions
-   - 2.3 Setup and Configuration
-      - 2.3.1 Default User Credentials
-   - 2.4 Running the Application Locally
-- 3 Architecture and Design
-   - 3.1 Architecture Overview
-   - 3.2 Key Components
-   - 3.3 Technology Stack
-   - 3.4 Database Design
-      - 3.4.1 Users Table
-      - 3.4.2 Project Table
-      - 3.4.3 Project Group Table
-      - 3.4.4 User Projects Table
-      - 3.4.5 Sprints Table
-      - 3.4.6 Happiness Table
-      - 3.4.7 Entity-Relationship Diagram
-- 4 Codebase Overview
-   - 4.1 Repository Structure and Layout
-   - 4.2 Naming Conventions
-   - 4.3 Key Files and Directories
-- 5 API Documentation
-   - 5.1 Overview of the API
-   - 5.2 Endpoints
-      - 5.2.1 Authentication Routes
-      - 5.2.2 Project Management Routes
-      - 5.2.3 Project Features Routes
-      - 5.2.4 Project Configuration Routes
-      - 5.2.5 Additional Routes
-   - 5.3 Error Handling
-- 6 User Guides
-   - 6.1 Instructions for Using the Application
-      - 6.1.1 Authentication
-      - 6.1.2 Project Management
-      - 6.1.3 Project Features
-      - 6.1.4 Project Configuration
-   - 6.2 Troubleshooting Tips
-- 7 Development Guide
-   - 7.1 Setting Up the Development Environment
-   - 7.2 Coding Standards and Best Practices
-   - 7.3 Testing
-   - 7.4 Debugging and Logging
-   - 7.5 Deployment Process
-- Appendices
-   - A Resources and Further Reading
-   - B Changelog
 
 
 ## 1 Introduction
@@ -120,7 +120,7 @@ tionally, it is targeted at students and educators in courses such as AMOS and A
 
 1. Clone the Repository
 ```
-git clone https://github.com/shumancheng/Mini-Meco.git
+ git clone https://github.com/shumancheng/Mini-Meco.git
 ```
 ```
  cd Mini-Meco
@@ -196,7 +196,7 @@ The database for this application is powered by SQLite and follows a relational 
 
 #### 3.4.1 Users Table
 
-Table Name:users <br>
+Table Name: users <br>
 Description: This table stores user account information, including credentials, statuses, and profile details.
 
 | Column               | Type     | Constraints                    | Description                         |
@@ -215,7 +215,7 @@ Description: This table stores user account information, including credentials, 
 
 #### 3.4.2 Project Table
 
-Table Name:project<br>
+Table Name: project<br>
 Description: This table stores information about the projects.
 
 | Column              | Type     | Constraints               | Description               |
@@ -227,7 +227,7 @@ Description: This table stores information about the projects.
 
 #### 3.4.3 Project Group Table
 
-Table Name:projectGroup<br>
+Table Name: projectGroup<br>
 Description: This table stores information about project groups for different semesters.
 
 | Column              | Type     | Constraints               | Description               |
@@ -239,7 +239,7 @@ Description: This table stores information about project groups for different se
 
 #### 3.4.4 User Projects Table
 
-Table Name:user_projects<br>
+Table Name: user_projects<br>
 Description: This table maps users to projects, allowing a user to participate in multiple projects.
 
 | Column              | Type     | Constraints                           | Description               |
@@ -251,7 +251,7 @@ Description: This table maps users to projects, allowing a user to participate i
 
 #### 3.4.5 Sprints Table
 
-Table Name:sprints<br>
+Table Name: sprints<br>
 Description:This table stores information about the sprints for project groups.
 
 | Column              | Type     | Constraints               | Description               |
@@ -264,7 +264,7 @@ Description:This table stores information about the sprints for project groups.
 
 #### 3.4.6 Happiness Table
 
-Table Name:happiness<br>
+Table Name: happiness<br>
 Description:This table records the happiness levels of users during sprints.
 
 
